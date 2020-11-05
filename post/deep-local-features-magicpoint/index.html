@@ -1,0 +1,214 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deep Local Features: MagicPoint | Gridea</title>
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604539946580">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Deep Local Features: MagicPoint | Gridea - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="MagicPoint (Magic Leap) pdf
+Abstract
+这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detec..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://jinyu-m.github.io">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604539946580" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          文章
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Deep Local Features: MagicPoint
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-11-05
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://jinyu-m.github.io/post-images/deep-local-features-magicpoint.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h2>
+<h3 id="abstract"><em>Abstract</em></h3>
+<p>这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detector！）<strong>；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography，</strong>（不需要descriptor！）**</p>
+<h3 id="introduction"><em>Introduction</em></h3>
+<p>作者先抛出了一个问题</p>
+<blockquote>
+<p>what would it take to build an ImageNet for SLAM?</p>
+<p>What would it take to build DeepSLAM?</p>
+</blockquote>
+<p>由于SLAM领域的真实数据往往无法获得很好的标注，而仿真数据无法囊括现实中的所有变化，所以可能引起domain adaptation issues和过拟合。所以用data-driven的深度学习方法去解决SLAM问题尚未解决。</p>
+<p>作者提到了两个点，首先利用预测图像的DCN去估计ego-motion是可能得，作者没有使用直接用图像估计6DoF位姿的监督方法，而是更关注geometric consistency；其次作者发现对于SLAM系统来说，预测和对齐关键点已经足够去解算pose，那么就不用去预测整幅图像了，直接估计homography足以满足需求。</p>
+<h3 id="method"><em>Method</em></h3>
+<h4 id="overview">overview</h4>
+<p>![overview](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_1.png)</p>
+<h4 id="magicpoint">MagicPoint</h4>
+<p>作者设计MagicPoint的motivation就是认为hand-crafted detector需要过多的经验和技巧，往往无法cover所有的干扰，所以就直接用DCN去估计pixel-level的显著性，提取图像关键点。</p>
+<p>![magicpoint](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_2.png)</p>
+<p>结构类似于VGG。输入一个图像，得到一个同等分辨率的point response image，输出的每个pixel的值代表原图中这个位置是角点的概率。但是直接用encoder下采样-decoder上采样的结构恢复分辨率很耗算力，所以作者用网络得到了1/8大小的feature map，维度是65维（65个通道），这65个通道对应原图中不重叠的8x8的区域即一个dustbin通道（用于表示该8x8区域内无关键点），最后reshape到原本分辨率，这样decoder就没有参数了。</p>
+<p>训练时使用OpenCV作了一批虚拟的几何体，几何体的角点可以直接得到，然后加入噪声、光照变化等进行数据增强。训练时对feature map上每个cell计算cross-entropy loss。</p>
+<h4 id="magicwarp">MagicWarp</h4>
+<p>MagicWarp输入一对图像的关键点，然后估计homography。比如两幅120x160的图像输入MagicPoint，分别得到65x15x20的feature map。输入MagicWarp后，先从channel维度上进行concatenation，得到130x15x20的feature map，然后经过一个VGG型的encoder，再通过全连接层降维，得到一个9-d的向量，恢复成3x3的homography矩阵。</p>
+<p>![magicwarp](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_3.png)</p>
+<p>训练时，用虚拟数据采集虚拟三维几何体的图像，来获得训练数据，计算loss时，用估计的homography将图1的point投影到图2，然后计算投影误差，用L2-distance作为loss。</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_4.png)</p>
+<h3 id="一些看法"><em>一些看法</em></h3>
+<p>MagicPoint算比较早的learnt detector了吧，所以感觉其实就是在学习如何检测corner，完全取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) pdf</a>
+<ul>
+<li><a href="#abstract"><em>Abstract</em></a></li>
+<li><a href="#introduction"><em>Introduction</em></a></li>
+<li><a href="#method"><em>Method</em></a>
+<ul>
+<li><a href="#overview">overview</a></li>
+<li><a href="#magicpoint">MagicPoint</a></li>
+<li><a href="#magicwarp">MagicWarp</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95"><em>一些看法</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://jinyu-m.github.io/post/about/">
+              <h3 class="post-title">
+                关于
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://jinyu-m.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

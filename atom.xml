@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>Gridea</title>
-    <updated>2020-11-05T01:26:57.166Z</updated>
+    <updated>2020-11-05T01:32:31.559Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -10,6 +10,55 @@
     <logo>https://jinyu-m.github.io/images/avatar.png</logo>
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[Deep Local Features: MagicPoint]]></title>
+        <id>https://jinyu-m.github.io/post/deep-local-features-magicpoint/</id>
+        <link href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
+        </link>
+        <updated>2020-11-05T01:30:16.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h2>
+<h3 id="abstract"><em>Abstract</em></h3>
+<p>这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detector！）<strong>；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography，</strong>（不需要descriptor！）**</p>
+<h3 id="introduction"><em>Introduction</em></h3>
+<p>作者先抛出了一个问题</p>
+<blockquote>
+<p>what would it take to build an ImageNet for SLAM?</p>
+<p>What would it take to build DeepSLAM?</p>
+</blockquote>
+<p>由于SLAM领域的真实数据往往无法获得很好的标注，而仿真数据无法囊括现实中的所有变化，所以可能引起domain adaptation issues和过拟合。所以用data-driven的深度学习方法去解决SLAM问题尚未解决。</p>
+<p>作者提到了两个点，首先利用预测图像的DCN去估计ego-motion是可能得，作者没有使用直接用图像估计6DoF位姿的监督方法，而是更关注geometric consistency；其次作者发现对于SLAM系统来说，预测和对齐关键点已经足够去解算pose，那么就不用去预测整幅图像了，直接估计homography足以满足需求。</p>
+<h3 id="method"><em>Method</em></h3>
+<h4 id="overview">overview</h4>
+<p>![overview](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_1.png)</p>
+<h4 id="magicpoint">MagicPoint</h4>
+<p>作者设计MagicPoint的motivation就是认为hand-crafted detector需要过多的经验和技巧，往往无法cover所有的干扰，所以就直接用DCN去估计pixel-level的显著性，提取图像关键点。</p>
+<p>![magicpoint](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_2.png)</p>
+<p>结构类似于VGG。输入一个图像，得到一个同等分辨率的point response image，输出的每个pixel的值代表原图中这个位置是角点的概率。但是直接用encoder下采样-decoder上采样的结构恢复分辨率很耗算力，所以作者用网络得到了1/8大小的feature map，维度是65维（65个通道），这65个通道对应原图中不重叠的8x8的区域即一个dustbin通道（用于表示该8x8区域内无关键点），最后reshape到原本分辨率，这样decoder就没有参数了。</p>
+<p>训练时使用OpenCV作了一批虚拟的几何体，几何体的角点可以直接得到，然后加入噪声、光照变化等进行数据增强。训练时对feature map上每个cell计算cross-entropy loss。</p>
+<h4 id="magicwarp">MagicWarp</h4>
+<p>MagicWarp输入一对图像的关键点，然后估计homography。比如两幅120x160的图像输入MagicPoint，分别得到65x15x20的feature map。输入MagicWarp后，先从channel维度上进行concatenation，得到130x15x20的feature map，然后经过一个VGG型的encoder，再通过全连接层降维，得到一个9-d的向量，恢复成3x3的homography矩阵。</p>
+<p>![magicwarp](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_3.png)</p>
+<p>训练时，用虚拟数据采集虚拟三维几何体的图像，来获得训练数据，计算loss时，用估计的homography将图1的point投影到图2，然后计算投影误差，用L2-distance作为loss。</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_4.png)</p>
+<h3 id="一些看法"><em>一些看法</em></h3>
+<p>MagicPoint算比较早的learnt detector了吧，所以感觉其实就是在学习如何检测corner，完全取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[关于]]></title>
+        <id>https://jinyu-m.github.io/post/about/</id>
+        <link href="https://jinyu-m.github.io/post/about/">
+        </link>
+        <updated>2019-01-25T11:09:48.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+</blockquote>
+<h2 id="关于本站">🏠 关于本站</h2>
+<h2 id="博主是谁">👨‍💻 博主是谁</h2>
+<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
+<h2 id="联系我呀">📬 联系我呀</h2>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://jinyu-m.github.io/post/hello-gridea/</id>
@@ -21,6 +70,7 @@
 ]]></summary>
         <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
 ✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+<!-- more -->
 <!-- more -->
 <p><a href="https://github.com/getgridea/gridea">Github</a><br>
 <a href="https://gridea.dev/">Gridea 主页</a><br>
