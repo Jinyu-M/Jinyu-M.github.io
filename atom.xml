@@ -1,21 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
-    <title>Gridea</title>
-    <updated>2020-11-05T01:32:31.559Z</updated>
+    <title>诗酒趁年华 年少万兜鍪</title>
+    <updated>2020-11-05T01:39:52.655Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
+    <subtitle>Jinyu Miao
+尘世恰好，有诗有酒刚好吐槽</subtitle>
     <logo>https://jinyu-m.github.io/images/avatar.png</logo>
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, Gridea</rights>
+    <rights>All rights reserved 2020, 诗酒趁年华 年少万兜鍪</rights>
+    <entry>
+        <title type="html"><![CDATA[Deep Local Features: SuperPoint]]></title>
+        <id>https://jinyu-m.github.io/post/superpoint/</id>
+        <link href="https://jinyu-m.github.io/post/superpoint/">
+        </link>
+        <updated>2020-11-04T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="superpoint-magic-leap-pdf">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a></h2>
+<h3 id="abstract"><em>Abstract</em></h3>
+<p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
+<h3 id="introduction"><em>Introduction</em></h3>
+<p>作者认为deep feature训练的关键在于带有标签的数据，但是人工标注的数据中，关键点往往是ill-defined，所以作者提出自监督方法训练，用网络本身去标注一批伪真值关键点，在此基础上进行训练，这样做，关键点更丰富，标注成本也更低。</p>
+<p>![train](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_1.png)</p>
+<p>第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
+<h3 id="architecture"><em>Architecture</em></h3>
+<p>![architecture](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_2.png)</p>
+<p>SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。</p>
+<p>在<strong>interest point decoder</strong>中，网络依旧延续MagicPoint的做法，采用非参数的上采样过程，feature map通过head降维到65 x Hc x Wc维，分别代表原图中与之对应的8x8区域内每个点是关键点的概率以及一个dustbin通道，dustbin用以表示该8x8区域内无关键点。</p>
+<p>在<strong>descriptor decoder</strong>中，网络先提取了Hc x Wc的semi-dense descriptor，每个descriptor代表与之对应的8x8区域内关键点的256-d descriptor（根据interest point detector，每8x8区域内只可能存在1/0个关键点），然后采用bi-cubic插值恢复到原分辨率。</p>
+<h3 id="loss"><em>Loss</em></h3>
+<p>训练interest point detector依旧采用对每个cell计算cross-entropy loss的方法：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_3.png)</p>
+<p>为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。</p>
+<p>训练descriptor extractor时，需要先找到匹配的点，然后用匹配点的descriptor来计算loss，所以先找判断图1(h,w)和图2(h',w')是否是一组匹配点：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_4.png)</p>
+<p>p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_5.png)</p>
+<p>上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。</p>
+<p>综上，SuperPoint训练使用的loss：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_6.png)</p>
+<p>分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
+<h3 id="training"><em>Training</em></h3>
+<p>作者先训练了SuperPoint中提取关键点的detector pathway，其实就是MagicPoint，发现在虚拟数据集上MP表现很好，在真实数据中，当场景中有大量角点时，效果很好，但是在自然场景中，MP效果不如传统特征，所以作者提出<strong>用自监督方法在真实场景中训练网络</strong>，即Homographic Adaptation。</p>
+<h3 id="homographic-adaptation"><em>Homographic Adaptation</em></h3>
+<p>![ha](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_7.png)</p>
+<p>可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
+<h3 id="一些见解"><em>一些见解</em></h3>
+<p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者也发现了MagicPoint只是单纯的去学习检测人工标注的那些点，很局限，所以提出了homographic adaptation去boostrap自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后面的特征，可能没有考虑到特征的repeatable这种特性如何在训练中应用。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Deep Local Features: MagicPoint]]></title>
         <id>https://jinyu-m.github.io/post/deep-local-features-magicpoint/</id>
         <link href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
         </link>
-        <updated>2020-11-05T01:30:16.000Z</updated>
+        <updated>2020-11-04T01:30:16.000Z</updated>
         <content type="html"><![CDATA[<h2 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h2>
 <h3 id="abstract"><em>Abstract</em></h3>
 <p>这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detector！）<strong>；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography，</strong>（不需要descriptor！）**</p>
@@ -57,39 +97,6 @@
 <h2 id="博主是谁">👨‍💻 博主是谁</h2>
 <h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
 <h2 id="联系我呀">📬 联系我呀</h2>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://jinyu-m.github.io/post/hello-gridea/</id>
-        <link href="https://jinyu-m.github.io/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
 ]]></content>
     </entry>
 </feed>

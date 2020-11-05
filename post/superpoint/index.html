@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Deep Local Features: SuperPoint | 诗酒趁年华 年少万兜鍪</title>
+<meta name="description" content="Jinyu Miao
+尘世恰好，有诗有酒刚好吐槽">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604540364820">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://jinyu-m.github.io">诗酒趁年华 年少万兜鍪</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                文章
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>Deep Local Features: SuperPoint</h1>
+            <p class="article-meta">
+              2020-11-05
+              
+            </p>
+            
+              <img src="https://jinyu-m.github.io/post-images/superpoint.png" alt="Deep Local Features: SuperPoint">
+            
+            <div class="post-content">
+              <h2 id="superpoint-magic-leap-pdf">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a></h2>
+<h3 id="abstract"><em>Abstract</em></h3>
+<p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
+<h3 id="introduction"><em>Introduction</em></h3>
+<p>作者认为deep feature训练的关键在于带有标签的数据，但是人工标注的数据中，关键点往往是ill-defined，所以作者提出自监督方法训练，用网络本身去标注一批伪真值关键点，在此基础上进行训练，这样做，关键点更丰富，标注成本也更低。</p>
+<p>![train](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_1.png)</p>
+<p>第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
+<h3 id="architecture"><em>Architecture</em></h3>
+<p>![architecture](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_2.png)</p>
+<p>SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。</p>
+<p>在<strong>interest point decoder</strong>中，网络依旧延续MagicPoint的做法，采用非参数的上采样过程，feature map通过head降维到65 x Hc x Wc维，分别代表原图中与之对应的8x8区域内每个点是关键点的概率以及一个dustbin通道，dustbin用以表示该8x8区域内无关键点。</p>
+<p>在<strong>descriptor decoder</strong>中，网络先提取了Hc x Wc的semi-dense descriptor，每个descriptor代表与之对应的8x8区域内关键点的256-d descriptor（根据interest point detector，每8x8区域内只可能存在1/0个关键点），然后采用bi-cubic插值恢复到原分辨率。</p>
+<h3 id="loss"><em>Loss</em></h3>
+<p>训练interest point detector依旧采用对每个cell计算cross-entropy loss的方法：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_3.png)</p>
+<p>为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。</p>
+<p>训练descriptor extractor时，需要先找到匹配的点，然后用匹配点的descriptor来计算loss，所以先找判断图1(h,w)和图2(h',w')是否是一组匹配点：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_4.png)</p>
+<p>p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_5.png)</p>
+<p>上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。</p>
+<p>综上，SuperPoint训练使用的loss：</p>
+<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_6.png)</p>
+<p>分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
+<h3 id="training"><em>Training</em></h3>
+<p>作者先训练了SuperPoint中提取关键点的detector pathway，其实就是MagicPoint，发现在虚拟数据集上MP表现很好，在真实数据中，当场景中有大量角点时，效果很好，但是在自然场景中，MP效果不如传统特征，所以作者提出<strong>用自监督方法在真实场景中训练网络</strong>，即Homographic Adaptation。</p>
+<h3 id="homographic-adaptation"><em>Homographic Adaptation</em></h3>
+<p>![ha](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\superpoint_7.png)</p>
+<p>可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
+<h3 id="一些见解"><em>一些见解</em></h3>
+<p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者也发现了MagicPoint只是单纯的去学习检测人工标注的那些点，很局限，所以提出了homographic adaptation去boostrap自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后面的特征，可能没有考虑到特征的repeatable这种特性如何在训练中应用。</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
+                <h3 class="post-title">
+                  Deep Local Features: MagicPoint
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://jinyu-m.github.io/images/avatar.png?v=1604540364820" class="no-responsive avatar">
+    <div class="text-muted">Jinyu Miao
+尘世恰好，有诗有酒刚好吐槽</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://jinyu-m.github.io/post/superpoint/">Deep Local Features: SuperPoint</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">Deep Local Features: MagicPoint</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://jinyu-m.github.io/post/about/">关于</a>
+            </li>
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+    </div>
+  </div>
+  <div class="paper">
+    Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://jinyu-m.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>
