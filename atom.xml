@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-05T02:15:38.333Z</updated>
+    <updated>2020-11-05T02:50:00.259Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -12,57 +12,18 @@
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 年少万兜鍪</rights>
     <entry>
-        <title type="html"><![CDATA[Deep Local Features: SuperPoint]]></title>
-        <id>https://jinyu-m.github.io/post/superpoint/</id>
-        <link href="https://jinyu-m.github.io/post/superpoint/">
-        </link>
-        <updated>2020-11-04T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
-<!-- more -->
-<h1 id="superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a> <a href="https://github.com/magicleap/SuperPointPretrainedNetwork">official code</a> <a href="https://github.com/rpautrat/SuperPoint">society code</a></h1>
-<h2 id="introduction"><em>Introduction</em></h2>
-<p>作者认为deep feature训练的关键在于带有标签的数据，但是人工标注的数据中，关键点往往是ill-defined，所以作者提出自监督方法训练，用网络本身去标注一批伪真值关键点，在此基础上进行训练，这样做，关键点更丰富，标注成本也更低。</p>
-<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1604541876168.png" alt="" loading="lazy"></figure>
-<p>第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
-<h2 id="architecture"><em>Architecture</em></h2>
-<figure data-type="image" tabindex="2"><img src="https://jinyu-m.github.io/post-images/1604541894356.png" alt="" loading="lazy"></figure>
-<p>SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。</p>
-<p>在<strong>interest point decoder</strong>中，网络依旧延续MagicPoint的做法，采用非参数的上采样过程，feature map通过head降维到65 x Hc x Wc维，分别代表原图中与之对应的8x8区域内每个点是关键点的概率以及一个dustbin通道，dustbin用以表示该8x8区域内无关键点。</p>
-<p>在<strong>descriptor decoder</strong>中，网络先提取了Hc x Wc的semi-dense descriptor，每个descriptor代表与之对应的8x8区域内关键点的256-d descriptor（根据interest point detector，每8x8区域内只可能存在1/0个关键点），然后采用bi-cubic插值恢复到原分辨率。</p>
-<h2 id="loss"><em>Loss</em></h2>
-<p>训练interest point detector依旧采用对每个cell计算cross-entropy loss的方法：</p>
-<figure data-type="image" tabindex="3"><img src="https://jinyu-m.github.io/post-images/1604542024924.png" alt="" loading="lazy"></figure>
-<p>为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。</p>
-<p>训练descriptor extractor时，需要先找到匹配的点，然后用匹配点的descriptor来计算loss，所以先找判断图1(h,w)和图2(h',w')是否是一组匹配点：</p>
-<figure data-type="image" tabindex="4"><img src="https://jinyu-m.github.io/post-images/1604542034183.png" alt="" loading="lazy"></figure>
-<p>p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：</p>
-<figure data-type="image" tabindex="5"><img src="https://jinyu-m.github.io/post-images/1604542039512.png" alt="" loading="lazy"></figure>
-<p>上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。</p>
-<p>综上，SuperPoint训练使用的loss：</p>
-<figure data-type="image" tabindex="6"><img src="https://jinyu-m.github.io/post-images/1604542045657.png" alt="" loading="lazy"></figure>
-<p>分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
-<h2 id="training"><em>Training</em></h2>
-<p>作者先训练了SuperPoint中提取关键点的detector pathway，其实就是MagicPoint，发现在虚拟数据集上MP表现很好，在真实数据中，当场景中有大量角点时，效果很好，但是在自然场景中，MP效果不如传统特征，所以作者提出<strong>用自监督方法在真实场景中训练网络</strong>，即Homographic Adaptation。</p>
-<h2 id="homographic-adaptation"><em>Homographic Adaptation</em></h2>
-<figure data-type="image" tabindex="7"><img src="https://jinyu-m.github.io/post-images/1604542062673.png" alt="" loading="lazy"></figure>
-<p>可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
-<h2 id="一些见解"><em>一些见解</em></h2>
-<p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者发现了MagicPoint只是单纯的去学习检测人工标注的那些点，比较局限，所以提出了homographic adaptation去进一步提升自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后续出现的特征，SuperPoint特征在训练时依旧采用监督的方法去训练detector，导致效果有待提升。在我的试验中，Bag of SuperPoint会提升loop closure的表现，但是用于SLAM系统（ORB-SLAM2）时，SuperPoint从一幅图像提取的特征过少，可能无法满足SLAM初始化的要求。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Deep Local Features: MagicPoint]]></title>
+        <title type="html"><![CDATA[Deep Local Features]]></title>
         <id>https://jinyu-m.github.io/post/deep-local-features-magicpoint/</id>
         <link href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
         </link>
         <updated>2020-11-04T01:30:16.000Z</updated>
-        <summary type="html"><![CDATA[<p>论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography（不需要descriptor信息）。</p>
+        <summary type="html"><![CDATA[<p>最近要做一个关于deep local feature for localization的工作，所以读了一些learnt feature的论文，记录一下，作为参考。也希望自己的工作得到评委认可呀😎</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography（不需要descriptor信息）。</p>
+        <content type="html"><![CDATA[<p>最近要做一个关于deep local feature for localization的工作，所以读了一些learnt feature的论文，记录一下，作为参考。也希望自己的工作得到评委认可呀😎</p>
 <!-- more -->
 <h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>
+<h2 id="abstract"><em>Abstract</em></h2>
+<p>论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography（不需要descriptor信息）。</p>
 <h2 id="introduction"><em>Introduction</em></h2>
 <p>作者先抛出了一个问题</p>
 <blockquote>
@@ -86,6 +47,155 @@ What would it take to build DeepSLAM?</p>
 <figure data-type="image" tabindex="4"><img src="https://jinyu-m.github.io/post-images/1604541741188.png" alt="" loading="lazy"></figure>
 <h2 id="一些看法"><em>一些看法</em></h2>
 <p>MagicPoint学习了如何检测corner，基本取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。后续SuperPoint也采用了这样上采样的方式，在recover resolution的同时参数也比较少。</p>
+<hr>
+<h1 id="superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a> <a href="https://github.com/magicleap/SuperPointPretrainedNetwork">official code</a> <a href="https://github.com/rpautrat/SuperPoint">society code</a></h1>
+<h2 id="abstract-2"><em>Abstract</em></h2>
+<p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
+<h2 id="introduction-2"><em>Introduction</em></h2>
+<p>作者认为deep feature训练的关键在于带有标签的数据，但是人工标注的数据中，关键点往往是ill-defined，所以作者提出自监督方法训练，用网络本身去标注一批伪真值关键点，在此基础上进行训练，这样做，关键点更丰富，标注成本也更低。</p>
+<figure data-type="image" tabindex="5"><img src="https://jinyu-m.github.io/post-images/1604541876168.png" alt="" loading="lazy"></figure>
+<p>第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
+<h2 id="architecture"><em>Architecture</em></h2>
+<figure data-type="image" tabindex="6"><img src="https://jinyu-m.github.io/post-images/1604541894356.png" alt="" loading="lazy"></figure>
+<p>SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。</p>
+<p>在<strong>interest point decoder</strong>中，网络依旧延续MagicPoint的做法，采用非参数的上采样过程，feature map通过head降维到65 x Hc x Wc维，分别代表原图中与之对应的8x8区域内每个点是关键点的概率以及一个dustbin通道，dustbin用以表示该8x8区域内无关键点。</p>
+<p>在<strong>descriptor decoder</strong>中，网络先提取了Hc x Wc的semi-dense descriptor，每个descriptor代表与之对应的8x8区域内关键点的256-d descriptor（根据interest point detector，每8x8区域内只可能存在1/0个关键点），然后采用bi-cubic插值恢复到原分辨率。</p>
+<h2 id="loss"><em>Loss</em></h2>
+<p>训练interest point detector依旧采用对每个cell计算cross-entropy loss的方法：</p>
+<figure data-type="image" tabindex="7"><img src="https://jinyu-m.github.io/post-images/1604542024924.png" alt="" loading="lazy"></figure>
+<p>为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。</p>
+<p>训练descriptor extractor时，需要先找到匹配的点，然后用匹配点的descriptor来计算loss，所以先找判断图1(h,w)和图2(h',w')是否是一组匹配点：</p>
+<figure data-type="image" tabindex="8"><img src="https://jinyu-m.github.io/post-images/1604542034183.png" alt="" loading="lazy"></figure>
+<p>p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：</p>
+<figure data-type="image" tabindex="9"><img src="https://jinyu-m.github.io/post-images/1604542039512.png" alt="" loading="lazy"></figure>
+<p>上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。</p>
+<p>综上，SuperPoint训练使用的loss：</p>
+<figure data-type="image" tabindex="10"><img src="https://jinyu-m.github.io/post-images/1604542045657.png" alt="" loading="lazy"></figure>
+<p>分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
+<h2 id="training"><em>Training</em></h2>
+<p>作者先训练了SuperPoint中提取关键点的detector pathway，其实就是MagicPoint，发现在虚拟数据集上MP表现很好，在真实数据中，当场景中有大量角点时，效果很好，但是在自然场景中，MP效果不如传统特征，所以作者提出<strong>用自监督方法在真实场景中训练网络</strong>，即Homographic Adaptation。</p>
+<h2 id="homographic-adaptation"><em>Homographic Adaptation</em></h2>
+<figure data-type="image" tabindex="11"><img src="https://jinyu-m.github.io/post-images/1604542062673.png" alt="" loading="lazy"></figure>
+<p>可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
+<h2 id="一些见解"><em>一些见解</em></h2>
+<p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者发现了MagicPoint只是单纯的去学习检测人工标注的那些点，比较局限，所以提出了homographic adaptation去进一步提升自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后续出现的特征，SuperPoint特征在训练时依旧采用监督的方法去训练detector，导致效果有待提升。在我的试验中，Bag of SuperPoint会提升loop closure的表现，但是用于SLAM系统（ORB-SLAM2）时，SuperPoint从一幅图像提取的特征过少，可能无法满足SLAM初始化的要求。</p>
+<hr>
+<h1 id="d2-net-pdf-code">D2-net <a href="https://arxiv.org/abs/1905.03561.pdf">pdf</a> <a href="https://github.com/mihaidusmanu/d2-net">code</a></h1>
+<h2 id="abstract-3"><em>Abstract</em></h2>
+<p>D2-net的主要在于提出了detect-and-describe的特征提取方法，不再是传统的detect-then-describe方法。作者认为从高层语义信息（CNN的高层conv输出的feature map）中提取的关键点位置要比从低层结构信息中提取的更稳定一些。detector和descriptor的参数实现了完全的共享。</p>
+<h2 id="method-2"><em>Method</em></h2>
+<p>D2的detector和descriptor是基于相同的feature map获取的。输入图像通过一个前向网络，得到C x H x W feature map，被视为得到了H x W 个C维的稠密局部特征。</p>
+<figure data-type="image" tabindex="12"><img src="https://jinyu-m.github.io/post-images/1604543214624.png" alt="" loading="lazy"></figure>
+<h2 id="hard-feature-detectiontest"><em>Hard feature detection(test)</em></h2>
+<p>由于D2得到feature map有很多层，每一层都可以作为一个detector去检测局部最大值进而提取local feature，所以在提取特征时，D2约定（i，j）为一个特征点当且仅当在该点具有最大值的那个detector中，该点是一个局部最大值：</p>
+<figure data-type="image" tabindex="13"><img src="https://jinyu-m.github.io/post-images/1604543229447.png" alt="" loading="lazy"></figure>
+<p>直观地来讲，就是对于每个点，我们需要先找到该点对应C个detector中最显著的那个detector，然后验证在该detector中，当前点是否是局部最大的。</p>
+<h2 id="soft-feature-detectiontraining"><em>Soft feature detection(training)</em></h2>
+<p>但是上述detection方法是不可微的，所有无法用BP进行训练，为了实现end-to-end训练，作者soften了上述detection的方法。</p>
+<p>首先soften筛选最显著detector的部分，计算当前detector的ratio-to-max用以表示其显著性</p>
+<figure data-type="image" tabindex="14"><img src="https://jinyu-m.github.io/post-images/1604543241393.png" alt="" loading="lazy"></figure>
+<p>其次soften计算局部最优值的部分，计算了9邻域内某点的soft local-max占比</p>
+<figure data-type="image" tabindex="15"><img src="https://jinyu-m.github.io/post-images/1604543248965.png" alt="" loading="lazy"></figure>
+<p>最后，综合两部分的分数，取最大值，并做image-level normalization得到一个用来表征像素是特征点的概率的score map。</p>
+<h2 id="multiscale-detection"><em>Multiscale detection</em></h2>
+<p>为了获取具有更强尺度不变性的特征，D2使用图像金字塔，在测试阶段，将图像分别缩放至0.5,1,2倍，输入D2，得到feature map，并将之前由低分辨率图像获得的feature map插值放大到当前分辨率，与当前feature map相加，获得更稳定的feature map，在此map上进行detection，之前提取的关键点也被上采样（最近邻）到当前尺度，纳入提取的特征中。</p>
+<h2 id="data"><em>Data</em></h2>
+<p>D2用megadepth数据集进行训练，megadepth提供了同一场景不同视角、光照、设备下的照片，以及深度信息，每个场景由COLMAP进行建图，由此获得2d-3d特征点的对应信息，利用sfm提供的信息，我们可以计算同一场景下两幅图像的overlap，在训练中，D2使用overlap&gt;0.5的图像对，并用depth信息进行验证，去除被遮挡的像素。</p>
+<h2 id="loss-2"><em>Loss</em></h2>
+<p>为了提升descriptor的区分度，需要让对应点的descriptor距离较小，非对应点的descriptor距离较大，所以D2使用了triplet margin loss。对于图1和图2中一对匹配点A和B，positive descriptor distance=</p>
+<figure data-type="image" tabindex="16"><img src="https://jinyu-m.github.io/post-images/1604543266447.png" alt="" loading="lazy"></figure>
+<p>在计算negative descriptor distance时，先挑选hardest negatives：</p>
+<figure data-type="image" tabindex="17"><img src="https://jinyu-m.github.io/post-images/1604543274031.png" alt="" loading="lazy"></figure>
+<p>直观理解，N1为图1中位于A的邻域之外，与B最相似的点。N2同理。</p>
+<p>然后就可以分别计算A与N2，B与N1的descriptor距离，得到negative descriptor distance</p>
+<figure data-type="image" tabindex="18"><img src="https://jinyu-m.github.io/post-images/1604543283391.png" alt="" loading="lazy"></figure>
+<p>最后，triplet margin loss如下：</p>
+<figure data-type="image" tabindex="19"><img src="https://jinyu-m.github.io/post-images/1604543289679.png" alt="" loading="lazy"></figure>
+<p>通过该loss可以让descriptor的distinctiveness提升，而为了挑选去更具重复性的特征，D2在triple margin loss前加了一个权重</p>
+<figure data-type="image" tabindex="20"><img src="https://jinyu-m.github.io/post-images/1604543298015.png" alt="" loading="lazy"></figure>
+<p>这样的话，为了让loss降低，网络需要学习去提取区分度更高（m更小）并且可重复性更好（权重更大）的点，并且优化提取的descriptor。</p>
+<h2 id="training-test"><em>Training &amp; Test</em></h2>
+<p>D2采用了VGG-16网络模型（~conv4_3），加载imagenet预训练模型即可提取特征，如果进行finetune只需训练最后一层。在测试时，最后一个max-pooling改为average-pooling，并且stride改为1（不降低分辨率），conv4_1到conv4_3使用空洞卷积，这样得到的feature map是1/4大小的，D2使用SIFT中的local refinement方法去修正关键点位置，descriptor被双线性插值到矫正后的位置。</p>
+<h2 id="evaluation"><em>Evaluation</em></h2>
+<figure data-type="image" tabindex="21"><img src="https://jinyu-m.github.io/post-images/1604544099886.png" alt="" loading="lazy"></figure>
+<p>在HPatches上，D2表现较差，threshold小于6px时的MMA很低。D2提取的特征较多，匹配数量也较多。在camera localization和3D reconstruction实验中效果较好。</p>
+<h2 id="一些见解-2"><em>一些见解</em></h2>
+<p>D2在strict matching上的表现较差，但是在localization和reconstruction任务上却表现不错。这其中的原因值得思考，我们一般做slam时要求特征更快更准，“更准”的要求真的必要么？</p>
+<p>在inference的时候，网络的forward速度很快，~x ms，但是detection和恢复position误差的部分都需要~x00 ms。感觉可以从detection的方法上改进一下。</p>
+<p>在我的试验中，发现D2其实提取的soft detection score还是很关注纹理复杂的区域的，但是这些区域很可能是dynamics，所以加入语义的方法进行筛选可能是个点。</p>
+<p>D2定位精度差的原因，我觉得是因为它是在1/8的feature map上进行训练，在1/4的feature map上进行inference，所以直接插值到原分辨率造成了这种差异，因为在hpatches上threshold大于6px时D2的效果还是不错。</p>
+<p>D2在训练时有考虑repeatable（因为直接用correspondence训练的）和disciminative，但是我觉得这种用triplets或者quadruplets去采样anchor、positive和negative会不会造成其实对disciminative的提升不大呢？</p>
+<hr>
+<h1 id="r2d2-pdf-code">R2D2 <a href="http://arxiv.org/abs/1906.06195">pdf</a> <a href="https://github.com/naver/r2d2">code</a></h1>
+<h2 id="abstract-4"><em>Abstract</em></h2>
+<p>作者在这篇工作中，提出一个观点：</p>
+<blockquote>
+<p>In this work, we argue that salient regions are not necessarily discriminative, and therefore an harm the performance of the description. Furthermore, we claim that descriptors should be learned only in regions for which matching can be performed with high confidence.</p>
+</blockquote>
+<p>简单来说，就是之前的训练detector的方法，都是更关注检测出的特征是否repeative，这样的特征可能不够discriminative，比如重复性的纹理。所以作者认为，这样的训练方法有弊端。并且由于提取的salient region不够discriminative，所以descriptor的训练也不够完善。所以这篇工作中，作者要提取sparse，repeative and disciminative特征，依旧使用detect-and-descibe的提取方法。</p>
+<h2 id="introduction-3"><em>Introduction</em></h2>
+<figure data-type="image" tabindex="22"><img src="https://jinyu-m.github.io/post-images/1604543612648.png" alt="" loading="lazy"></figure>
+<p>作者先更详细直观地阐述了一下motivation，就像上面这两幅示例图。第一幅图中，对于detector来说，只有黑三角形附近的区域是有利于提取keypoint的，但是所有包含该三角形的patch都可以提取同等可靠的descriptor，所以匹配的时候会有误差。第二幅图中，对于detector，所有棋盘网格的角点都可以提取出同等可靠的keypoint，但是它们都不利于提取descriptor，因为完全重复，匹配的时候会出现混淆。</p>
+<p>所以，在这篇论文，作者认为detection和description是不可分割的，要一起训练（其实就是detect-and-descibe），并且提取的特征不关要repeatable还需要reliable for matching（感觉就是discrimative）。所以R2D2会分别根据basenet输出的feature map得到两张repeatability confidence map和reliability confidence map，然后综合两张map提取特征。</p>
+<h2 id="methods"><em>Methods</em></h2>
+<figure data-type="image" tabindex="23"><img src="https://jinyu-m.github.io/post-images/1604543624200.png" alt="" loading="lazy"></figure>
+<p>R2D2采用全卷积网络结构，输入H x W大小的图像，输出三部分：第一部分D x H x W feature map X，视作H x W个D维局部特征，每个像素对应一个局部特征；第二部分是一个H x W heatmap S，每个位置上的值代表该点特征的sparse和repeatable，值在[0,1]之间，为了获得稀疏的特征，只提取S中局部最大值作为特征；第三部分是H x W heatmap R，对应特征的reliability或者说disciminativeness.</p>
+<p>网络的backbone选用L2-net（不降低分辨率），但是将最后一个8x8的卷积换做3个2x2卷积，来减少参数。D=128。为了获得S和R，在backbone后接了两个1x1卷积+softmax。</p>
+<h2 id="loss-3"><em>Loss</em></h2>
+<h3 id="repeatability">repeatability</h3>
+<p>首先训练特征的repeatability，作者认为</p>
+<blockquote>
+<p>In fact, using supervision essentially boils down in this case to copying an existing detector rather than discovering better and easier keypoints.</p>
+</blockquote>
+<p>就是用监督学习的训练方法，只是在学习那些现成的detector的检测策略（这个意义上讲，superpoint其实也是这样的，只不过通过homographic adaptation进行了一个data augmentation，去提升性能）。所以作者希望直接训练S，让其跟随图像变换而一起变换。</p>
+<p>假设图1，图2，当图像是真实图像时，用optical flow或stereo matching的方法去获得两幅图像中像素级的对应关系U，当图像是虚拟的仿真图像时，那么U可以直接获得了。分别获得两幅图像的S1和S2，利用U将S2对应到S2U。如果S是covariant to transformations，那么S1和S2U应该是一致的。</p>
+<p>所以，可以直接对S1和S2U求取cosine相似度，相似度越大，说明S的表现越好，但是warp后可能会出现occlusions、warp artifacts or border effects，所以作者用了一个局部的cosine相似度，求取多个patch的cosine相似度：</p>
+<figure data-type="image" tabindex="24"><img src="https://jinyu-m.github.io/post-images/1604543638431.png" alt="" loading="lazy"></figure>
+<p>Lcosine只能保证S1和S2U相似，但是容易导致S1和S2U变成常值。由于最后使用S是要挑选local maxima，所以还需要让S的局部峰值变大：</p>
+<figure data-type="image" tabindex="25"><img src="https://jinyu-m.github.io/post-images/1604543644970.png" alt="" loading="lazy"></figure>
+<p>最后，训练repeatability的loss就是以上两部分的加权：</p>
+<figure data-type="image" tabindex="26"><img src="https://jinyu-m.github.io/post-images/1604543649872.png" alt="" loading="lazy"></figure>
+<h3 id="reliability-ie-discriminativeness">Reliability, i.e., Discriminativeness</h3>
+<p>这部分是为了让具有得到一个可以度量discriminative的score map，让具有discriminative descriptor的区域具有较大的可信度。</p>
+<p>使用Average Precision Loss进行训练descriptor，就是给一对ground-truth batch，计算batch1中每个descriptor与batch2中每个des之间的距离，然后计算batch中每个query的AP loss**(?)**，用下面公式进行训练：</p>
+<figure data-type="image" tabindex="27"><img src="https://jinyu-m.github.io/post-images/1604543659256.png" alt="" loading="lazy"></figure>
+<p>这篇论文中也用到了AP loss，区别在于原本AP loss使用标准的keypoint detector去提取ground-truth batch，而在这里根据前文可以知道，提供了U，所以直接用U就可以获得ground-truth batch了。</p>
+<p>在这一部分，作者还提出，想要提取利于匹配的特征，不光要考虑图像纹理的丰富度，还要考虑其是否discriminative。所以作者用R去筛选discriminative region中的特征，只有这部分特征会对网络训练产生影响。</p>
+<figure data-type="image" tabindex="28"><img src="https://jinyu-m.github.io/post-images/1604543707448.png" alt="" loading="lazy"></figure>
+<p>使用这种loss，为了使loss减小，当AP(i,j)小于k时，即该点descriptor不够discriminative，那么Rij应当为0,；当该点descriptor足够discriminative时，Rij应当为1。</p>
+<h2 id="test"><em>Test</em></h2>
+<p>在测试时，也采用了图像金字塔去获取更丰富的特征，从原分辨率开始，逐渐下采样，直到图像小于128px。每次从图像中利用S的局部最大值提取特征，保存。最后从所有保存的特征中，根据SR挑选top-K特征。</p>
+<h2 id="training-2"><em>Training</em></h2>
+<p>R2D2需要获得图像间的ground-truth correspondence。所以作者提出两种方法，一种就是常规的图2是由图1经过一种确定的transformation变换而来的；另一种，是作者自己提出一种pipeline，区别于之前用完全利用sfm获得dense correspondence（感觉在说D2...），作者先用sfm生成图像的3D点与6DoF位姿（sparse），对于sufficient overlap图像，用sfm提供的2D correspondence计算F matrix（作者发现这比直接用图像位姿去算要更可靠），然后用EpicFlow获得高质量的dense correspondence，作者在DeepMatching中加入epipolar constraint去增强方法，在EpicFlow的第一步获得了semi-dense correspondence。但是光流法可能无法应对有遮挡的情况，所以对于DeepMatching的输出，作者计算了一个connected consistent neighbors的图，只保留属于较大（至少有20个matches）connected component的matches，然后用一个thresholded kernel density estimator在验证后的matches中估计一个mask，作为optical flow可信度的度量。</p>
+<h2 id="data-2"><em>Data</em></h2>
+<p>Oxford，Paris，Aachen Day-Night.</p>
+<h2 id="results"><em>Results</em></h2>
+<figure data-type="image" tabindex="29"><img src="https://jinyu-m.github.io/post-images/1604543745556.png" alt="" loading="lazy"></figure>
+<p>这张图很直观的表现出r2d2的优点，对于repeatability来说（第2行图），天空是可重复性很高的，但是对于特征来说，由于天空有大量重复纹理或无纹理，所以不利于区分，所以其上的特征reliability很低，r2d2综合考虑了这两点，所以提取的特征比较好。</p>
+<figure data-type="image" tabindex="30"><img src="https://jinyu-m.github.io/post-images/1604544063401.png" alt="" loading="lazy"></figure>
+<p>在hseq上效果也很好。</p>
+<h2 id="一些见解-3"><em>一些见解</em></h2>
+<p>r2d2很明确的定义了特征的两种特性，repeatability和reliability，其中reliability就是discriminativeness。</p>
+<p>目前bag of others中据说效果很好的一种特征了，很显式的将特征的repeatable和disciminative纳入loss中，让网络去学习。</p>
+<p>完全没有人工标记的特征点了，所以是网络自己去学习判断和提取特征——superpoint</p>
+<p>在原分辨率的feature map上提取特征，定位准确度高了——D2</p>
+<p>考虑到了local maxima可能并不全是利于匹配的特征，要考虑disciminative——D2+SuperPoint</p>
+<hr>
+<h1 id="sekd-pdf">SEKD <a href="http://arxiv.org/abs/2006.05077">pdf</a></h1>
+<h2 id="abstract-5"><em>Abstract</em></h2>
+<p>论文提出，现存的一些特征提取方法（hand-crafted or learnt）都没有考虑到detector和descriptor之间的相互促进作用，所以导致效果或多或少不尽人意。所以这篇文章，其实是设计了一种自监督训练框架，强调repeatability和reliability，用完全无标注的自然图像去学习特征。</p>
+<h2 id="introduction-4"><em>Introduction</em></h2>
+<p>作者更加细化的分别定义了detector和descriptor的repeatability和reliability：</p>
+<figure data-type="image" tabindex="31"><img src="https://jinyu-m.github.io/post-images/1604544171601.png" alt="" loading="lazy"></figure>
+<p>总的来说就是两大特性，细分为四部分：（1）Repeatability：detector的repeatability体现在如果两幅图像描述了同一场景，那么在图1中“看到”的一个keypoint在图2中也应该可以看到；descriptor的repeatability体现在相同真实位置的关键点在不同图像中应该是invariant；（2）Reliability（其实可以理解为我们常说的disciminativeness）：detector的reliability体现在给定描述子的计算方法，一个detected keypoint应该可靠的区别于其他点，直白点说就是应该落在利于分辨的区域，避开重复性纹理区域；descriptor的reliability体现在给定了detection方法，计算出的描述子应该足够区分这些detected keypoints。</p>
+<p>思考一下上面的这些特性，其实repeatability特性是detector和descriptor自己的inherent property，而reliability则体现了detector与descriptor之间的interactive property。</p>
+<p>这篇论文别出心裁，不一起训练detector和descriptor（SuperPoint是先训detector后训descriptor，D2和R2D2是一起训），而是采用了一种iterative training strategy。利用上面说的inherent and interactive property，去直到训练。</p>
+<p>简单的说，找出所有具有reliable descriptor的keypoints（descriptor repeatability），作为ground-truth去训练detector（detector reliability），用优化后的detector去检测keypoints（detector repeatability），基于这些keypoints训练descriptor（descriptor reliability）。重复这一过程，直到模型收敛。这就是self-evolving framework。整个训练过程不需要带有标注的数据。</p>
+<p>（其实，我感觉和SuperPoint中提到的Iterative Homographic Adaptation有些相似，不过SEKD将这个流程变为一个end-to-end的训练过程，从零开始训练了）</p>
+<h2 id="architecture-2"><em>Architecture</em></h2>
+<figure data-type="image" tabindex="32"><img src="https://jinyu-m.github.io/post-images/1604544204468.png" alt="" loading="lazy"></figure>
+<p>SEKD采用了类似于SuperPoint的结构，backbone由1个卷积和9个ResNet_v2模块，得到1/4大小的feature map。detector branch由2个deconv和1个softmax构成，输出2 x H x W的map P，代表keypoint probability，为了提升定位精度，有两个来自低层feature map的shortcut。descriptor branch由1个ResNet_v2模块和1个bi_linear上采样层构成，输出C-d描述子。</p>
+<h3 id="self-evolving"><em>Self-Evolving !</em></h3>
 ]]></content>
     </entry>
     <entry>
@@ -95,12 +205,17 @@ What would it take to build DeepSLAM?</p>
         </link>
         <updated>2019-01-25T11:09:48.000Z</updated>
         <content type="html"><![CDATA[<blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+<p>尘世恰好，有诗有酒刚好吐槽~</p>
 </blockquote>
 <h2 id="关于本站">🏠 关于本站</h2>
+<p>这里大多是博主平时读论文时的一些笔记和理解，比较杂乱，还请谅解。</p>
 <h2 id="博主是谁">👨‍💻 博主是谁</h2>
+<p>博士是北京航空航天大学自动化科学与电气工程学院的一枚小硕，从事SLAM、Place Recognition方向的研究，有时也会做一些深度学习相关的工作。</p>
 <h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
+<p>🏀🎧💻🍦</p>
 <h2 id="联系我呀">📬 联系我呀</h2>
+<p>邮箱：mjy0519@buaa.edu.cn<br>
+欢迎相关专业的大佬赐教~</p>
 ]]></content>
     </entry>
 </feed>
