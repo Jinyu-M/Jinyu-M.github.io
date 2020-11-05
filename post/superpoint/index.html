@@ -1,108 +1,99 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Deep Local Features: SuperPoint | 年少万兜鍪</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604542370700">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604542530524">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
-
-
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="alternate" type="application/atom+xml" title="Deep Local Features: SuperPoint | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
     <meta name="description" content="作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-..." />
     <meta name="keywords" content="Deep learning" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://jinyu-m.github.io">
-        <img src="https://jinyu-m.github.io/images/avatar.png?v=1604542370700" class="site-logo">
-        <h1 class="site-title">年少万兜鍪</h1>
-      </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
-      </div>
-    </div>
-    <div>
-      
-        
-          <a href="/" class="site-nav">
-            首页
-          </a>
-        
-      
-        
-          <a href="/archives" class="site-nav">
-            文章
-          </a>
-        
-      
-        
-          <a href="/tags" class="site-nav">
-            标签
-          </a>
-        
-      
-        
-          <a href="/post/about" class="site-nav">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
-      
-        
-          <a class="social-link" href="https://github.com/Jinyu-M" target="_blank">
-            <i class="fab fa-github"></i>
-          </a>
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </div>
-    <div class="site-description">
-      Jinyu Miao
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://jinyu-m.github.io">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604542530524" alt="">
+  </a>
+  <h1 class="site-title">
+    年少万兜鍪
+  </h1>
+  <p class="site-description">
+    Jinyu Miao
 尘世恰好，有诗有酒刚好吐槽
-    </div>
-    <div class="site-footer">
-      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://jinyu-m.github.io/atom.xml" target="_blank">RSS</a>
-    </div>
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          文章
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">Deep Local Features: SuperPoint</h2>
-            <div class="post-date">2020-11-05</div>
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Deep Local Features: SuperPoint
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-11-05
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
+                  # Deep learning
+                </a>
+              
+            </div>
             
-              <div class="feature-container" style="background-image: url('https://jinyu-m.github.io/post-images/superpoint.png')">
-              </div>
-            
-            <div class="post-content" v-pre>
-              <p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
 <!-- more -->
 <h1 id="superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a> <a href="https://github.com/magicleap/SuperPointPretrainedNetwork">official code</a> <a href="https://github.com/rpautrat/SuperPoint">society code</a></h1>
 <h2 id="introduction"><em>Introduction</em></h2>
@@ -134,53 +125,88 @@
 <h2 id="一些见解"><em>一些见解</em></h2>
 <p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者发现了MagicPoint只是单纯的去学习检测人工标注的那些点，比较局限，所以提出了homographic adaptation去进一步提升自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后续出现的特征，SuperPoint特征在训练时依旧采用监督的方法去训练detector，导致效果有待提升。在我的试验中，Bag of SuperPoint会提升loop closure的表现，但是用于SLAM系统（ORB-SLAM2）时，SuperPoint从一幅图像提取的特征过少，可能无法满足SLAM初始化的要求。</p>
 
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) pdf official code society code</a>
+<ul>
+<li><a href="#introduction"><em>Introduction</em></a></li>
+<li><a href="#architecture"><em>Architecture</em></a></li>
+<li><a href="#loss"><em>Loss</em></a></li>
+<li><a href="#training"><em>Training</em></a></li>
+<li><a href="#homographic-adaptation"><em>Homographic Adaptation</em></a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3"><em>一些见解</em></a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
             </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="tag">
-                    Deep learning
-                  </a>
-                
-              </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
-                  <h3 class="post-title">
-                    Deep Local Features: MagicPoint
-                  </h3>
-                </a>
-              </div>
-            
-
-            
-
-          </div>
-
+          </article>
         </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://jinyu-m.github.io/post/deep-local-features-magicpoint/">
+              <h3 class="post-title">
+                Deep Local Features: MagicPoint
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://jinyu-m.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
       </div>
     </div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script type="application/javascript">
+    <script>
+      hljs.initHighlightingOnLoad()
 
-AOS.init();
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-</script>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
-
-
-
-
+    </script>
   </body>
 </html>
