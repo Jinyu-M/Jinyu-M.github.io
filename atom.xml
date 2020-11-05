@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-05T08:29:21.572Z</updated>
+    <updated>2020-11-05T08:54:48.828Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -11,6 +11,37 @@
     <logo>https://jinyu-m.github.io/images/avatar.png</logo>
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 年少万兜鍪</rights>
+    <entry>
+        <title type="html"><![CDATA[A Comprehensive Comparison of VPR under Changing Conditions]]></title>
+        <id>https://jinyu-m.github.io/post/a-comprehensive-comparison-of-vpr-under-changing-conditions/</id>
+        <link href="https://jinyu-m.github.io/post/a-comprehensive-comparison-of-vpr-under-changing-conditions/">
+        </link>
+        <updated>2020-11-05T08:33:45.000Z</updated>
+        <summary type="html"><![CDATA[<p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>. ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>. ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
+<!-- more -->
+<h2 id="introduction">introduction</h2>
+<p>本文是对一些VPR算法的比较。作者提出VPR的四个难点：<strong>Seasonal Variation, Viewpoint Variation, Illumination Variation, Dynamic Objects</strong>。在这篇文献中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
+<h2 id="evaluation-datasets">Evaluation Datasets</h2>
+<p>作者使用了Berilin Kudamm Dataset, Gardens Point Dataset, Nordland Dataset作为评测的数据集。<br>
+<img src="https://jinyu-m.github.io/post-images/1604565916808.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604565943321.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604565945569.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604565947793.png" alt="" loading="lazy"></p>
+<h2 id="evaluation-metrics">Evaluation Metrics</h2>
+<p>作者使用AUC来评估算法的matching performance：<br>
+<img src="https://jinyu-m.github.io/post-images/1604566016251.png" alt="" loading="lazy"></p>
+<p>作者记录了每个算法对每张query image匹配所需的时间，包括query image的feature encoding time和利用描述子匹配R张reference image的时间。</p>
+<p>作者还第一次将每个算法特征描述子所需的储存空间进行了比较。</p>
+<h2 id="performance">Performance</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1604566230544.png" alt="" loading="lazy"><br>
+在Berilin Kudamm Dataset上NetVLAD表现最好。在Gardens Point Dataset上，Cross-Region-BoW获得最佳表现，NetVLAD、HybridNet和AMOSNet也获得了相似的不错表现。在Nordland数据集上，Region-VLAD、NetVLAD和Cross-Region-BoW表现较好。<br>
+<img src="https://jinyu-m.github.io/post-images/1604566387518.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604566402408.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604566416379.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Semantic Localization]]></title>
         <id>https://jinyu-m.github.io/post/semantic-localization/</id>
