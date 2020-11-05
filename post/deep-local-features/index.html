@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Deep Local Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604566485638">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604567075625">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Deep Local Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -23,7 +23,7 @@ MagicPoint (Magic Le..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604566485638" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604567075625" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,7 +84,7 @@ MagicPoint (Magic Le..." />
                 2020-11-04
               </span>
               <span>
-                21 min read
+                28 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -257,7 +257,7 @@ What would it take to build DeepSLAM?</p>
 <p>在原分辨率的feature map上提取特征，定位准确度高了——D2</p>
 <p>考虑到了local maxima可能并不全是利于匹配的特征，要考虑disciminative——D2+SuperPoint</p>
 <hr>
-<h1 id="sekd-pdf">SEKD <a href="http://arxiv.org/abs/2006.05077">pdf</a></h1>
+<h1 id="sekd-pdf-code">SEKD <a href="http://arxiv.org/abs/2006.05077">pdf</a> <a href="https://github.com/aliyun/Self-Evolving-Keypoint-Demo">code</a></h1>
 <h2 id="abstract-5"><em>Abstract</em></h2>
 <p>论文提出，现存的一些特征提取方法（hand-crafted or learnt）都没有考虑到detector和descriptor之间的相互促进作用，所以导致效果或多或少不尽人意。所以这篇文章，其实是设计了一种自监督训练框架，强调repeatability和reliability，用完全无标注的自然图像去学习特征。</p>
 <h2 id="introduction-4"><em>Introduction</em></h2>
@@ -271,7 +271,82 @@ What would it take to build DeepSLAM?</p>
 <h2 id="architecture-2"><em>Architecture</em></h2>
 <figure data-type="image" tabindex="32"><img src="https://jinyu-m.github.io/post-images/1604544204468.png" alt="" loading="lazy"></figure>
 <p>SEKD采用了类似于SuperPoint的结构，backbone由1个卷积和9个ResNet_v2模块，得到1/4大小的feature map。detector branch由2个deconv和1个softmax构成，输出2 x H x W的map P，代表keypoint probability，为了提升定位精度，有两个来自低层feature map的shortcut。descriptor branch由1个ResNet_v2模块和1个bi_linear上采样层构成，输出C-d描述子。</p>
-<h3 id="self-evolving"><em>Self-Evolving !</em></h3>
+<h2 id="self-evolving"><em>Self-Evolving !</em></h2>
+<figure data-type="image" tabindex="33"><img src="https://jinyu-m.github.io/post-images/1604566729992.png" alt="" loading="lazy"></figure>
+<p>在训练过程中，网络利用两方面的监督：（1）关键点的选取，有可靠descriptor的point被认为是keypoint；（2）不同图像间的keypoints correspondence，这个通过用一张图像，经过affine transformation获得匹配图像，因此correspondence也可以直接获得。</p>
+<p>训练的流程基本分为四步：</p>
+<p>1.用detector branch得到keypoint probability map P，利用NMS筛选keypoint；</p>
+<p>2.在这些keypoint上，通过增强descriptor的repeatability和reliability来更新descriptor branch；</p>
+<p>3.计算keypoint，具有reliable（repeatable and distinct） descriptor的point被作为keypoints;</p>
+<p>4.在这些新的keypoint上，根据detector的repeatability和reliability来更新detector branch。</p>
+<h3 id="1detect-keypoints-using-detector">1.Detect Keypoints using Detector</h3>
+<figure data-type="image" tabindex="34"><img src="https://jinyu-m.github.io/post-images/1604566746753.png" alt="" loading="lazy"></figure>
+<p>具有较高相应的点被视为可能的keypoint，经过NMS，每张图像可以获得1000个keypoint。但是由于不同图像条件下，可能没法取到一样的keypoint，所以作者采用了affine adaption方法，即对于原始图像进行random affine transformation和color jitter，获得新的图像后经过网络，获得不同图像条件下的P，最后映射回原图，取平均，得到最后的P.</p>
+<h3 id="2update-keypoint-descriptor">2.Update Keypoint Descriptor</h3>
+<p>根据上一节，获得了一张图像I中的keypoints Q，对I和Q进行random affine transformation和color jitter H，得到I<sup>和Q</sup>，并且可以获得特征的匹配关系&lt;Q,Q^&gt;，那么根据descriptor repeatability，匹配特征的des应该很靠近，根据descriptor reliability，不匹配的特征应该有很好的区分度。所以作者使用了triplet loss with hardest example mining去训练descriptor。</p>
+<figure data-type="image" tabindex="35"><img src="https://jinyu-m.github.io/post-images/1604566756477.png" alt="" loading="lazy"></figure>
+<p>除此之外，由于网络使用共享参数的backbone，所以为了保证detection的结果不会变化，作者还加入了一个损失函数：</p>
+<figure data-type="image" tabindex="36"><img src="https://jinyu-m.github.io/post-images/1604566764397.png" alt="" loading="lazy"></figure>
+<p>其中N’表示更新后的N。所以，用于更新descriptor的总loss为：</p>
+<figure data-type="image" tabindex="37"><img src="https://jinyu-m.github.io/post-images/1604566770713.png" alt="" loading="lazy"></figure>
+<h3 id="3compute-keypoints-via-descriptor">3.Compute Keypoints via Descriptor</h3>
+<p>更新了descriptor后，下一步是要从descriptor map中提取keypoint。特征的reliability可从repeatability和distinctiveness两方面度量。对于repeatability：</p>
+<figure data-type="image" tabindex="38"><img src="https://jinyu-m.github.io/post-images/1604566777144.png" alt="" loading="lazy"></figure>
+<p>D越低，说明descriptor在相同位置上更靠近，repeatability更好。而对于distinctiveness：</p>
+<figure data-type="image" tabindex="39"><img src="https://jinyu-m.github.io/post-images/1604566782560.png" alt="" loading="lazy"></figure>
+<p>D‘越大，说明descriptor在不同位置的差异越大，distinctiveness更好。所以综合两点，特征的reliability定义为：</p>
+<figure data-type="image" tabindex="40"><img src="https://jinyu-m.github.io/post-images/1604566791572.png" alt="" loading="lazy"></figure>
+<p>R越大，说明特征更reliable。</p>
+<p>由于匹配的图像对是用affine transformation获得的，所以图像中可能一些点没有对应的R，所以这里依然采用了之前所用的affine adaption方法来获得一张average R。</p>
+<p>另外，计算D‘的计算量很大，所以作者在邻域内计算D'：</p>
+<figure data-type="image" tabindex="41"><img src="https://jinyu-m.github.io/post-images/1604566800589.png" alt="" loading="lazy"></figure>
+<p>在实验中，作者在1/4，1倍分辨率的descriptor map上分别计算R，然后将两个map融合，一起使用，以获得足够精细的R。</p>
+<h3 id="4update-keypoint-detector">4.Update Keypoint detector</h3>
+<p>根据descriptor计算出的keypoint可以看作ground-truth对detector进行训练，作者使用了focal loss：</p>
+<figure data-type="image" tabindex="42"><img src="https://jinyu-m.github.io/post-images/1604566821435.png" alt="" loading="lazy"></figure>
+<p>同时，为了减小匹配图像对上detection结果的差异，作者加入了：</p>
+<figure data-type="image" tabindex="43"><img src="https://jinyu-m.github.io/post-images/1604566826991.png" alt="" loading="lazy"></figure>
+<p>来训练detector的repeatability。并且还需要保证descriptor在这期间不受干扰，所以加入了：</p>
+<figure data-type="image" tabindex="44"><img src="https://jinyu-m.github.io/post-images/1604566831492.png" alt="" loading="lazy"></figure>
+<p>最后综合三部分，训练detector的loss为：</p>
+<figure data-type="image" tabindex="45"><img src="https://jinyu-m.github.io/post-images/1604566836368.png" alt="" loading="lazy"></figure>
+<h2 id="training-3"><em>Training</em></h2>
+<p>特征在MS COCO验证集上完成训练。</p>
+<p>训练进行了5个iteration，每个iteration中分别训练detector和descriptor20个epoches</p>
+<h2 id="model-size"><em>Model Size</em></h2>
+<figure data-type="image" tabindex="46"><img src="https://jinyu-m.github.io/post-images/1604566842806.png" alt="" loading="lazy"></figure>
+<h2 id="performance"><em>Performance</em></h2>
+<figure data-type="image" tabindex="47"><img src="https://jinyu-m.github.io/post-images/1604566848258.png" alt="" loading="lazy"></figure>
+<hr>
+<h1 id="l2-net-2017-pdf-code">L2-Net (2017) <a href="https://ieeexplore.ieee.org/document/8100132">pdf</a> <a href="https://github.com/yuruntian/L2-Net">code</a></h1>
+<h2 id="abstract-6"><em>Abstract</em></h2>
+<p>这篇论文提出了一种在欧拉空间中表现很好的CNN特征，突出点有四点：（1）提出了一种渐进的采样策略，使得网络可以在很少epoch内获得数以亿计的训练样本；（2）重视descriptor之间的相对距离；（3）对中间的feature map有格外的监督；（4）考虑des的compactness。</p>
+<h2 id="architecture-3"><em>Architecture</em></h2>
+<figure data-type="image" tabindex="48"><img src="https://jinyu-m.github.io/post-images/1604566899195.png" alt="" loading="lazy"></figure>
+<p>网络结构如上图，在BN层中，作者设置权重为1，方差为0，不进行更新。在输出层，作者使用了local response normalization layer（LRN）来输出单位des。L2-Net将32 x 32的patch转变为128维的des。作者也使用了central-surround L2-Net，将两个L2-Net concat，左边的网络输入的是原始输入，右边的网络输入的是原本patch经过crop和resize后的中心部分（据说是可以处理scale不变性）。</p>
+<h2 id="training-data"><em>Training data</em></h2>
+<p>L2-Net用Hpatches和Brown数据集进行训练，这两个数据集都提供了matched pairs。</p>
+<p>在加载训练数据时，从P个3D点中挑选p1个点，然后从P-p1中挑选p2个点，得到了p(p1+p2)个点，对每个p，随机获取一个匹配的patch，这样就获得了2p个训练数据作为网络的输入，记为X，X是32 x 32 x 2p维的。网路的输出记为Y，Y是128 x 2p维的。由于网络的输出经过了normalization，所以可以定义距离矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><mi>s</mi><mi>q</mi><mi>r</mi><mi>t</mi><mo>(</mo><mn>2</mn><mi>x</mi><mo>(</mo><mn>1</mn><mo>−</mo><msubsup><mi>Y</mi><mn>1</mn><mi>T</mi></msubsup><msub><mi>Y</mi><mn>2</mn></msub><mo>)</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">D=sqrt(2 x (1 - Y_1^T Y_2))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">t</span><span class="mopen">(</span><span class="mord">2</span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>。</p>
+<p>D中包含了p x p个pairs，对角线上的p个pair是positive matched pair，非对角线上的pair是negative pairs。<strong>(Q: 点都是随机取得，那在原本的p点中就可能会出现相互匹配的点，那么非对角线上的pair也不一定都是negative吧)</strong></p>
+<h2 id="loss-function"><em>Loss function</em></h2>
+<p>损失函数由三部分构成，第一部分，作者利用相对距离去约束匹配和非匹配的pair；第二部分，作者强调des的紧凑性，即des的各维信息之间应该没有相互关系；第三部分，作者对中间的feature map进行了约束。</p>
+<h3 id="descriptor-similarity">descriptor similarity</h3>
+<p>des之间的相互距离在pair是匹配的时候最小，所以体现在D中，就是对角线上的元素应当是行、列中最小的。定义行相似矩阵和列相似矩阵：</p>
+<figure data-type="image" tabindex="49"><img src="https://jinyu-m.github.io/post-images/1604566957511.png" alt="" loading="lazy"></figure>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">S^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">S^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率。为了让匹配的des之间距离减小，loss设计为：</p>
+<figure data-type="image" tabindex="50"><img src="https://jinyu-m.github.io/post-images/1604566963223.png" alt="" loading="lazy"></figure>
+<h3 id="descriptor-compactness">descriptor compactness</h3>
+<p>作者发现过拟合问题是由于des各维度之间的correlation（我理解的是des出现了冗余）。所以作者加入了对des compactness的考虑。</p>
+<p>作者设计了一个correlation matrix R：</p>
+<figure data-type="image" tabindex="51"><img src="https://jinyu-m.github.io/post-images/1604566969526.png" alt="" loading="lazy"></figure>
+<p>其中bi表示q个patch的des中第i维元素的集合，是个行向量。（我理解是对des的每一维调整均值后，计算cosine相似度，r=0，说明计算的两维des间正交，不相关）所以R的非对角线位置的元素需要靠近0。所以des compactness的loss为：</p>
+<figure data-type="image" tabindex="52"><img src="https://jinyu-m.github.io/post-images/1604566974432.png" alt="" loading="lazy"></figure>
+<p>如果加入了LRN后，每维数据的均值为0，所以Rs的计算可以简化为：</p>
+<figure data-type="image" tabindex="53"><img src="https://jinyu-m.github.io/post-images/1604566979212.png" alt="" loading="lazy"></figure>
+<h4 id="intermediate-feature-maps">Intermediate feature maps</h4>
+<p>用E1的loss去计算网络中间的feature map上的similarity matrix G，然后构建了loss：</p>
+<figure data-type="image" tabindex="54"><img src="https://jinyu-m.github.io/post-images/1604566984516.png" alt="" loading="lazy"></figure>
+<p>作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
 
               </div>
               <div class="toc-container">
@@ -333,13 +408,37 @@ What would it take to build DeepSLAM?</p>
 <li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3-3"><em>一些见解</em></a></li>
 </ul>
 </li>
-<li><a href="#sekd-pdf">SEKD pdf</a>
+<li><a href="#sekd-pdf-code">SEKD pdf code</a>
 <ul>
 <li><a href="#abstract-5"><em>Abstract</em></a></li>
 <li><a href="#introduction-4"><em>Introduction</em></a></li>
-<li><a href="#architecture-2"><em>Architecture</em></a>
+<li><a href="#architecture-2"><em>Architecture</em></a></li>
+<li><a href="#self-evolving"><em>Self-Evolving !</em></a>
 <ul>
-<li><a href="#self-evolving"><em>Self-Evolving !</em></a></li>
+<li><a href="#1detect-keypoints-using-detector">1.Detect Keypoints using Detector</a></li>
+<li><a href="#2update-keypoint-descriptor">2.Update Keypoint Descriptor</a></li>
+<li><a href="#3compute-keypoints-via-descriptor">3.Compute Keypoints via Descriptor</a></li>
+<li><a href="#4update-keypoint-detector">4.Update Keypoint detector</a></li>
+</ul>
+</li>
+<li><a href="#training-3"><em>Training</em></a></li>
+<li><a href="#model-size"><em>Model Size</em></a></li>
+<li><a href="#performance"><em>Performance</em></a></li>
+</ul>
+</li>
+<li><a href="#l2-net-2017-pdf-code">L2-Net (2017) pdf code</a>
+<ul>
+<li><a href="#abstract-6"><em>Abstract</em></a></li>
+<li><a href="#architecture-3"><em>Architecture</em></a></li>
+<li><a href="#training-data"><em>Training data</em></a></li>
+<li><a href="#loss-function"><em>Loss function</em></a>
+<ul>
+<li><a href="#descriptor-similarity">descriptor similarity</a></li>
+<li><a href="#descriptor-compactness">descriptor compactness</a>
+<ul>
+<li><a href="#intermediate-feature-maps">Intermediate feature maps</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
