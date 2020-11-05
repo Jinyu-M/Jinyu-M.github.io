@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Semantic Localization | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604567075625">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604569117990">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Semantic Localization | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -23,7 +23,7 @@ Improving Condi..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604567075625" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1604569117990" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,7 +84,7 @@ Improving Condi..." />
                 2020-11-05
               </span>
               <span>
-                5 min read
+                6 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -140,6 +140,16 @@ t时刻观测到状态i的概率为：<br>
 这样的处理使得SeqSLAM计算SAD时的sliding window随着场景条件的变化而变化，不再是一个定值，更具备condition-invariant。</p>
 <h2 id="个人看法"><em>个人看法</em></h2>
 <p>这篇论文究其根本，是利用语义信息来讲reference image进行划分，代替了SeqSLAM中固定尺寸的sliding window策略，借此提升了在一些跨场景数据集中的表现，这种变长的sliding window可以拓展下应用，在利用temporal consistency的算法中都可以参考借鉴的。</p>
+<hr>
+<h1 id="lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics-rss2018-pdf-code">LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics -RSS2018 <a href="https://arxiv.org/abs/1804.05526">pdf</a> <a href="https://github.com/oravus/lostX">code</a></h1>
+<h2 id="abstract-2"><em>Abstract</em></h2>
+<p>We first propose a novel Local Semantic Tensor (LoST) descriptor of images using the convolutional feature maps from a state-of-the-art dense semantic segmentation network. Then, to verify the spatial semantic arrangement of the top matching candidates, we develop a novel approach for mining semantically-salient keypoint correspondences.</p>
+<h2 id="introduction-2"><em>Introduction</em></h2>
+<p><img src="https://jinyu-m.github.io/post-images/1604568457014.png" alt="" loading="lazy"><br>
+作者提出现有的sota场景识别算法，在面对extreme appearance variation时的表现受到严重挑战。所以作者希望用语义信息来解决viewpoint and appearance variations问题，并且只有limited filed-of-view camera，而非全景相机或lidar。本文的贡献点在于：<br>
+1.提出一个PR算法，结合了基于语义和外观的全局描述子和空间一致的局部keypoint correspondences；<br>
+2.由语义标签和卷积特征图获得一种新的图像描述子，LoST；<br>
+3.一种新的从匹配图像对中挖掘和筛选具有语义显著性的keypoint correspondences方法。</p>
 
               </div>
               <div class="toc-container">
@@ -161,6 +171,12 @@ t时刻观测到状态i的概率为：<br>
 </ul>
 </li>
 <li><a href="#%E4%B8%AA%E4%BA%BA%E7%9C%8B%E6%B3%95"><em>个人看法</em></a></li>
+</ul>
+</li>
+<li><a href="#lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics-rss2018-pdf-code">LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics -RSS2018 pdf code</a>
+<ul>
+<li><a href="#abstract-2"><em>Abstract</em></a></li>
+<li><a href="#introduction-2"><em>Introduction</em></a></li>
 </ul>
 </li>
 </ul>
