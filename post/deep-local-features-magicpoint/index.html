@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604541404473">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1604542370700">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 
 
@@ -18,9 +18,7 @@
 
 
 
-    <meta name="description" content="MagicPoint (Magic Leap) pdf
-Abstract
-这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detec..." />
+    <meta name="description" content="论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中..." />
     <meta name="keywords" content="Deep learning" />
   </head>
   <body>
@@ -30,7 +28,7 @@ Abstract
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://jinyu-m.github.io">
-        <img src="https://jinyu-m.github.io/images/avatar.png?v=1604541404473" class="site-logo">
+        <img src="https://jinyu-m.github.io/images/avatar.png?v=1604542370700" class="site-logo">
         <h1 class="site-title">年少万兜鍪</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -104,32 +102,32 @@ Abstract
               </div>
             
             <div class="post-content" v-pre>
-              <h2 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h2>
-<h3 id="abstract"><em>Abstract</em></h3>
-<p>这篇论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点**（就只是一个detector！）<strong>；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography，</strong>（不需要descriptor！）**</p>
-<h3 id="introduction"><em>Introduction</em></h3>
+              <p>论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography（不需要descriptor信息）。</p>
+<!-- more -->
+<h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>
+<h2 id="introduction"><em>Introduction</em></h2>
 <p>作者先抛出了一个问题</p>
 <blockquote>
-<p>what would it take to build an ImageNet for SLAM?</p>
-<p>What would it take to build DeepSLAM?</p>
+<p>what would it take to build an ImageNet for SLAM?<br>
+What would it take to build DeepSLAM?</p>
 </blockquote>
 <p>由于SLAM领域的真实数据往往无法获得很好的标注，而仿真数据无法囊括现实中的所有变化，所以可能引起domain adaptation issues和过拟合。所以用data-driven的深度学习方法去解决SLAM问题尚未解决。</p>
 <p>作者提到了两个点，首先利用预测图像的DCN去估计ego-motion是可能得，作者没有使用直接用图像估计6DoF位姿的监督方法，而是更关注geometric consistency；其次作者发现对于SLAM系统来说，预测和对齐关键点已经足够去解算pose，那么就不用去预测整幅图像了，直接估计homography足以满足需求。</p>
-<h3 id="method"><em>Method</em></h3>
-<h4 id="overview">overview</h4>
-<p>![overview](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_1.png)</p>
-<h4 id="magicpoint">MagicPoint</h4>
+<h2 id="method"><em>Method</em></h2>
+<h3 id="overview">overview</h3>
+<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1604541682692.png" alt="" loading="lazy"></figure>
+<h3 id="magicpoint">MagicPoint</h3>
 <p>作者设计MagicPoint的motivation就是认为hand-crafted detector需要过多的经验和技巧，往往无法cover所有的干扰，所以就直接用DCN去估计pixel-level的显著性，提取图像关键点。</p>
-<p>![magicpoint](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_2.png)</p>
+<figure data-type="image" tabindex="2"><img src="https://jinyu-m.github.io/post-images/1604541717680.png" alt="" loading="lazy"></figure>
 <p>结构类似于VGG。输入一个图像，得到一个同等分辨率的point response image，输出的每个pixel的值代表原图中这个位置是角点的概率。但是直接用encoder下采样-decoder上采样的结构恢复分辨率很耗算力，所以作者用网络得到了1/8大小的feature map，维度是65维（65个通道），这65个通道对应原图中不重叠的8x8的区域即一个dustbin通道（用于表示该8x8区域内无关键点），最后reshape到原本分辨率，这样decoder就没有参数了。</p>
 <p>训练时使用OpenCV作了一批虚拟的几何体，几何体的角点可以直接得到，然后加入噪声、光照变化等进行数据增强。训练时对feature map上每个cell计算cross-entropy loss。</p>
-<h4 id="magicwarp">MagicWarp</h4>
+<h3 id="magicwarp">MagicWarp</h3>
 <p>MagicWarp输入一对图像的关键点，然后估计homography。比如两幅120x160的图像输入MagicPoint，分别得到65x15x20的feature map。输入MagicWarp后，先从channel维度上进行concatenation，得到130x15x20的feature map，然后经过一个VGG型的encoder，再通过全连接层降维，得到一个9-d的向量，恢复成3x3的homography矩阵。</p>
-<p>![magicwarp](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_3.png)</p>
+<figure data-type="image" tabindex="3"><img src="https://jinyu-m.github.io/post-images/1604541734864.png" alt="" loading="lazy"></figure>
 <p>训练时，用虚拟数据采集虚拟三维几何体的图像，来获得训练数据，计算loss时，用估计的homography将图1的point投影到图2，然后计算投影误差，用L2-distance作为loss。</p>
-<p>![loss](F:\MyBUAA\硕SY1903703\笔记\deep local features\figs\magicpoint_4.png)</p>
-<h3 id="一些看法"><em>一些看法</em></h3>
-<p>MagicPoint算比较早的learnt detector了吧，所以感觉其实就是在学习如何检测corner，完全取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。</p>
+<figure data-type="image" tabindex="4"><img src="https://jinyu-m.github.io/post-images/1604541741188.png" alt="" loading="lazy"></figure>
+<h2 id="一些看法"><em>一些看法</em></h2>
+<p>MagicPoint学习了如何检测corner，基本取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。后续SuperPoint也采用了这样上采样的方式，在recover resolution的同时参数也比较少。</p>
 
             </div>
             
