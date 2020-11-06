@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-06T03:05:46.054Z</updated>
+    <updated>2020-11-06T03:35:40.676Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -125,7 +125,13 @@ t时刻观测到状态i的概率为：<br>
 <h4 id="我的理解">我的理解</h4>
 <p>这部分看的有点懵，我的理解是，作者将D维feature map中的每一维都提取出来，找到图中最大响应值的位置，作为keypoint。这样对于query和reference image，每张图像可以提取出D个keypoint，并且两张图像的keypoint已经有了一一对应的的关系，也就是D个keypoint correspondence。对于这D个keypoint correspondence，作者对每个correspondence先用语义进行了筛选，如果每个correspondence中对应的keypoint的语义类别是相同的，那么保留这个correspondence，否则剔除。并且，为了减少同一语义类别中小邻域内存在大量keypoint，作者在3x3的区域内，只保留了一个correspondence。在计算query和reference之间的匹配分数时，由于已知了keypoint correspondence，所以只需要计算匹配误差就行。也就是加权欧拉距离，但是这里**为什么要计算翻转后keypoint坐标的欧拉距离？**还没想清楚。难道是假设了遇到的情况都是opposite-view？而且视角都在同一水平面内平移？这种情况有点局限吧。</p>
 <h3 id="image-sequence-matching">Image Sequence Matching</h3>
-<p>作者用OpenSeqSLAM的方法加入了temporal consistency</p>
+<p>作者用OpenSeqSLAM的方法加入了temporal consistency，也就是累加序列的匹配分数，找到最优的匹配候选。</p>
+<h2 id="performance"><em>Performance</em></h2>
+<p>LoST是指只采用图像描述子的检测方法，LoST-X是指整个算法。<br>
+sequence matching:<br>
+<img src="https://jinyu-m.github.io/post-images/1604633587324.png" alt="" loading="lazy"><br>
+single_frame matching:<br>
+<img src="https://jinyu-m.github.io/post-images/1604633669753.png" alt="" loading="lazy"></p>
 ]]></content>
     </entry>
     <entry>
