@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-07T03:10:14.281Z</updated>
+    <updated>2020-11-07T03:12:41.328Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -17,9 +17,9 @@
         <link href="https://jinyu-m.github.io/post/deep-loop-closure/">
         </link>
         <updated>2020-11-07T02:55:58.000Z</updated>
-        <summary type="html"><![CDATA[<p>利用深度学习来做回环检测的工作越来越多了，我自己也在做这方面的研究，自己的感受是用deep feature代替传统的hand-crafted feature一般来说会带来更好的表现。但是，要做研究嘛，还是要从更深入的角度的去研究的。</p>
+        <summary type="html"><![CDATA[<p>利用深度学习来做回环检测的工作越来越多了，我自己也在做这方面的研究，自己的感受是用deep feature代替传统的hand-crafted feature一般来说会带来更好的表现。但是，要做研究嘛，还是要从更深入的角度的去研究的。其实用语义也是一种deep feature嘛，这里就记录一些除语义之外的基于deep learning的回环检测工作吧。</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>利用深度学习来做回环检测的工作越来越多了，我自己也在做这方面的研究，自己的感受是用deep feature代替传统的hand-crafted feature一般来说会带来更好的表现。但是，要做研究嘛，还是要从更深入的角度的去研究的。</p>
+        <content type="html"><![CDATA[<p>利用深度学习来做回环检测的工作越来越多了，我自己也在做这方面的研究，自己的感受是用deep feature代替传统的hand-crafted feature一般来说会带来更好的表现。但是，要做研究嘛，还是要从更深入的角度的去研究的。其实用语义也是一种deep feature嘛，这里就记录一些除语义之外的基于deep learning的回环检测工作吧。</p>
 <!-- more -->
 <h1 id="calc-pdf-code">CALC <a href="https://arxiv.org/abs/1805.07703.pdf">pdf</a> <a href="https://github.com/rpng/calc">code</a></h1>
 <h2 id="abstract"><em>Abstract</em></h2>
