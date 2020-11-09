@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-07T03:17:22.945Z</updated>
+    <updated>2020-11-09T04:14:44.040Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -122,7 +122,7 @@ t时刻观测到状态i的概率为：<br>
 也就是一段段具有相同语义标签<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">L_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的序列。SAD矩阵的邻近标准化也相应变化。<br>
 <img src="https://jinyu-m.github.io/post-images/1604563084024.png" alt="" loading="lazy"><br>
 这样的处理使得SeqSLAM计算SAD时的sliding window随着场景条件的变化而变化，不再是一个定值，更具备condition-invariant。</p>
-<h2 id="个人看法"><em>个人看法</em></h2>
+<h2 id="一点看法"><em>一点看法</em></h2>
 <p>这篇论文究其根本，是利用语义信息来讲reference image进行划分，代替了SeqSLAM中固定尺寸的sliding window策略，借此提升了在一些跨场景数据集中的表现，这种变长的sliding window可以拓展下应用，在利用temporal consistency的算法中都可以参考借鉴的。</p>
 <hr>
 <h1 id="lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics-rss2018-pdf-code">LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics -RSS2018 <a href="https://arxiv.org/abs/1804.05526">pdf</a> <a href="https://github.com/oravus/lostX">code</a></h1>
@@ -165,6 +165,43 @@ sequence matching:<br>
 <img src="https://jinyu-m.github.io/post-images/1604633587324.png" alt="" loading="lazy"><br>
 single_frame matching:<br>
 <img src="https://jinyu-m.github.io/post-images/1604633669753.png" alt="" loading="lazy"></p>
+<hr>
+<h1 id="dont-look-back-robustifying-place-categorization-for-viewpoint-and-condition-invariant-place-recognition-icra-2018-pdf">Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition (ICRA 2018) <a href="https://arxiv.org/abs/1801.05078">pdf</a></h1>
+<h2 id="abstract-3"><em>Abstract</em></h2>
+<p>In this work, we develop a novel methodology for using the semantics-aware higher-order layers of deep neural networks for recognizing specific places from within a reference database. To further improve the robustness to appearance change, we develop a descriptor normalization scheme that builds on the success of normalization schemes for pure appearance-based techniques such as SeqSLAM.</p>
+<h2 id="introduction-3"><em>Introduction</em></h2>
+<p>作者先说了一下place categorization和place recognition之间的联系和区别。place categorization相对更简单，只是识别了当前场景的类型，如parking garage，但是place recognition还要识别出在parking garage中拍摄当前图像时相机的具体位置。<br>
+在这篇论文中，作者研究了神经网络高层的语义级别的全连接层的适应性，而非依赖于视角的中层卷积层，来获得视角不变性和条件不变性的场景识别。特别调研了语义级别的图像表征在应对极端视角变化时的表现。除此之外，作者来提出一种描述子标准化方法，来获得多变环境条件下的外观鲁棒性。并且展示了上下文信息可以用于生成一个拓展的图像描述子，进一步提升场景识别的表现。最后，作者通过与场景描述子的PCA分析得到了一些有价值的观点，突出了场景识别任务中时空特性的重要性。</p>
+<h2 id="method-3"><em>Method</em></h2>
+<h3 id="place-representation">Place Representation</h3>
+<p>作者使用了<strong>Places365</strong>网络去表征场景，高层的全连接层可以输出场景的语义描述，所以作者使用<strong>fc6</strong>输出的4096维向量来描述场景。虽然全连接层输出的特征具被视角不变性，但是缺乏外观不变性。</p>
+<h3 id="feature-normalization">Feature Normalization</h3>
+<p>作者为了增加场景外观不变性，对描述子进行了标准化：<br>
+<img src="https://jinyu-m.github.io/post-images/1604890569771.png" alt="" loading="lazy"><br>
+其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>μ</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">{\mu}_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">μ</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是数据集中所有图像描述子的均值，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>δ</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">{\delta}_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是方差。标准化后的特征描述子集合称为Normalized Set of Descriptors (NSD)。对于reference images，由于图像可以事先获得，所以直接在全部图像中计算均值和方差。对于query image，均值和方差随着图像输入不断更新。</p>
+<h3 id="sequence-search-in-cost-matrix">Sequence Search in Cost Matrix</h3>
+<p>作者计算了query image和reference images之间的余弦距离（应该是1-cosine similarity），得到了一个cost matrix，利用SeqSLAM中的序列匹配方法，搜索匹配的序列：<br>
+<img src="https://jinyu-m.github.io/post-images/1604890902565.png" alt="" loading="lazy"><br>
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">S_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是reference image i的最小序列匹配损失。k是序列匹配的斜率（参考SeqSLAM），是在cost matrix对角线±2 rad间变化。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>D</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">D^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span>是时间T时的余弦距离，在时间长度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span></span></span></span>的序列上累加。<br>
+<img src="https://jinyu-m.github.io/post-images/1604891259870.png" alt="" loading="lazy"><br>
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">I_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是匹配的reference image</p>
+<h3 id="cropped-regions">Cropped Regions</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1604891760942.png" alt="" loading="lazy"><br>
+为了解决opposite-view的问题，作者在图像中提取左右两个region，分别提取Normalized Descriptor，得到两个4096维的描述子，在匹配时，两个描述子都计算余弦距离，取较小的作为度量。(称为NSD-CR)</p>
+<h2 id="performance-2"><em>Performance</em></h2>
+<h3 id="across-datasets">Across Datasets</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1604893224752.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604893228900.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1604893232030.png" alt="" loading="lazy"><br>
+证明了在front v.s. rear-view的情况下，NSD-CR算法表现最好。</p>
+<h3 id="across-layers">Across Layers</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1604893470243.png" alt="" loading="lazy"><br>
+证明了fc6是可以较好的平衡外观不变性和视角不变性的。</p>
+<h3 id="across-networks">Across Networks</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1604893541180.png" alt="" loading="lazy"><br>
+证明了提出的方法NSD对于任何网络都有效，并且通过place-centric training得到的网络p365、NetVLAD表现比object-centric training得到的网络要更好，因为它表征了场景的类别属性。</p>
+<h2 id="一点看法-2"><em>一点看法</em></h2>
+<p>这篇论文通过利用分类网络的高层全连接层来获得语义信息，解决视角不变性。采用cropped regions的方法来解决front v.s. rear view的问题，但是我感觉有些局限，相当于已知视角变化是相同方向或相反方向加一个小视角偏移。像X-view适用的范围更广，所以，图模型大有可为😎</p>
 ]]></content>
     </entry>
     <entry>
