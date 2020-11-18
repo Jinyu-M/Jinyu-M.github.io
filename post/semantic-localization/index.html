@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Semantic Localization | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1605666565145">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1605669009388">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Semantic Localization | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -11,7 +11,7 @@
 
 
 
-    <meta name="description" content="一直觉得语义和图的结合可以解决localization在剧烈视角变化（cross-view，甚至opposite view）和外观变化下表现不好的问题，有兴趣做下这方面研究，所以最近准备看一些这方面的文献。
+    <meta name="description" content="一直觉得语义和图的结合可以解决localization在剧烈视角变化（cross-view，甚至opposite-view）和外观变化下表现不好的问题，有兴趣做下这方面研究，所以最近准备看一些这方面的文献。
 
 Improving Condi..." />
     <meta name="keywords" content="Place recognition,Deep learning" />
@@ -23,7 +23,7 @@ Improving Condi..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1605666565145" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1605669009388" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,7 +84,7 @@ Improving Condi..." />
                 2020-11-05
               </span>
               <span>
-                19 min read
+                20 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -99,7 +99,7 @@ Improving Condi..." />
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>一直觉得语义和图的结合可以解决localization在剧烈视角变化（cross-view，甚至opposite view）和外观变化下表现不好的问题，有兴趣做下这方面研究，所以最近准备看一些这方面的文献。</p>
+                <p>一直觉得语义和图的结合可以解决localization在剧烈视角变化（cross-view，甚至opposite-view）和外观变化下表现不好的问题，有兴趣做下这方面研究，所以最近准备看一些这方面的文献。</p>
 <!-- more -->
 <h1 id="improving-condition-and-enviroment-invariant-pr-with-semantic-place-categorization-iros2017-pdf">Improving Condition- and Enviroment- Invariant PR with Semantic Place Categorization -IROS2017 <a href="https://arxiv.org/abs/1706.07144">pdf</a></h1>
 <h2 id="abstract"><em>Abstract</em></h2>
@@ -246,6 +246,11 @@ single_frame matching:<br>
 <img src="https://jinyu-m.github.io/post-images/1604975210053.png" alt="" loading="lazy"></p>
 <h2 id="一点看法-3"><em>一点看法</em></h2>
 <p>X-view构建语义拓扑图和利用random walk描述子来表示图像的方法很新颖、高效。但是算法要求理想的分割结果，以我自己的工程经验而言，即使在KITTI这种比较理想的真实数据集上，语义分割的效果也不足以构建如X-view论文中所需的拓扑图...所以算法的实际效果有待考证，官方代码还没开源，所以只能默默等待了。</p>
+<hr>
+<h1 id="calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure-iros-2019-pdf-code">CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure (IROS 2019) <a href="https://arxiv.org/abs/1910.14103">pdf</a> <a href="https://github.com/rpng/calc2.0">code</a></h1>
+<h2 id="abstract-5"><em>Abstract</em></h2>
+<p>作者认为现有的基于CNN的回环检测算法虽然使用了语义、外观或者几何特征信息，但是没有很充分的利用一张图像可以提供过的全部信息（语义、外观、几何信息等），并且需要人工设置参数去完成实际的回环检测。这篇论文中，作者提出了一个专为场景识别设计的神经网络，由semantic segmentator、Variational Autoencoder(VAE)和triplet embedding network组成。该网络用于提取一个全局特征空间来描述图像的外观和语义分布。然后从低层卷积特征图中提取最大响应的区域作为局部关键点，关键点描述子也参考hand-crafted特征的思路从这些特征图中提取。关键点被用于全局匹配搜索候选的回环，并用于最后的几何验证来提出错误回环。</p>
+<h2 id="method-5"><em>Method</em></h2>
 
               </div>
               <div class="toc-container">
@@ -326,6 +331,12 @@ single_frame matching:<br>
 </li>
 <li><a href="#performance-3"><em>Performance</em></a></li>
 <li><a href="#%E4%B8%80%E7%82%B9%E7%9C%8B%E6%B3%95-3"><em>一点看法</em></a></li>
+</ul>
+</li>
+<li><a href="#calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure-iros-2019-pdf-code">CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure (IROS 2019) pdf code</a>
+<ul>
+<li><a href="#abstract-5"><em>Abstract</em></a></li>
+<li><a href="#method-5"><em>Method</em></a></li>
 </ul>
 </li>
 </ul>
