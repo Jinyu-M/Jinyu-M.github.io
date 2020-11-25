@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-11-25T03:42:20.623Z</updated>
+    <updated>2020-11-25T08:19:48.676Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -60,6 +60,30 @@
 <h2 id="performance"><em>Performance</em></h2>
 <p><img src="https://jinyu-m.github.io/post-images/1606275615688.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1606275618541.png" alt="" loading="lazy"></p>
+<hr>
+<h1 id="ibow-lcd-an-appearance-based-loop-closure-detection-approach-using-incremental-bags-of-binary-words-pdf-code">iBoW-LCD: An Appearance-based Loop Closure Detection Approach using incremental Bags of Binary Words <a href="https://arxiv.org/abs/1802.05909v2">pdf</a> <a href="https://github.com/emiliofidalgo/ibow-lcd">code</a></h1>
+<h2 id="abstract-2"><em>Abstract</em></h2>
+<p>这篇论文提出了iBoW-LCD算法，使用一个基于二进制描述子的增量式的BoW方法来检测回环，不需要传统BoW模型的离线训练阶段。除此之外，该算法建立在dynamic islands这一概念上，这是一个简单但有效的将时间上相邻的相似图像聚成一组的方法，可以减少Bayesian框架的计算时间。</p>
+<h2 id="introduction-2"><em>Introduction</em></h2>
+<p>这篇论文，作者提出了一个有效的appearance-based回环检测算法，称为iBoW-LCD （Incremental Bag-of-Words Loop Closure Detection)，该算法使用增量式的二进制词典，可以在线构建视觉词典，避免了离线训练的各种弊端。这一方法，与inverted index结构结合，可以很有效的检索到回环图像。接着，一个鲁棒回环检测方法被提出。它拓展并加强了island的概念，来防止将相邻图像检索为回环候选。</p>
+<p>关于BoW模型，之前的一些工作只添加视觉单词，而没有遗忘（删除）无用的视觉单词，在这篇工作中，优化的词典不光添加单词，在单词被认为无用时也删除单词。实验证明，这样的处理可以用更少的词典达到相似的表现。关于回环检测，作者之前的工作是基于贝叶斯滤波的，但是随着图像数量的增多，处理时间会不断增加。所以这篇工作中，作者用一个简单但有效的基于dynamic island概念的机制来代替滤波器，可以用更少的时间来实现相似的表现。这篇论文提出的算法没有使用FLANN算法。</p>
+<h2 id="incremental-bow-for-image-indexing">Incremental BoW for Image Indexing</h2>
+<h3 id="overview-of-mujas-approach">Overview of Muja's Approach</h3>
+<p>作者参考了Muja and Lowe提出的方法，该方法引入一种高效的层次化结构来检索和匹配二进制特征，需要很少的内存空间并且比一般的hashing方法scale better。这一结构由一个树构成，非叶节点包含着聚类中心，叶节点存储着要匹配的视觉描述子。也就是增量式词典树的视觉单词被储存在叶节点中。</p>
+<p>在构建过程中，算法先随机从初始点集中挑选K个描述子作为聚类中心。然后，余下的每个输入描述子根据hamming距离被分配到最近的聚类中心上。这一过程递归的重复进行，直到一个聚类中的描述子数量小于阈值S。Muja et al.也提出构建多个树T，在搜索过程中并行的使用它们会带来更好的效果。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1606290151915.png" alt="" loading="lazy"></figure>
+<p>为了并行的利用这些树来搜索描述子，算法对于每个树，从根节点到叶节点遍历树，每步中挑选与检索描述子最相近的节点，并把未被探索过的节点加入一个优先级队列中。当达到叶节点时，该节点中的所有点被线性搜索。当每个树被搜索过一次后，从优先级队列中最近的节点开始继续搜索。直到一定数量的描述子被检查过（在本文中，设为64），这一过程结束。</p>
+<h3 id="visual-vocabulary-update">Visual Vocabulary Update</h3>
+<p>Muja的方法最初是设计用于检索一个静态的描述子集合。在本文的方法中，作者需要处理一个增量式的视觉词典，所以作者引入了需要改进。首先，在探索过程中，二进制描述子被匹配和合并，以一种合并的政策来更新词典的视觉单词。作者用bitwise AND operation来实现合并：<br>
+<img src="https://jinyu-m.github.io/post-images/1606290905303.png" alt="" loading="lazy"><br>
+这一策略被实验证明不会导致描述子退化（几乎所有位都变为0）。</p>
+<p>其次，在检索过程中没有匹配的描述子将被包含入词典中，作为一个新的视觉单词。为此，每个描述子从根节点到叶节点被搜索。接着，评估将对应的新描述子加入被选定的节点中是否会超过最大叶尺寸S。如果是，则将该描述子加入最初的描述子，递归的重建这个节点。否则，直接将这个描述子加入该节点。<br>
+<img src="https://jinyu-m.github.io/post-images/1606291269472.png" alt="" loading="lazy"></p>
+<p>然后，算法保留了一个inverted index结构，对于每个视觉单词，它储存了该单词出现过的图像。最初，视觉词典通过把第一幅图像的二进制描述子作为视觉单词的集合来完成构建。当一幅图像输入，它的描述子与检索的视觉单词利用ratio test进行匹配。匹配到的描述子合并到对应视觉单词上。未匹配的描述子被临时当做新的视觉单词加入词典。为了减少检索的复杂度，这些临时的视觉单词只有在连续<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">P_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>帧被匹配到至少<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>o</mi></msub></mrow><annotation encoding="application/x-tex">P_o</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>次，才会保留下来。inverted index相应地更新。这一策略的主要目的在于，挑选那些当机器人达到回环位置时更有可能被观察到的视觉单词。</p>
+<p>最后，作者用一种删除视觉单词的机制来保证词典支持上述的更新策略。当从词典中删除一个描述子后，它所加入的节点和其父节点都将被递归地修改来评估它们是否包含子节点。一个没有子节点的节点将不再需要，因此要删除。如果要删除的描述最与聚类中心一致，则重新选择一个新的中心。<br>
+<img src="https://jinyu-m.github.io/post-images/1606292138825.png" alt="" loading="lazy"></p>
+<h3 id="retrieval-of-similar-images">Retrieval of Similar Images</h3>
+<p>inverted index结构可以让搜索范围缩小为与当前图像具有共同视觉单词的历史图像。</p>
 ]]></content>
     </entry>
     <entry>
