@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dataset | 年少万兜鍪</title>
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1606738658724">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Dataset | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="这一篇日志记录一些自己感觉很有用、常用的数据集介绍。
+
+Cross-Season Correspondence Dataset paper link
+Abstract
+这篇论文中，作者提出一种利用不同视觉条件下图像的2D-2D点匹配来训练语..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://jinyu-m.github.io">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1606738658724" alt="">
+  </a>
+  <h1 class="site-title">
+    年少万兜鍪
+  </h1>
+  <p class="site-description">
+    少年吔
+尘世恰好，有诗有酒刚好吐槽
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          文章
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Dataset
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-11-30
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>这一篇日志记录一些自己感觉很有用、常用的数据集介绍。</p>
+<!-- more -->
+<h1 id="cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset <a href="https://arxiv.org/abs/1903.06916v2">paper</a> <a href="https://visuallocalization.net">link</a></h1>
+<h2 id="abstract">Abstract</h2>
+<p>这篇论文中，作者提出一种利用不同视觉条件下图像的2D-2D点匹配来训练语义分割网络的方法。通过要求匹配点的语义一致性，来让语义分割网络在不同视觉条件下更鲁棒。</p>
+<h2 id="introduction">Introduction</h2>
+<p>论文的主要贡献为：1.不同视觉条件下图像之间的点匹配为语义分割网络的训练提供了新的约束，即匹配点应当有一致的语义，作者以此作为一个损失函数；2.作者获得点对应关系的方法不需要真值，只需少量的人工干预；3.本篇论文得到的模型在多变视觉条件下表现有显著提升。</p>
+<h2 id="semantic-correspondence-loss">Semantic Correspondence Loss</h2>
+<p>作者将从数据集中获得一个样本记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><msup><mi>I</mi><mi>r</mi></msup><mo separator="true">,</mo><msup><mi>I</mi><mi>t</mi></msup><mo separator="true">,</mo><msup><mi>x</mi><mi>r</mi></msup><mo separator="true">,</mo><msup><mi>x</mi><mi>t</mi></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">(I^r,I^t,x^r,x^t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.043556em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7935559999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7935559999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">I^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span>是reference traversal中的一张图像，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>I</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">I^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7935559999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7935559999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span></span></span>是target traversal中的一张图像，x分别是两张图像中匹配的关键点位置。reference每次取同一次traversal，而target从其他traversal随机选取。因此，匹配损失函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mrow><mi>c</mi><mi>o</mi><mi>r</mi><mi>r</mi></mrow></msub></mrow><annotation encoding="application/x-tex">L_{corr}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>可以记为：<br>
+<img src="https://jinyu-m.github.io/post-images/1606734886198.png" alt="" loading="lazy"><br>
+其中，l为hinge loss或cross-entropy loss。<br>
+令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>x</mi></msub><mo>∈</mo><msup><mi>R</mi><mi>F</mi></msup></mrow><annotation encoding="application/x-tex">d_x \in R^F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">F</span></span></span></span></span></span></span></span></span></span></span>为语义分割网络在点x处获得的长度为F的特征向量。则correspondence hinge loss被定义为：<br>
+<img src="https://jinyu-m.github.io/post-images/1606735027166.png" alt="" loading="lazy"><br>
+而对于correspondence cross-entropy loss，作者首先从reference image的最后特征图中得到最可能的语义类别，用一个one-hot编码向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>c</mi><msub><mi>x</mi><mi>i</mi></msub></msub></mrow><annotation encoding="application/x-tex">c_{x_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68066em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139199999999997em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3280857142857143em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>来表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>位置点的最可能的类别，损失函数可以写为：<br>
+<img src="https://jinyu-m.github.io/post-images/1606735255798.png" alt="" loading="lazy"><br>
+在训练过程中，作者在标准的cross-entropy loss之外加入correspondence loss进行训练。</p>
+<h2 id="a-cross-season-correspondence-dataset">A Cross-Season Correspondence Dataset</h2>
+<p>数据集中每个样本包含了不同季节或天气条件下采集的两张邻近图像，并且包含图像间2D-2D的点对应关系。点对应关系是自动通过两点间3D几何一致性来得到的。在不同视觉条件下，几何关系要比光度信息更稳定。该数据集是基于CMU和RobotCar建立的。<br>
+<img src="https://jinyu-m.github.io/post-images/1606735930378.png" alt="" loading="lazy"><br>
+该数据集的建立可以分为四步：1.计算每张图像的位姿；2.对每个条件或traversal下的环境建立一个稠密的3D点云；3.不同条件下的3D点云进行匹配，由于所有的点云是在同一坐标系下，所以可以通过位置来匹配，不需要特征描述子，避免了视觉条件的干扰；最后，根据相机位姿，基于3D点云的匹配关系，获得2D-2D的匹配关系。</p>
+<h3 id="cmu-seasons-correspondence-dataset">CMU Seasons Correspondence Dataset</h3>
+<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1606736569867.png" alt="" loading="lazy"></figure>
+<h3 id="oxford-robotcar-correspondence-dataset">Oxford RoBotCar Correspondence Dataset</h3>
+<p>由于视觉条件较差，所以用RGB图像去进行MVS点云中的点太少了，所以作者用了Lidar点云去建图，利用真值的pose和时间戳，去获得点云到图像的映射。<br>
+<img src="https://jinyu-m.github.io/post-images/1606736824853.png" alt="" loading="lazy"></p>
+<h2 id="inplementation-details">Inplementation Details</h2>
+<p>作者使用了在Cityscapes上预训练过的PSPNet作为模型。除了Cityscapes训练图像外，作者来添加了一个CMU和RobotCar粗略标注的图像。这一过程，是为了避免模型将所有像素预测为同一类别，让模型在Cityscapes上依然具有好的表现。<br>
+作者还添加了一个运行过程中进行的correspondence refinement阶段，即那些在reference image中被分类为不稳定类别点的匹配被删除。被纳入考虑的类别有person,rider,car,truck,bus,train,motorcycle和bicycle。在加入correspondence loss前，模型先经过了500代warm-up，来保证模型对于reference images有较好的分割效果。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset paper link</a>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#semantic-correspondence-loss">Semantic Correspondence Loss</a></li>
+<li><a href="#a-cross-season-correspondence-dataset">A Cross-Season Correspondence Dataset</a>
+<ul>
+<li><a href="#cmu-seasons-correspondence-dataset">CMU Seasons Correspondence Dataset</a></li>
+<li><a href="#oxford-robotcar-correspondence-dataset">Oxford RoBotCar Correspondence Dataset</a></li>
+</ul>
+</li>
+<li><a href="#inplementation-details">Inplementation Details</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://jinyu-m.github.io/post/incrementalautomatic-loop-closure/">
+              <h3 class="post-title">
+                Incremental/Automatic Loop Closure
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'e0833a79ae313ee43ee5',
+    clientSecret: 'b56f2b325b4ecd49f15ddec8d4795a0013debc77',
+    repo: 'jinyu-m.github.io',
+    owner: 'Jinyu-M',
+    admin: ['Jinyu-M'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://jinyu-m.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
