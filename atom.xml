@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2020-12-01T08:01:03.506Z</updated>
+    <updated>2020-12-05T02:09:46.358Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -600,9 +600,9 @@ What would it take to build DeepSLAM?</p>
 <p>4.在这些新的keypoint上，根据detector的repeatability和reliability来更新detector branch。</p>
 <h3 id="1detect-keypoints-using-detector">1.Detect Keypoints using Detector</h3>
 <figure data-type="image" tabindex="34"><img src="https://jinyu-m.github.io/post-images/1604566746753.png" alt="" loading="lazy"></figure>
-<p>具有较高相应的点被视为可能的keypoint，经过NMS，每张图像可以获得1000个keypoint。但是由于不同图像条件下，可能没法取到一样的keypoint，所以作者采用了affine adaption方法，即对于原始图像进行random affine transformation和color jitter，获得新的图像后经过网络，获得不同图像条件下的P，最后映射回原图，取平均，得到最后的P.</p>
+<p>具有较高响应的点被视为可能的keypoint，经过NMS，每张图像可以获得1000个keypoint。但是由于不同图像条件下，可能没法取到一样的keypoint，所以作者采用了affine adaption方法，即对于原始图像进行random affine transformation和color jitter，获得新的图像后经过网络，获得不同图像条件下的P，最后映射回原图，取平均，得到最后的P.</p>
 <h3 id="2update-keypoint-descriptor">2.Update Keypoint Descriptor</h3>
-<p>根据上一节，获得了一张图像I中的keypoints Q，对I和Q进行random affine transformation和color jitter H，得到I<sup>和Q</sup>，并且可以获得特征的匹配关系&lt;Q,Q^&gt;，那么根据descriptor repeatability，匹配特征的des应该很靠近，根据descriptor reliability，不匹配的特征应该有很好的区分度。所以作者使用了triplet loss with hardest example mining去训练descriptor。</p>
+<p>根据上一节，获得了一张图像I中的keypoints Q，对I和Q进行random affine transformation和color jitter H，得到I^和Q^，并且可以获得特征的匹配关系&lt;Q,Q^&gt;，那么根据descriptor repeatability，匹配特征的des应该很靠近，根据descriptor reliability，不匹配的特征应该有很好的区分度。所以作者使用了triplet loss with hardest example mining去训练descriptor。</p>
 <figure data-type="image" tabindex="35"><img src="https://jinyu-m.github.io/post-images/1604566756477.png" alt="" loading="lazy"></figure>
 <p>除此之外，由于网络使用共享参数的backbone，所以为了保证detection的结果不会变化，作者还加入了一个损失函数：</p>
 <figure data-type="image" tabindex="36"><img src="https://jinyu-m.github.io/post-images/1604566764397.png" alt="" loading="lazy"></figure>
