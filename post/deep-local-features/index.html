@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Deep Local Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1607132215210">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1607850528843">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Deep Local Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -23,7 +23,7 @@ MagicPoint (Magic Le..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1607132215210" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1607850528843" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,7 +84,7 @@ MagicPoint (Magic Le..." />
                 2020-10-01
               </span>
               <span>
-                35 min read
+                36 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -348,7 +348,7 @@ What would it take to build DeepSLAM?</p>
 <figure data-type="image" tabindex="54"><img src="https://jinyu-m.github.io/post-images/1604566984516.png" alt="" loading="lazy"></figure>
 <p>作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
 <hr>
-<h1 id="doap-2018-papercode">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a><a href="">code</a></h1>
+<h1 id="doap-2018-paperap-loss-code">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a><a href="https://github.com/kunhe/FastAP-metric-learning/blob/master/pytorch/FastAP_loss.py">AP loss code</a></h1>
 <p>为了看懂r2d2的AP loss，特地去看了这篇论文，算是用AP loss描述子的开山之作。</p>
 <h2 id="abstract-7"><em>Abstract</em></h2>
 <p>特征匹配，本质上就是特征描述子的最近邻检索。在这篇工作中，作者用神经网络直接优化ranking-based retrieval的指标，Average Precision。这一通用的方法可以视作比传统的local ranking方法更先进的listwise learning方法。</p>
@@ -391,7 +391,10 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 <h3 id="handling-geometric-noise">Handling Geometric Noise</h3>
 <p>为了提升特征在匹配时的鲁棒性，保证描述子对几何噪声的不敏感型很重要。作者使用了Spatial Transformer，通过预测6-DOF 仿射变化来对齐patches，无需额外的监督。在本文的实验中，他被用于矫正几何畸变，提升效果。</p>
 <h3 id="label-mining-for-image-matching">Label Mining for Image Matching</h3>
-<p>前面的优化过程是根据patch retrieval任务设计的，但是它也适用于更高层的任务。</p>
+<p>前面的优化过程是根据patch retrieval任务设计的，但是它也适用于更高层的任务。作者在HPatches上测试了算法，来验证算法在image matching任务上的表现。HPatches数据集的image matching任务与patch retrieval任务类似，都是从一些干扰项中检索匹配的图像（块）。但是，在patch retrieval任务中，不会挑选与query位于同一图像序列的图像块作为干扰项，以防止图像具有重复的纹理（干扰项看起来确实与query一样）。在image matching任务中，图像与同一序列的其他图像相匹配，所有干扰项都来自于同一序列。因此，图像匹配的表现可以用将同一序列干扰项加入优化patch retrieval来优化。<br>
+作者在优化HPatches上的patch retrieval时用label mining来增强干扰项。为了避免重复结构带来的有噪声的标签，作者用了一个简单的启发式方法：聚类。对于每个图像序列，作者根据视觉外观将所有patches聚类，然后，具有较高类内距离的patches被记为彼此的干扰项（要经过3D的验证）。要注意，label mining与hard negative mining无关，它的目的是增加额外的监督。</p>
+<h2 id="experiments"><em>Experiments</em></h2>
+<p>作者使用了L2Net的结构，网络的输入是32x32的灰度图，当加入Spatial Transformer module时，输入的尺寸被增加到42x42，用3个卷积层来预测一个6-DOF仿射变换，这一变换被用于采样32x32的patch。</p>
 
               </div>
               <div class="toc-container">
@@ -488,7 +491,7 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 </li>
 </ul>
 </li>
-<li><a href="#doap-2018-papercode">DOAP (2018) papercode</a>
+<li><a href="#doap-2018-paperap-loss-code">DOAP (2018) paperAP loss code</a>
 <ul>
 <li><a href="#abstract-7"><em>Abstract</em></a></li>
 <li><a href="#introduction-5"><em>Introduction</em></a></li>
@@ -510,6 +513,7 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 <li><a href="#label-mining-for-image-matching">Label Mining for Image Matching</a></li>
 </ul>
 </li>
+<li><a href="#experiments"><em>Experiments</em></a></li>
 </ul>
 </li>
 </ul>
