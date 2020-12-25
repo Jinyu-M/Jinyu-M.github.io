@@ -2,17 +2,19 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A Comprehensive Comparison of VPR under Changing Conditions | 年少万兜鍪</title>
+<title>Traditional Place Recognition | 年少万兜鍪</title>
 <link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1608886453301">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="A Comprehensive Comparison of VPR under Changing Conditions | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Traditional Place Recognition | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. Levelling the Playin..." />
-    <meta name="keywords" content="Place recognition" />
+    <meta name="description" content="这篇笔记记录一下不使用深度学习的回环检测/场景识别算法，主要为了学习这些工作的算法思路。
+
+Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." />
+    <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -75,55 +77,37 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              A Comprehensive Comparison of VPR under Changing Conditions
+              Traditional Place Recognition
             </h2>
             <div class="post-info">
               <span>
-                2020-11-05
+                2020-12-25
               </span>
               <span>
                 2 min read
               </span>
               
-                <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
-                  # Place recognition
-                </a>
-              
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>. ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
+                <p>这篇笔记记录一下不使用深度学习的回环检测/场景识别算法，主要为了学习这些工作的算法思路。</p>
 <!-- more -->
-<h2 id="introduction">introduction</h2>
-<p>本文是对一些VPR算法的比较。作者提出VPR的四个难点：<strong>Seasonal Variation, Viewpoint Variation, Illumination Variation, Dynamic Objects</strong>。在这篇文献中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
-<h2 id="evaluation-datasets">Evaluation Datasets</h2>
-<p>作者使用了Berilin Kudamm Dataset, Gardens Point Dataset, Nordland Dataset作为评测的数据集。<br>
-<img src="https://jinyu-m.github.io/post-images/1604565916808.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565943321.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565945569.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565947793.png" alt="" loading="lazy"></p>
-<h2 id="evaluation-metrics">Evaluation Metrics</h2>
-<p>作者使用AUC来评估算法的matching performance：<br>
-<img src="https://jinyu-m.github.io/post-images/1604566016251.png" alt="" loading="lazy"></p>
-<p>作者记录了每个算法对每张query image匹配所需的时间，包括query image的feature encoding time和利用描述子匹配R张reference image的时间。</p>
-<p>作者还第一次将每个算法特征描述子所需的储存空间进行了比较。</p>
-<h2 id="performance">Performance</h2>
-<p><img src="https://jinyu-m.github.io/post-images/1604566230544.png" alt="" loading="lazy"><br>
-在Berilin Kudamm Dataset上NetVLAD表现最好。在Gardens Point Dataset上，Cross-Region-BoW获得最佳表现，NetVLAD、HybridNet和AMOSNet也获得了相似的不错表现。在Nordland数据集上，Region-VLAD、NetVLAD和Cross-Region-BoW表现较好。<br>
-<img src="https://jinyu-m.github.io/post-images/1604566387518.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604566402408.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604566416379.png" alt="" loading="lazy"></p>
+<h1 id="fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) <a href="https://www.researchgate.net/publication/263298223">pdf</a></h1>
+<h2 id="abstract">Abstract</h2>
+<p>这篇工作提出了一个基于二进制code和视差信息的双目场景识别算法。算法（ABLE-S）在全局框架中使用Local Difference Binary（LDB）描述子来获得鲁棒的全局图像描述，该描述是基于图像像素对间亮度和梯度之间差异的。LDB相比其他描述子，如仅依赖于图像亮度的BRIEF，有更好的描述能力。除此之外，作者还讲视差信息加入了二进制描述子（D-LDB）。视差可以提供一些有用的信息，来解决场景识别中常见的问题，如perceptual aliasing。<br>
+论文用KITTI数据集测试算法。并且，作者提供了一个回环的真值，以方便回环检测算法表现的比较。</p>
+<h2 id="introduction">Introduction</h2>
+<p>作者提出FAB-MAP有一些缺陷，即需要事先训练环境的视觉词典和相关联的概率方法，使得算法无法适应实时的应用。</p>
+<p>在这篇论文中，作者提出了一个用于视觉回环检测和场景识别的算法，该算法使用基于像素对的亮度、梯度和视差比较的全局二进制描述子，如图1所示。作者将视差信息加入了LDB，得到了D-LDB。在实验中，作者证明了视差的加入提供了更准确的视觉定位，减少了视觉场景识别中的常见问题，如perceptual aliasing。最后的实验证明，ABLE-S算法获得了超过FAB-MAP、WI-SURF、BRIEF-Gist的表现，并且计算消耗更低。</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li>
+<li><a href="#fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) pdf</a>
 <ul>
-<li><a href="#introduction">introduction</a></li>
-<li><a href="#evaluation-datasets">Evaluation Datasets</a></li>
-<li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
-<li><a href="#performance">Performance</a></li>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
 </ul>
 </li>
 </ul>
@@ -136,9 +120,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://jinyu-m.github.io/post/semantic-localization/">
+            <a href="https://jinyu-m.github.io/post/fastap/">
               <h3 class="post-title">
-                Semantic Localization
+                FastAP
               </h3>
             </a>
           </div>
