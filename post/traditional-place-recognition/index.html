@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Traditional Place Recognition | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1608886453301">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1609841578248">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Traditional Place Recognition | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -23,7 +23,7 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1608886453301" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1609841578248" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,7 +84,7 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
                 2020-12-25
               </span>
               <span>
-                2 min read
+                4 min read
               </span>
               
             </div>
@@ -100,6 +100,23 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
 <h2 id="introduction">Introduction</h2>
 <p>作者提出FAB-MAP有一些缺陷，即需要事先训练环境的视觉词典和相关联的概率方法，使得算法无法适应实时的应用。</p>
 <p>在这篇论文中，作者提出了一个用于视觉回环检测和场景识别的算法，该算法使用基于像素对的亮度、梯度和视差比较的全局二进制描述子，如图1所示。作者将视差信息加入了LDB，得到了D-LDB。在实验中，作者证明了视差的加入提供了更准确的视觉定位，减少了视觉场景识别中的常见问题，如perceptual aliasing。最后的实验证明，ABLE-S算法获得了超过FAB-MAP、WI-SURF、BRIEF-Gist的表现，并且计算消耗更低。</p>
+<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1609817400142.png" alt="" loading="lazy"></figure>
+<h2 id="binary-descriptor">Binary Descriptor</h2>
+<p>二进制描述子最好的性质为可以用hamming距离进行高效的匹配。假设一个平滑后的图像块p，其中心为关键点(x,y)，那么二进制检测可以定义为：<br>
+<img src="https://jinyu-m.github.io/post-images/1609817384520.png" alt="" loading="lazy"><br>
+其中，f(i)是一个函数，返回p中特定pixel或cell的图像特征响应。f(i)可以采用如BRIEF、ORB和BRISK中二进制描述子一样的平滑后的图像灰度值。除此之外，f(i)也可以是如LDB和M-LDB中不同二进制比较结构的串联，比如平均图像灰度、p中特定cell的图像梯度Gx和Gy。<br>
+<img src="https://jinyu-m.github.io/post-images/1609817680298.png" alt="" loading="lazy"><br>
+为了减少场景识别问题中perceptual aliasing等问题的干扰，作者拓展了LDB，加入了平均视差Davg的二进制比较结构：<br>
+<img src="https://jinyu-m.github.io/post-images/1609817813887.png" alt="" loading="lazy"><br>
+最后，合成的描述子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>n</mi></msub><mo>(</mo><mi>p</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d_n(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>为一个n次二进制检测的向量，n是描述子的维度，通常被矫正为：<br>
+<img src="https://jinyu-m.github.io/post-images/1609817918294.png" alt="" loading="lazy"></p>
+<h2 id="proposed-method">Proposed Method</h2>
+<h3 id="binary-code-calculation">Binary code calculation</h3>
+<p>在本文中，作者采用了LDB，因为LDB相对BRIEF加入了梯度信息。作者还加入了视差信息，得到D-LDB。视差是通过SGBM(Semi Global Block Matching)获得的。<br>
+作者将图像块的大小定义为64x64，在提取全局二进制描述子之前将图像缩放到这一尺寸。更小的图像块会削弱场景识别算法的有效性，更大的分辨率也没有得到更好的表现。另外，作者将二进制描述子的维度定义为256比特。描述子通过LDB的随机比特挑选方法来满足维度要求。<br>
+该全局描述子将缩放后图像块的中心作为关键点，来进行计算，没有显性的旋转和缩放。然而，可以采用其他替代方法，将图像划分为多个grids，将每个grid的中心视为关键点，然后计算每个grid的二进制描述子，拼接到一起得到最后的二进制code。这一方法可以考虑采用不同宽和高的grid(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>w</mi></msub><mo>×</mo><msub><mi>g</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">g_w \times g_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。</p>
+<h3 id="binary-codes-matching">Binary codes matching</h3>
+<p>对要分析的m个场景，提取二进制描述子，构成向量v。计算二进制描述子之间的hamming距离，得到距离矩阵M</p>
 
               </div>
               <div class="toc-container">
@@ -108,6 +125,13 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
 <ul>
 <li><a href="#abstract">Abstract</a></li>
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#binary-descriptor">Binary Descriptor</a></li>
+<li><a href="#proposed-method">Proposed Method</a>
+<ul>
+<li><a href="#binary-code-calculation">Binary code calculation</a></li>
+<li><a href="#binary-codes-matching">Binary codes matching</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
