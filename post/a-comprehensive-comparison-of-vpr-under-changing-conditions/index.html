@@ -2,16 +2,17 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A Comprehensive Comparison of VPR under Changing Conditions | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1609841578248">
+<title>BenchMark | 年少万兜鍪</title>
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615257830379">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="A Comprehensive Comparison of VPR under Changing Conditions | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="BenchMark | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. Levelling the Playin..." />
+    <meta name="description" content="Levelling the Playing Field
+Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier,..." />
     <meta name="keywords" content="Place recognition" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -21,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1609841578248" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615257830379" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -75,7 +76,7 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              A Comprehensive Comparison of VPR under Changing Conditions
+              BenchMark
             </h2>
             <div class="post-info">
               <span>
@@ -93,34 +94,34 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>. ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
-<!-- more -->
-<h2 id="introduction">introduction</h2>
+                <h1 id="levelling-the-playing-field">Levelling the Playing Field</h1>
+<p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>.  ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
+<h2 id="introduction">Introduction</h2>
 <p>本文是对一些VPR算法的比较。作者提出VPR的四个难点：<strong>Seasonal Variation, Viewpoint Variation, Illumination Variation, Dynamic Objects</strong>。在这篇文献中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
 <h2 id="evaluation-datasets">Evaluation Datasets</h2>
 <p>作者使用了Berilin Kudamm Dataset, Gardens Point Dataset, Nordland Dataset作为评测的数据集。<br>
-<img src="https://jinyu-m.github.io/post-images/1604565916808.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565943321.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565945569.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604565947793.png" alt="" loading="lazy"></p>
+<img src="https://jinyu-m.github.io/post-images/1610853254734.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610853260659.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610853264199.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610853267787.png" alt="" loading="lazy"></p>
 <h2 id="evaluation-metrics">Evaluation Metrics</h2>
 <p>作者使用AUC来评估算法的matching performance：<br>
-<img src="https://jinyu-m.github.io/post-images/1604566016251.png" alt="" loading="lazy"></p>
+<img src="https://jinyu-m.github.io/post-images/1610853272896.png" alt="" loading="lazy"></p>
 <p>作者记录了每个算法对每张query image匹配所需的时间，包括query image的feature encoding time和利用描述子匹配R张reference image的时间。</p>
 <p>作者还第一次将每个算法特征描述子所需的储存空间进行了比较。</p>
 <h2 id="performance">Performance</h2>
-<p><img src="https://jinyu-m.github.io/post-images/1604566230544.png" alt="" loading="lazy"><br>
+<p><img src="https://jinyu-m.github.io/post-images/1610853281610.png" alt="" loading="lazy"><br>
 在Berilin Kudamm Dataset上NetVLAD表现最好。在Gardens Point Dataset上，Cross-Region-BoW获得最佳表现，NetVLAD、HybridNet和AMOSNet也获得了相似的不错表现。在Nordland数据集上，Region-VLAD、NetVLAD和Cross-Region-BoW表现较好。<br>
-<img src="https://jinyu-m.github.io/post-images/1604566387518.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604566402408.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1604566416379.png" alt="" loading="lazy"></p>
+<img src="https://jinyu-m.github.io/post-images/1610853289214.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610853296288.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610853301967.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li>
+<li><a href="#levelling-the-playing-field">Levelling the Playing Field</a>
 <ul>
-<li><a href="#introduction">introduction</a></li>
+<li><a href="#introduction">Introduction</a></li>
 <li><a href="#evaluation-datasets">Evaluation Datasets</a></li>
 <li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
 <li><a href="#performance">Performance</a></li>

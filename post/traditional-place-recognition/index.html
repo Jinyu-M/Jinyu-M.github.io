@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Traditional Place Recognition | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1609841578248">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615257830379">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Traditional Place Recognition | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -11,9 +11,9 @@
 
 
 
-    <meta name="description" content="这篇笔记记录一下不使用深度学习的回环检测/场景识别算法，主要为了学习这些工作的算法思路。
-
-Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." />
+    <meta name="description" content="Online Visual Vocabulary (TRO 2012) pdf
+Abstract
+SLAM系统一般会将回环检测任务当作一个2D-2D的图像检索任务来完成，bag-of-word模型是一个高效的解决方案，但是现存SOTA的算法..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -23,7 +23,7 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1609841578248" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615257830379" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,52 +84,206 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
                 2020-12-25
               </span>
               <span>
-                4 min read
+                14 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>这篇笔记记录一下不使用深度学习的回环检测/场景识别算法，主要为了学习这些工作的算法思路。</p>
-<!-- more -->
+                <h1 id="online-visual-vocabulary-tro-2012-pdf">Online Visual Vocabulary (TRO 2012) <a href="https://doi.org/10.1109/TRO.2012.2192013">pdf</a></h1>
+<h2 id="abstract"><em>Abstract</em></h2>
+<p>SLAM系统一般会将回环检测任务当作一个2D-2D的图像检索任务来完成，bag-of-word模型是一个高效的解决方案，但是现存SOTA的算法是现在一个训练集上训练一个pre-built vocabulary，这里就需要用到人类对于环境的先验认知（比如室内还是室外，词典的规模等）。这篇论文提出了一种在线训练词典的方法，所以无需训练数据集。</p>
+<h2 id="introduction"><em>Introduction</em></h2>
+<p>传统BoW的算法流程大致分为两部分：1.离线部分，从训练集中提取特征完成聚类，构建视觉词典，特征的聚类被当作描述图像的视觉单词；2.在线部分，提取当前图像的特征，量化到视觉单词上，用视觉单词的直方图向量来描述图像，完成图像相似度的计算。</p>
+<blockquote>
+<p>BoW image representation employs two stages: 1) In the training stage, sets of visual features are grouped or clustered together to generate visual vocabularies, i.e., collections of generalized visual features or visual words; 2) in the second stage, the images are represented as histograms of visual word occurrences.</p>
+</blockquote>
+<p>当前BoW模型的缺点之一就是使用了静态的pre-built vocabulary，需要先验的知识，但是在复杂、大型的场景中，这一定是不合理的（我们的试验也证明了这一点，室内场景构建的词典在室外检测效果不好，室外训练的词典在室内效果不好）。<br>
+作者提出了一种无需先验和人工设计参数的增量式词典训练方法，online visual vocabulary(OVV)。另外，作者也设计了一种新的聚类房啊，用一种新的、考虑到整个聚类分布的聚类收敛标准。<br>
+<img src="https://jinyu-m.github.io/post-images/1610877239498.png" alt="" loading="lazy"></p>
+<h2 id="methods"><em>Methods</em></h2>
+<blockquote>
+<p>Finding the adequate parameters for an optimum vocabulary is a tedious task which generally involves a trial-and-error approach. For instance, a vocabulary with too many words would not have enough abstraction power to detect similarities between images. In contrast, a vocabulary with too few words would be too confusing and generalized to be discriminative.</p>
+</blockquote>
+<p>作者先提出了static pre-built vocabulary的一个弊端，就是词典的规模完全由人工反复实验获得，耗时且不一定最优。而且对于词典树来说，当词典的规模过大，特征的鲁棒性下降了，对于视觉的干扰过于敏感；反之，当词典的规模过小，特征的disciminativeness下降，特征容易误匹配。<br>
+作者因此提出了一种增量式的视觉词典训练方法，为了实现这一点，作者采用一种修改后的聚类方法（Agglomerative clustering）.</p>
+<h3 id="agglomerative-clustering">Agglomerative clustering</h3>
+<p>该聚类方法是一种自底向上的层次聚类方法，过程如：（1）先将每个元素单独定为一类（elementary clusters），（2）合并指定距离最小的类，（3）重复（2）直到所有元素都归为同一类。</p>
+<h3 id="vocabulary-building">Vocabulary building</h3>
+<p>在这篇论文中，首先跟踪图像中的特征点，用这些跟踪到的点作为elementary clusters，减少了用于构建词典树的特征数量。词典树通过增量式的合并这些clusters来构建，构建过程可以总结为两点：<br>
+1.初始化：词典先用前m张图像提取到的tracked features去初始化一个词典，然后由底向上构建词典树；<br>
+2.更新：我理解的是，OVV用了一种滑动窗的概念，每m张图像提取出的elementary clusters都被加入到词典树中，然后整个词典树重新由底向上完成构建。这样，新出现的场景中的特征也会被更新到词典树中。</p>
+<h3 id="cluster-characterization">Cluster characterization</h3>
+<p>每个cluster具有两个属性，聚类中心值Ck，和协方差矩阵**<u>(?)</u>**Rk。Ck反映了聚类的分布，Rk反映了聚类之间的关系。<br>
+<img src="https://jinyu-m.github.io/post-images/1610877261587.png" alt="" loading="lazy"></p>
+<h4 id="cluster-updating">Cluster updating</h4>
+<p>每个聚类都是通过合并两个聚类来获得的，所以新的聚类属性可以根据原本的两个聚类的属性来获得。<br>
+<img src="https://jinyu-m.github.io/post-images/1610877270139.png" alt="" loading="lazy"></p>
+<p>这样可以节省运算的消耗。</p>
+<h3 id="cluster-merging-criterion">Cluster merging criterion</h3>
+<p>作者认为原本在Agglomerative clustering度量距离的方法是局部最优的，没有考虑到特征的全局分布。所以作者提出了新的聚类方法，在聚类时，同时增加各类之间的间距和类中的compactness。<br>
+新的聚类方法基于Fisher’s linear discriminant。先计算了两个矩阵：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877281134.png" alt="" loading="lazy"></p>
+<p>其中C是所有数据的中心值，N表示所有数据的数量，nk表示在cluster_k中包含的数据的数量。Sb代表了between clusters scatter matrix，我理解的是体现了类与类之间的分散程度（类间距离）；Sw代表了within clusters scatter matrix，是体现了类内数据的分散程度（类内紧密度）。<br>
+然后用Sb和Sw的迹的比值作为损失函数:<br>
+<img src="https://jinyu-m.github.io/post-images/1610877295645.png" alt="" loading="lazy"></p>
+<p>合并发生在两步：（1）对于每个cluster，利用kd-tree在它的领域内（欧拉空间中）搜索可能合并的candidate；（2）对于每个candidate，计算合并前后的Q，如果Q有提升，那么将两个cluster合并，并且更新相应的Sb、Sw。<br>
+由于每次合并都会引起Sb、Sw的更新，所需的计算量较大。所以作者提出一种增量式的更新方案：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877301528.png" alt="" loading="lazy"></p>
+<p>在算法中，重复合并处理，直到Q值无法提升。此时，词典的repetitiveness和disciminative power都达到了最大。</p>
+<h3 id="adding-new-clusters">Adding New Clusters</h3>
+<p>在词典更新阶段，新的elementary cluster被加入。对于每个新加入的elementary cluster EC，Sb和Sw要相应的更新，为了减少更新时的计算量，作者使用：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877309931.png" alt="" loading="lazy"></p>
+<p>Re是EC的covariance matrix，nc是其element的数量。在本文中，nc表示对于特定特征，可以跟踪到的帧数。<br>
+向词典中添加cluster会改变全部特征的中心值C，所以C的更新如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877314955.png" alt="" loading="lazy"></p>
+<p>所以Sb的更新如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877321430.png" alt="" loading="lazy"></p>
+<p>其中delta_C=C'-C，V是先添加的cluster的中心与全部数据的中心之间的差异的加权和。V可以增量式获得:<br>
+<img src="https://jinyu-m.github.io/post-images/1610877327864.png" alt="" loading="lazy"></p>
+<h3 id="linear-disciminant-analysis-uu">Linear Disciminant Analysis <u>(?)</u></h3>
+<p>为了得到一个最大化cluster之间的可分离度以及减少数据的维度的data transformation，作者最大化：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877334370.png" alt="" loading="lazy"></p>
+<p>其中w是决定最大cluster可分离度的趋势。最大化J(w)可以当做一个一般的求特征值问题，从w的特征向量中作者获得了一个data transformation。挑选G中对应w最大值的m列，作者将数据的维度降低到s维。</p>
+<h3 id="vocabulary-update-criterion">Vocabulary Update Criterion</h3>
+<p>在实际操作中，词典不是间隔固定时间更新一次的，而是自适应的更新。在图像检索过程中，当特征的每个维度都满足：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877346064.png" alt="" loading="lazy"></p>
+<p>则认为该特征落入当前cluster。当特征落入cluster的比率小于90%，则更新词典。</p>
+<h3 id="cluster-association">Cluster Association</h3>
+<p>在cluster merging的过程中，词典的repetitiveness和disciminative得到最大化。但是还需要考虑词典的stability，即同一特征，在更新前后应当associate同一cluster。<br>
+本文提出的feature-cluster association方法基于树，在词典训练的同时，建立树，树的节点表示cluster，分支表示cluster的层次，树的根节点对应着visual word<u><strong>(?)</strong></u>，树的叶节点对应elementary cluster。<br>
+在association过程中，树由上自下被访问，计算特征与节点之间的欧氏距离。为了减少遍历的树的个数，只搜索满足以下条件的树：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877363078.png" alt="" loading="lazy"></p>
+<h4 id="image-reindexing">Image Reindexing</h4>
+<p>词典更新后，图像的index也会变化，本文定义了transformation T去体现这种变化，这样就不用了每次计算图像的index了：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877478309.png" alt="" loading="lazy"></p>
+<p>其中，W是图像的indexing。具体步骤如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877482833.png" alt="" loading="lazy"></p>
+<p>示例：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877487348.png" alt="" loading="lazy"></p>
+<h3 id="image-similarity">Image similarity</h3>
+<p>计算图像相似度用：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877501357.png" alt="" loading="lazy"></p>
+<p>为了体现visual word的disciminative，用TF-IDF加权。</p>
+<h3 id="increasing-vocabulary-efficiency">Increasing vocabulary efficiency</h3>
+<p>为了进一步提升OVV的计算效率，作者对包含较少信息的节点进行了剪枝。当<br>
+<img src="https://jinyu-m.github.io/post-images/1610877509249.png" alt="" loading="lazy"><br>
+时，进行剪枝。</p>
+<h3 id="experiments"><em>Experiments</em></h3>
+<p><img src="https://jinyu-m.github.io/post-images/1610877518916.png" alt="" loading="lazy"><br>
+OVV的词典会随着环境的增大而逐渐增大。<strong>（值得改进）</strong><br>
+<img src="https://jinyu-m.github.io/post-images/1610877528466.png" alt="" loading="lazy"><br>
+作者比较了incremental indexing和full indexing的表现（对应着image reindexing节），相差不大。</p>
+<hr>
+<h1 id="dbow-tro-pdf">DBoW (TRO) <a href="https://doi.org/10.1109/TRO.2012.2197158">pdf</a></h1>
+<h2 id="introduction-2"><em>Introduction</em></h2>
+<p>贡献点可以总结为几点：<br>
+1.使用了一种改进的FAST+BEIFF二进制特征；<br>
+2.把邻近图像联系起来，组成island，防止过于靠近的图像被匹配到（算是一种temporal constrant）；<br>
+3.在词典树中加入inverse index来实现快速的图像检索，加入direct index来保留图像间的correspondence，加快geometrical check的速度。</p>
+<h2 id="image-database"><em>Image Database</em></h2>
+<p>由于作者使用二进制描述子，所以构建了二进制词典树，使用K-means++ seeding初始化K-means的初始medians，medians中非二进制值得被置为0。<br>
+计算两个BoW向量得相似度时使用了L1分数：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877562404.png" alt="" loading="lazy"></p>
+<p>在词典树中，作者使用了inverse index table来保留该单词出现过的图像索引值。当一张新的图像加入database，inverse index table会随之更新。<br>
+作者来使用了direct index table，对于每张图像，作者在direct index table中储存了该图像出现过的单词所属的位于l层的节点，以及该节点包含的局部特征。此结构可以用于在获得candidate loop时，准备进行geometrical check时计算同属于一个word或者同属于一个节点的特征的correspondence。</p>
+<h2 id="loop-detection-algorithm"><em>Loop Detection Algorithm</em></h2>
+<h3 id="database-query">Database query</h3>
+<p>对于每个query图像，利用词典树，搜索到一系列匹配的candidates以及对应的分数，由于这些分数受query image和它其中的单词分布影响，所以作者对分数进行了归一化：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877572685.png" alt="" loading="lazy"></p>
+<h3 id="match-grouping">Match grouping</h3>
+<p>为了避免相邻的图像被匹配，作者将相邻图像构成了island，将其视为一个匹配。如果query匹配到的candidate的时间戳之间差距很小，那么就将这些candidate视为一个island，其匹配分数为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877580156.png" alt="" loading="lazy"></p>
+<p>具有最高匹配分数的island被挑选出来作为matching group，进入下一步的验证。</p>
+<h3 id="temporal-consistency">Temporal consistency</h3>
+<p>当获得最好的matching island后，对其进行时间一致性的检验，即其之前的k个query也必须被匹配到，当其通过检验后，挑选island中具有最高匹配分数的一个image作为当前query的匹配。</p>
+<h3 id="efficient-geometrical-consistency">Efficient geometrical consistency</h3>
+<p>作者的几何检验思路是计算匹配图像对的F矩阵，利用RANSAC，至少需要有12个匹配点对。为了加快特征匹配，作者用direct index去粗略搜索。</p>
+<hr>
 <h1 id="fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) <a href="https://www.researchgate.net/publication/263298223">pdf</a></h1>
-<h2 id="abstract">Abstract</h2>
+<h2 id="abstract-2"><strong>Abstract</strong></h2>
 <p>这篇工作提出了一个基于二进制code和视差信息的双目场景识别算法。算法（ABLE-S）在全局框架中使用Local Difference Binary（LDB）描述子来获得鲁棒的全局图像描述，该描述是基于图像像素对间亮度和梯度之间差异的。LDB相比其他描述子，如仅依赖于图像亮度的BRIEF，有更好的描述能力。除此之外，作者还讲视差信息加入了二进制描述子（D-LDB）。视差可以提供一些有用的信息，来解决场景识别中常见的问题，如perceptual aliasing。<br>
 论文用KITTI数据集测试算法。并且，作者提供了一个回环的真值，以方便回环检测算法表现的比较。</p>
-<h2 id="introduction">Introduction</h2>
-<p>作者提出FAB-MAP有一些缺陷，即需要事先训练环境的视觉词典和相关联的概率方法，使得算法无法适应实时的应用。</p>
-<p>在这篇论文中，作者提出了一个用于视觉回环检测和场景识别的算法，该算法使用基于像素对的亮度、梯度和视差比较的全局二进制描述子，如图1所示。作者将视差信息加入了LDB，得到了D-LDB。在实验中，作者证明了视差的加入提供了更准确的视觉定位，减少了视觉场景识别中的常见问题，如perceptual aliasing。最后的实验证明，ABLE-S算法获得了超过FAB-MAP、WI-SURF、BRIEF-Gist的表现，并且计算消耗更低。</p>
-<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1609817400142.png" alt="" loading="lazy"></figure>
-<h2 id="binary-descriptor">Binary Descriptor</h2>
+<h2 id="introduction-3"><strong>Introduction</strong></h2>
+<p>作者提出FAB-MAP有一些缺陷，即需要事先训练环境的视觉词典和相关联的概率方法，使得算法无法适应实时的应用。<br>
+在这篇论文中，作者提出了一个用于视觉回环检测和场景识别的算法，该算法使用基于像素对的亮度、梯度和视差比较的全局二进制描述子，如图1所示。作者将视差信息加入了LDB，得到了D-LDB。在实验中，作者证明了视差的加入提供了更准确的视觉定位，减少了视觉场景识别中的常见问题，如perceptual aliasing。最后的实验证明，ABLE-S算法获得了超过FAB-MAP、WI-SURF、BRIEF-Gist的表现，并且计算消耗更低。<br>
+<img src="https://jinyu-m.github.io/post-images/1610877655376.png" alt="" loading="lazy"></p>
+<h2 id="binary-descriptor"><strong>Binary Descriptor</strong></h2>
 <p>二进制描述子最好的性质为可以用hamming距离进行高效的匹配。假设一个平滑后的图像块p，其中心为关键点(x,y)，那么二进制检测可以定义为：<br>
-<img src="https://jinyu-m.github.io/post-images/1609817384520.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610877660015.png" alt="" loading="lazy"><br>
 其中，f(i)是一个函数，返回p中特定pixel或cell的图像特征响应。f(i)可以采用如BRIEF、ORB和BRISK中二进制描述子一样的平滑后的图像灰度值。除此之外，f(i)也可以是如LDB和M-LDB中不同二进制比较结构的串联，比如平均图像灰度、p中特定cell的图像梯度Gx和Gy。<br>
-<img src="https://jinyu-m.github.io/post-images/1609817680298.png" alt="" loading="lazy"><br>
-为了减少场景识别问题中perceptual aliasing等问题的干扰，作者拓展了LDB，加入了平均视差Davg的二进制比较结构：<br>
-<img src="https://jinyu-m.github.io/post-images/1609817813887.png" alt="" loading="lazy"><br>
-最后，合成的描述子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>n</mi></msub><mo>(</mo><mi>p</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d_n(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>为一个n次二进制检测的向量，n是描述子的维度，通常被矫正为：<br>
-<img src="https://jinyu-m.github.io/post-images/1609817918294.png" alt="" loading="lazy"></p>
-<h2 id="proposed-method">Proposed Method</h2>
-<h3 id="binary-code-calculation">Binary code calculation</h3>
-<p>在本文中，作者采用了LDB，因为LDB相对BRIEF加入了梯度信息。作者还加入了视差信息，得到D-LDB。视差是通过SGBM(Semi Global Block Matching)获得的。<br>
-作者将图像块的大小定义为64x64，在提取全局二进制描述子之前将图像缩放到这一尺寸。更小的图像块会削弱场景识别算法的有效性，更大的分辨率也没有得到更好的表现。另外，作者将二进制描述子的维度定义为256比特。描述子通过LDB的随机比特挑选方法来满足维度要求。<br>
-该全局描述子将缩放后图像块的中心作为关键点，来进行计算，没有显性的旋转和缩放。然而，可以采用其他替代方法，将图像划分为多个grids，将每个grid的中心视为关键点，然后计算每个grid的二进制描述子，拼接到一起得到最后的二进制code。这一方法可以考虑采用不同宽和高的grid(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>w</mi></msub><mo>×</mo><msub><mi>g</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">g_w \times g_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。</p>
-<h3 id="binary-codes-matching">Binary codes matching</h3>
+<img src="https://jinyu-m.github.io/post-images/1610877671571.png" alt="" loading="lazy"></p>
+<p>为了减少场景识别问题中perceptual aliasing等问题的干扰，作者拓展了LDB，加入了平均视差Davg的二进制比较结构：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877681169.png" alt="" loading="lazy"></p>
+<p>最后，合成的描述子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>n</mi></msub><mo>(</mo><mi>p</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d_n(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>为一个n次二进制检测的向量，n是描述子的维度，通常被矫正为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610877692854.png" alt="" loading="lazy"></p>
+<h3 id="proposed-method"><strong>Proposed Method</strong></h3>
+<h4 id="binary-code-calculation"><strong>Binary code calculation</strong></h4>
+<p>在本文中，作者采用了LDB，因为LDB相对BRIEF加入了梯度信息。作者还加入了视差信息，得到D-LDB。视差是通过SGBM(Semi Global Block Matching)获得的。</p>
+<p>作者将图像块的大小定义为64x64，在提取全局二进制描述子之前将图像缩放到这一尺寸。更小的图像块会削弱场景识别算法的有效性，更大的分辨率也没有得到更好的表现。另外，作者将二进制描述子的维度定义为256比特。描述子通过LDB的随机比特挑选方法来满足维度要求。</p>
+<p>该全局描述子将缩放后图像块的中心作为关键点，来进行计算，没有显性的旋转和缩放。然而，可以采用其他替代方法，将图像划分为多个grids，将每个grid的中心视为关键点，然后计算每个grid的二进制描述子，拼接到一起得到最后的二进制code。这一方法可以考虑采用不同宽和高的grid(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>w</mi></msub><mo>×</mo><msub><mi>g</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">g_w \times g_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。</p>
+<h4 id="binary-codes-matching"><strong>Binary codes matching</strong></h4>
 <p>对要分析的m个场景，提取二进制描述子，构成向量v。计算二进制描述子之间的hamming距离，得到距离矩阵M</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
+<li><a href="#online-visual-vocabulary-tro-2012-pdf">Online Visual Vocabulary (TRO 2012) pdf</a>
+<ul>
+<li><a href="#abstract"><em>Abstract</em></a></li>
+<li><a href="#introduction"><em>Introduction</em></a></li>
+<li><a href="#methods"><em>Methods</em></a>
+<ul>
+<li><a href="#agglomerative-clustering">Agglomerative clustering</a></li>
+<li><a href="#vocabulary-building">Vocabulary building</a></li>
+<li><a href="#cluster-characterization">Cluster characterization</a>
+<ul>
+<li><a href="#cluster-updating">Cluster updating</a></li>
+</ul>
+</li>
+<li><a href="#cluster-merging-criterion">Cluster merging criterion</a></li>
+<li><a href="#adding-new-clusters">Adding New Clusters</a></li>
+<li><a href="#linear-disciminant-analysis-uu">Linear Disciminant Analysis <u>(?)</u></a></li>
+<li><a href="#vocabulary-update-criterion">Vocabulary Update Criterion</a></li>
+<li><a href="#cluster-association">Cluster Association</a>
+<ul>
+<li><a href="#image-reindexing">Image Reindexing</a></li>
+</ul>
+</li>
+<li><a href="#image-similarity">Image similarity</a></li>
+<li><a href="#increasing-vocabulary-efficiency">Increasing vocabulary efficiency</a></li>
+<li><a href="#experiments"><em>Experiments</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#dbow-tro-pdf">DBoW (TRO) pdf</a>
+<ul>
+<li><a href="#introduction-2"><em>Introduction</em></a></li>
+<li><a href="#image-database"><em>Image Database</em></a></li>
+<li><a href="#loop-detection-algorithm"><em>Loop Detection Algorithm</em></a>
+<ul>
+<li><a href="#database-query">Database query</a></li>
+<li><a href="#match-grouping">Match grouping</a></li>
+<li><a href="#temporal-consistency">Temporal consistency</a></li>
+<li><a href="#efficient-geometrical-consistency">Efficient geometrical consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) pdf</a>
 <ul>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#binary-descriptor">Binary Descriptor</a></li>
-<li><a href="#proposed-method">Proposed Method</a>
+<li><a href="#abstract-2"><strong>Abstract</strong></a></li>
+<li><a href="#introduction-3"><strong>Introduction</strong></a></li>
+<li><a href="#binary-descriptor"><strong>Binary Descriptor</strong></a>
 <ul>
-<li><a href="#binary-code-calculation">Binary code calculation</a></li>
-<li><a href="#binary-codes-matching">Binary codes matching</a></li>
+<li><a href="#proposed-method"><strong>Proposed Method</strong></a>
+<ul>
+<li><a href="#binary-code-calculation"><strong>Binary code calculation</strong></a></li>
+<li><a href="#binary-codes-matching"><strong>Binary codes matching</strong></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -146,7 +300,7 @@ Fast and Effective Visual Place Recognition using Binary Codes and Dispari..." /
             <div class="next">下一篇</div>
             <a href="https://jinyu-m.github.io/post/fastap/">
               <h3 class="post-title">
-                FastAP
+                Loss Function
               </h3>
             </a>
           </div>
