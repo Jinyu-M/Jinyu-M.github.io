@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Traditional Place Recognition | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615348352211">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615360383958">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Traditional Place Recognition | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615348352211" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615360383958" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -92,9 +92,12 @@
               <div class="post-content">
                 <h1 id="写在前面">写在前面</h1>
 <p>这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。</p>
+<hr>
 <h1 id="总结">总结</h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
 <p>这篇论文提出了一个很完整的增量式构建词典树的方法，利用特征跟踪获得基本单元，自下而上构建词典树，词典树的根节点为视觉单词，叶节点为基本单元，词典树（视觉单词）的数量由一个目标函数优化得到，无需人工干预，很新颖。词典的更新构成采用了增量式地更新，利用一些方法避免了重复计算。使用LDA对特征进行降维。应用场景为水下场景的SfM算法。</p>
+<hr>
+<h1 id="目录">目录</h1>
 <p><ul class="markdownIt-TOC">
 <li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
 <li><a href="#%E6%80%BB%E7%BB%93">总结</a>
@@ -102,6 +105,7 @@
 <li><a href="#iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></a></li>
 </ul>
 </li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
 <li><a href="#online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019-pdf">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019) pdf</a>
 <ul>
 <li><a href="#abstract"><em>Abstract</em></a></li>
@@ -435,6 +439,7 @@ OVV的词典会随着环境的增大而逐渐增大。<strong>（值得改进）
 <li><a href="#iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></a></li>
 </ul>
 </li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
 <li><a href="#online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019-pdf">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019) pdf</a>
 <ul>
 <li><a href="#abstract"><em>Abstract</em></a></li>
