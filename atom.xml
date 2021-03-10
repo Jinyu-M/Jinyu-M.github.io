@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-10T01:51:06.398Z</updated>
+    <updated>2021-03-10T03:52:37.325Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -17,7 +17,18 @@
         <link href="https://jinyu-m.github.io/post/traditional-place-recognition/">
         </link>
         <updated>2020-12-25T08:09:14.000Z</updated>
-        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+        <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。</p>
+<h1 id="总结">总结</h1>
+<h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
+<p>这篇论文提出了一个很完整的增量式构建词典树的方法，利用特征跟踪获得基本单元，自下而上构建词典树，词典树的根节点为视觉单词，叶节点为基本单元，词典树（视觉单词）的数量由一个目标函数优化得到，无需人工干预，很新颖。词典的更新构成采用了增量式地更新，利用一些方法避免了重复计算。使用LDA对特征进行降维。应用场景为水下场景的SfM算法。</p>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></a></li>
+</ul>
+</li>
 <li><a href="#online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019-pdf">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019) pdf</a>
 <ul>
 <li><a href="#abstract"><em>Abstract</em></a></li>
@@ -32,6 +43,15 @@
 <li><a href="#linear-discriminant-analysis-lda">Linear Discriminant Analysis (LDA)</a></li>
 </ul>
 </li>
+<li><a href="#image-indexing">Image Indexing</a>
+<ul>
+<li><a href="#cluster-association">Cluster association</a></li>
+<li><a href="#image-re-indexing">Image re-indexing</a></li>
+<li><a href="#image-similarity">Image similarity</a></li>
+<li><a href="#cross-over-detection">Cross-over detection</a></li>
+</ul>
+</li>
+<li><a href="#experimental-results">Experimental Results</a></li>
 </ul>
 </li>
 <li><a href="#online-visual-vocabulary-tro-2012-pdf">Online Visual Vocabulary (TRO 2012) pdf</a>
@@ -51,12 +71,12 @@
 <li><a href="#adding-new-clusters">Adding New Clusters</a></li>
 <li><a href="#linear-disciminant-analysis-uu">Linear Disciminant Analysis <u>(?)</u></a></li>
 <li><a href="#vocabulary-update-criterion">Vocabulary Update Criterion</a></li>
-<li><a href="#cluster-association">Cluster Association</a>
+<li><a href="#cluster-association-2">Cluster Association</a>
 <ul>
 <li><a href="#image-reindexing">Image Reindexing</a></li>
 </ul>
 </li>
-<li><a href="#image-similarity">Image similarity</a></li>
+<li><a href="#image-similarity-2">Image similarity</a></li>
 <li><a href="#increasing-vocabulary-efficiency">Increasing vocabulary efficiency</a></li>
 <li><a href="#experiments"><em>Experiments</em></a></li>
 </ul>
@@ -110,7 +130,7 @@
 </blockquote>
 <p>作者提出了一种先进的视觉词典构建方法，它是可扩展的（scalable，因此适用于on-line检测）和自动的（automatic）。为此，作者使用了修改版的agglomerative clustering。agglomerative algorithm从将每个element作为独立的cluster（以下称之为elementary clusters）开始，然后利用某种相似度度量方法将它们合并为更大的clusters中，直到达到一些收敛条件（比如最小clusters数量，最大cluster半径等）。</p>
 <h3 id="vocabulary-building">Vocabulary Building</h3>
-<p>在本方法中，elementary clusters是通过对场景点的视觉跟踪（T. Nicosevici and R. Garcia. Online Robust 3D Mapping Using Structure from Motion Cues. In MTS/IEEE OCEANS Conference, pages 1–7, 2008.）产生的，一个elementary cluster对应着一个追踪的特征。视觉词典通过增量式地合并这些clusters。词典构建过程可以总结为两步：<br>
+<p>在本方法中，elementary clusters是通过对场景点的视觉跟踪产生的，一个elementary cluster对应着一个追踪的特征。视觉词典通过增量式地合并这些clusters。词典构建过程可以总结为两步：<br>
 （1）词典初始化阶段。词典由前m张图像中的elementary cluster初始化，这些cluster逐渐合并，直到收敛（合并的准则在后文中详细描述）；<br>
 （2）词典更新阶段。当机器人移动，机器人获得了场景中的更多视觉信息，这些信需要包含到词典中。因此，对于每m张图像，新的elementary cluster被提取出来。这些cluster被加入到词典中，然后全部clusters逐渐合并，直到收敛。这一步每输入m张图像重复一次。<br>
 <img src="https://jinyu-m.github.io/post-images/1615277763160.png" alt="" loading="lazy"></p>
@@ -147,7 +167,53 @@
 <img src="https://jinyu-m.github.io/post-images/1615281993246.png" alt="" loading="lazy"><br>
 <strong>懵了，这些公式都没推导过...</strong></p>
 <h3 id="linear-discriminant-analysis-lda">Linear Discriminant Analysis (LDA)</h3>
-<p>对于视觉词典中包含的cluster信息，我们需要找到一种数据变换方法来是cluster的区分度最大，并且可以让我们减少数据的维度，来提升词典构建和图像检索的速度。因此，作者最大化以下LDA目标函数：</p>
+<p>对于视觉词典中包含的cluster信息，我们需要找到一种数据变换方法来是cluster的区分度最大，并且可以让我们减少数据的维度，来提升词典构建和图像检索的速度。因此，作者最大化以下LDA目标函数：<br>
+<img src="https://jinyu-m.github.io/post-images/1615341122606.png" alt="" loading="lazy"><br>
+其中，w是一个决定最大cluster分散度方向的向量。将最大化J(w)当做一个一般的特征值问题，我们得到一个特征向量对应着w的数据变换。选取G中对应着w中较大值的m列，我们可以将数据的维度降低到s维。<br>
+<strong>为什么会降低到s维？不是m维</strong></p>
+<h2 id="image-indexing">Image Indexing</h2>
+<p>一般来说，有两个方面决定了视觉词典的有效性：（1）相似的图像特征应当被对应到相同的cluster（可重复性）；（2）不相似的图像特征应该对应着不同的clusters（区分能力）。</p>
+<blockquote>
+<p>Generally, there are two aspects that define the efficiency of a visual vocabulary: (i) similar image features should be associated with the same clusters (repetitiveness) and (ii) dissimilar image features have to be associated with different clusters (discriminative power).</p>
+</blockquote>
+<p>在on-line词典中，作者定义了第三种特性：stability。因为词典一直在更新，作者的目的是相似的特征应当在词典更新的不同阶段都对应着相同的cluster。</p>
+<h3 id="cluster-association">Cluster association</h3>
+<p>特征与视觉单词间的对应是通过比较每个特征与词典中所有cluster来获得的。特征被对应到最相似的cluster。大多数图像检索方法利用特征空间中的距离来计算特征和clusters之间的距离。这种方法适合在静态预训练好的词典中使用。<br>
+<img src="https://jinyu-m.github.io/post-images/1615342470093.png" alt="" loading="lazy"><br>
+如图3所示，传统的特征association方法是不适用于on-line词典的（<strong>很棒的关注点！</strong>）。因此，作者提出的feature-cluster association方法是基于树的。在前文的词典构建过程中，词典树被构建好，树的节点对应着clusters，而树的分支对应着cluster的合并层次。树的根节点对应着视觉单词，树的叶节点对应着elementary clusters（从图像中tracking得到的基本单元）。<br>
+<img src="https://jinyu-m.github.io/post-images/1615342741631.png" alt="" loading="lazy"><br>
+在feature-cluster association过程中，自顶向下遍历树，计算特征和node之间的欧式距离。为了加速，算法只访问与特征相近的分支，为此，作者计算特征和视觉单词之间的距离，并选取满足：<br>
+<img src="https://jinyu-m.github.io/post-images/1615343028338.png" alt="" loading="lazy"><br>
+的树，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>(</mo><mi>f</mi><mo separator="true">,</mo><msub><mi>ζ</mi><mi>k</mi></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">D(f,\zeta_k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07378em;">ζ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.07378em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>是特征f与<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>ζ</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\zeta_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07378em;">ζ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.07378em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>之间的距离，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mi>m</mi></msub></mrow><annotation encoding="application/x-tex">D_m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是特征f与视觉单词之间的最小距离，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.1132em;">τ</span></span></span></span>是一个大于1的预设常值。<br>
+被选取的树将被并行访问，为了提升效率，算法使用了一个类似于式15的停止准则，不需要访问离f较远的分支。特征最后被关联到最相似的叶节点对应的视觉单词上。（就是自顶向下查找，找到最相似的叶节点，这一颗树的根节点，即视觉单词，被关联到特征）</p>
+<h3 id="image-re-indexing">Image re-indexing</h3>
+<p>在更新阶段，词典的设置被改变了。因此，无法计算在不同更新阶段索引的图像之间的相似性，而且在每次词典更新后对图像进行索引不是一个可行的解决方案，因为它的计算成本很大。<br>
+作者为此提出了一个转换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mrow></mrow><mi>p</mi></msup><msub><mi>T</mi><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">{}^pT_{p-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>来体现更新阶段词典的变化。这个转换可以实现对image re-indexing，而不需要重新进行image indexing：<br>
+<img src="https://jinyu-m.github.io/post-images/1615343875714.png" alt="" loading="lazy"><br>
+其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>H</mi><mi>I</mi><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow></msubsup></mrow><annotation encoding="application/x-tex">H^{p-1}_{I}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.225547em;vertical-align:-0.293531em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.932016em;"><span style="top:-2.4064690000000004em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span></span></span></span>是图像I在p-1词典更新阶段时的检索，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><msubsup><mi>H</mi><mi>I</mi><mi>p</mi></msubsup><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{H^{p}_{I}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2758310000000002em;vertical-align:-0.293531em;"></span><span class="mord overline"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9823000000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4064690000000004em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.9023em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span></span></span>是图像I在p-1词典更新阶段时的近似检索。<br>
+在更新阶段，词典经历了以下改变：<br>
+（1）添加elementary clusters。如果新的cluster没有被其他已存在的clusters吸收，它们将包含新的视觉信息。在这种情况下，任何图像的特征在更新之前都不太可能与它们相关联。因此，这部分<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><msubsup><mi>H</mi><mi>I</mi><mi>k</mi></msubsup><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{H^{k}_{I}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.324439em;vertical-align:-0.29353099999999993em;"></span><span class="mord overline"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.030908em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.830908em;"><span style="top:-2.4064690000000004em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07847em;">I</span></span></span></span><span style="top:-3.0448000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29353099999999993em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.950908em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29353099999999993em;"><span></span></span></span></span></span></span></span></span>被初始化为0；<br>
+（2）cluster合并。在这种情况下，两个或多个clusters合并，所有之前关联到这些cluster的特征将被关联到新合成的cluster上。因此，与新cluster关联的出现elements数是正在合并的clusters的elements数之和。<br>
+为了反映这些变化，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mrow></mrow><mi>p</mi></msup><msub><mi>T</mi><mrow><mi>p</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">{}^pT_{p-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>需要初始化对应着新添加的cluster的直方图元素，求和对应着合并的clusters的元素。举个例子：<br>
+<img src="https://jinyu-m.github.io/post-images/1615345181242.png" alt="" loading="lazy"></p>
+<h3 id="image-similarity">Image similarity</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1615345809486.png" alt="" loading="lazy"><br>
+作者还使用了TF-IDF权重。</p>
+<h3 id="cross-over-detection">Cross-over detection</h3>
+<figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1615346135592.png" alt="" loading="lazy"></figure>
+<h2 id="experimental-results">Experimental Results</h2>
+<p>该回环检测算法被应用在一个SfM算法（T. Nicosevici and R. Garcia. Online Robust 3D Mapping Using Structure from Motion Cues. In MTS/IEEE OCEANS Conference, pages 1–7, 2008.）中。SfM算法应用SIFT、SURF、MSER、Harris等特征进行特征跟踪。</p>
+<p>第一个实验在实验室中进行，使用了一个包含书、箱子和杂志的相对平坦的场景。场景的视觉组成是<br>
+复杂的，结合了无纹理区域、自然场景、几何图像和抽象的画。测试集包含215张640x480的图像，利用Canon G9 compact camera采集。算法利用SURF提取特征，特征描述子为64维，反映了特征附近的Haar小波响应。词典用前20张图像进行初始化，然后每10张图像更新一次。<br>
+<img src="https://jinyu-m.github.io/post-images/1615346729684.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615346752503.png" alt="" loading="lazy"><br>
+在序列的末端，词典的规模增长速度逐渐变慢。<br>
+<img src="https://jinyu-m.github.io/post-images/1615346927451.png" alt="" loading="lazy"><br>
+作者采用了一个直接的data association方法，来测试数据聚类的质量和所提出索引方法的效率。对于每个图像特征，我们直接将其与欧式距离小的elementary cluster相关联。然后，利用词典树检索该图像特征，如果该特征最后检索到了与相关联的elementary cluster对应的叶节点，被认为是一次“命中”，否则是一次“错失”。作者测试了不同LDA维度缩减和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi></mrow><annotation encoding="application/x-tex">\tau</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.1132em;">τ</span></span></span></span>值，最后得到，当LDA将特征维度从64降到24，并且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>τ</mi><mo>=</mo><mn>1.4</mn></mrow><annotation encoding="application/x-tex">\tau=1.4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">4</span></span></span></span>时，错失率为0.96%。这一参数设置可以很好地减少计算耗时，同时很好的保留词典的能力。在这个序列上，词典更新的平均时间为每次更新1.36秒，图像检索的平均时间为每帧0.23秒。<br>
+<img src="https://jinyu-m.github.io/post-images/1615347676267.png" alt="" loading="lazy"><br>
+回环检测的结果使用similarity matrix给出的.</p>
+<p>第二个实验是在水下数据集进行的，该数据集包含235张720x530的图像。回环检测结果依然由similarity matrix给出。（好像早期的研究偏向于similarity matrix做直观的显示，没有p-r曲线和p@r=1这样的指标）<br>
+<img src="https://jinyu-m.github.io/post-images/1615347862825.png" alt="" loading="lazy"></p>
 <hr>
 <h1 id="online-visual-vocabulary-tro-2012-pdf">Online Visual Vocabulary (TRO 2012) <a href="https://doi.org/10.1109/TRO.2012.2192013">pdf</a></h1>
 <h2 id="abstract-2"><em>Abstract</em></h2>
@@ -211,7 +277,7 @@
 <p>在实际操作中，词典不是间隔固定时间更新一次的，而是自适应的更新。在图像检索过程中，当特征的每个维度都满足：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877346064.png" alt="" loading="lazy"></p>
 <p>则认为该特征落入当前cluster。当特征落入cluster的比率小于90%，则更新词典。</p>
-<h3 id="cluster-association">Cluster Association</h3>
+<h3 id="cluster-association-2">Cluster Association</h3>
 <p>在cluster merging的过程中，词典的repetitiveness和disciminative得到最大化。但是还需要考虑词典的stability，即同一特征，在更新前后应当associate同一cluster。<br>
 本文提出的feature-cluster association方法基于树，在词典训练的同时，建立树，树的节点表示cluster，分支表示cluster的层次，树的根节点对应着visual word<u><strong>(?)</strong></u>，树的叶节点对应elementary cluster。<br>
 在association过程中，树由上自下被访问，计算特征与节点之间的欧氏距离。为了减少遍历的树的个数，只搜索满足以下条件的树：<br>
@@ -223,7 +289,7 @@
 <img src="https://jinyu-m.github.io/post-images/1610877482833.png" alt="" loading="lazy"></p>
 <p>示例：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877487348.png" alt="" loading="lazy"></p>
-<h3 id="image-similarity">Image similarity</h3>
+<h3 id="image-similarity-2">Image similarity</h3>
 <p>计算图像相似度用：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877501357.png" alt="" loading="lazy"></p>
 <p>为了体现visual word的disciminative，用TF-IDF加权。</p>
