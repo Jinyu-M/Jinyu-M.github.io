@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Traditional Place Recognition | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615362149817">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615385869915">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Traditional Place Recognition | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615362149817" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615385869915" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -110,7 +110,7 @@
 <ul>
 <li><a href="#abstract"><em>Abstract</em></a></li>
 <li><a href="#introduction"><em>Introduction</em></a></li>
-<li><a href="#visual-vocabularyignoretrue"><em>Visual Vocabulary</em>{ignore=true}</a>
+<li><a href="#visual-vocabulary"><em>Visual Vocabulary</em></a>
 <ul>
 <li><a href="#vocabulary-building">Vocabulary Building</a></li>
 <li><a href="#cluster-characterization">Cluster Characterization</a></li>
@@ -200,7 +200,7 @@
 <p>在这篇论文中，作者提出了一个增量式构建视觉词典的框架。该算法不需要人工干预，不需要关于环境的先验信息。在导航过程中，当视觉信息输入到系统中，系统会构建一个简化的词典。该词典会进行更新，以正确地对场景中出现的视觉信息建模。该词典使用一种考虑视觉数据的全局分布的方法来构建，提升了效率。并且，作者提出了一种新的用于特征-聚类之间的联合方法和图像检索方法，适合在线的检测。<br>
 提出的方法被应用在水下导航和建图的SFM算法中，视觉词典被用于量化帧间的相似度，从而进行回环检测。<br>
 <img src="https://jinyu-m.github.io/post-images/1615277597694.png" alt="" loading="lazy"></p>
-<h2 id="visual-vocabularyignoretrue"><em>Visual Vocabulary</em>{ignore=true}</h2>
+<h2 id="visual-vocabulary"><em>Visual Vocabulary</em></h2>
 <p>当前sota的算法都处于一个off-line的阶段，这一阶段需要实现从场景中获取视觉特征。这些特征然后通过某种聚类方法被用于构建视觉词典。典型的off-line词典构建方法使用K-means，K-medians或者fixed-radius clustering方法，这些方法需要使用者去设置许多参数，比如聚类簇数。为一个最优的词典找到合适的参数是一项繁琐的任务，需要不同的试错。比如，一个拥有过多单词的词典不会有足够的抽象能力来检测图像间的相似度，反之，一个单词太少的词典将受到混淆，单词过于泛化导致无法区分。</p>
 <blockquote>
 <p>the adequate parameters for an optimum vocabulary is a tedious task which generally involves a trial and error approach. For example, a vocabulary with too many words would not have enough abstraction power to detect similarities between images. In contrast, a vocabulary with too few words would be too confusing and generalized to be discriminant.</p>
@@ -444,7 +444,7 @@ OVV的词典会随着环境的增大而逐渐增大。<strong>（值得改进）
 <ul>
 <li><a href="#abstract"><em>Abstract</em></a></li>
 <li><a href="#introduction"><em>Introduction</em></a></li>
-<li><a href="#visual-vocabularyignoretrue"><em>Visual Vocabulary</em>{ignore=true}</a>
+<li><a href="#visual-vocabulary"><em>Visual Vocabulary</em></a>
 <ul>
 <li><a href="#vocabulary-building">Vocabulary Building</a></li>
 <li><a href="#cluster-characterization">Cluster Characterization</a></li>
