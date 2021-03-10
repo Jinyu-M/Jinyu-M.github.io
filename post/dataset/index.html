@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dataset | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615385869915">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615386973460">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Dataset | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -11,9 +11,12 @@
 
 
 
-    <meta name="description" content="Cross-Season Correspondence Dataset paper link
-Abstract
-这篇论文中，作者提出一种利用不同视觉条件下图像的2D-2D点匹配来训练语义分割网络的方法。通过要求匹配点的语义一致性，来让语义分..." />
+    <meta name="description" content="写在前面
+这篇日志记录了一些可能用到的数据集。
+
+总结
+[semantic segmentation] Cross-Season Correspondence dataset
+这篇论文中，作者提出了一个数据集，包括不同视觉条件下同一场景的图..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -23,7 +26,7 @@ Abstract
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615385869915" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615386973460" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -84,14 +87,47 @@ Abstract
                 2020-11-30
               </span>
               <span>
-                4 min read
+                5 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset <a href="https://arxiv.org/abs/1903.06916v2">paper</a> <a href="https://visuallocalization.net">link</a></h1>
+                <h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录了一些可能用到的数据集。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<h2 id="semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></h2>
+<p>这篇论文中，作者提出了一个数据集，包括不同视觉条件下同一场景的图像，以及图像间2D-2D点的真值匹配关系。在语义分割框架中，作者加入了特征匹配带来的语义一致性约束（即匹配到的特征点应该具有相同的语义标签），提升了语义分割算法的表现。</p>
+<hr>
+<h1 id="目录">目录</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset paper link</a>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#semantic-correspondence-loss">Semantic Correspondence Loss</a></li>
+<li><a href="#a-cross-season-correspondence-dataset">A Cross-Season Correspondence Dataset</a>
+<ul>
+<li><a href="#cmu-seasons-correspondence-dataset">CMU Seasons Correspondence Dataset</a></li>
+<li><a href="#oxford-robotcar-correspondence-dataset">Oxford RoBotCar Correspondence Dataset</a></li>
+</ul>
+</li>
+<li><a href="#inplementation-details">Inplementation Details</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<hr>
+<h1 id="cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset <a href="https://arxiv.org/abs/1903.06916v2">paper</a> <a href="https://visuallocalization.net">link</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>这篇论文中，作者提出一种利用不同视觉条件下图像的2D-2D点匹配来训练语义分割网络的方法。通过要求匹配点的语义一致性，来让语义分割网络在不同视觉条件下更鲁棒。</p>
 <h2 id="introduction">Introduction</h2>
@@ -121,6 +157,13 @@ Abstract
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
 <li><a href="#cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset paper link</a>
 <ul>
 <li><a href="#abstract">Abstract</a></li>

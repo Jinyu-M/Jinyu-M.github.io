@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-10T14:18:28.264Z</updated>
+    <updated>2021-03-10T14:36:26.803Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -12,7 +12,7 @@
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 年少万兜鍪</rights>
     <entry>
-        <title type="html"><![CDATA[Traditional Place Recognition]]></title>
+        <title type="html"><![CDATA[Place Recognition/Loop Closure Detection]]></title>
         <id>https://jinyu-m.github.io/post/traditional-place-recognition/</id>
         <link href="https://jinyu-m.github.io/post/traditional-place-recognition/">
         </link>
@@ -115,6 +115,14 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#calc-pdf-code">CALC pdf code</a>
+<ul>
+<li><a href="#abstract-4"><em>Abstract</em></a></li>
+<li><a href="#method"><em>Method</em></a></li>
+<li><a href="#performance"><em>Performance</em></a></li>
+<li><a href="#%E4%B8%80%E7%82%B9%E7%9C%8B%E6%B3%95">一点看法</a></li>
 </ul>
 </li>
 </ul>
@@ -356,6 +364,28 @@ OVV的词典会随着环境的增大而逐渐增大。<strong>（值得改进）
 <p>该全局描述子将缩放后图像块的中心作为关键点，来进行计算，没有显性的旋转和缩放。然而，可以采用其他替代方法，将图像划分为多个grids，将每个grid的中心视为关键点，然后计算每个grid的二进制描述子，拼接到一起得到最后的二进制code。这一方法可以考虑采用不同宽和高的grid(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>w</mi></msub><mo>×</mo><msub><mi>g</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">g_w \times g_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。</p>
 <h4 id="binary-codes-matching"><strong>Binary codes matching</strong></h4>
 <p>对要分析的m个场景，提取二进制描述子，构成向量v。计算二进制描述子之间的hamming距离，得到距离矩阵M</p>
+<hr>
+<h1 id="calc-pdf-code">CALC <a href="https://arxiv.org/abs/1805.07703.pdf">pdf</a> <a href="https://github.com/rpng/calc">code</a></h1>
+<h2 id="abstract-4"><em>Abstract</em></h2>
+<p>这篇论文提出了一种无监督的神经网络，采用autoencoder的结构，但是重建的不是原始图像，而是图像的HoG描述子。</p>
+<h2 id="method"><em>Method</em></h2>
+<p>这篇论文作者设计了一个可以将高维的原始图像信息映射到低维特征空间的网络，对场景变化不敏感，训练方法不需要标注图像。<br>
+训练pipeline如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610854867832.png" alt="" loading="lazy"></p>
+<p>训练集中的每张图像被缩小到120x160，灰度图。通过projective transformations获得匹配图像。<br>
+HOG特征对网络提供了一个先验的几何约束，网络可以获得光照不变性，通过projective transformations来获得HOG所不具备的视角不变性。<br>
+获得训练的方法-projective transformations过程如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610854876928.png" alt="" loading="lazy"></p>
+<p>这个过程的目的是：根据一张真实图像I，通过随机的2D projective transformation获得一系列描述同场景、但视角不同的图像。<br>
+对于每张图像，从其四角的某一区域内各随机选一个点，作为生成图像的四个角点，获得四个点后，就可以获得从原图到生成图像的homograph，矫正之后就生成了新图像。<br>
+<img src="https://jinyu-m.github.io/post-images/1610854884737.png" alt="" loading="lazy"></p>
+<h2 id="performance"><em>Performance</em></h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610854891056.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610854894727.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610854897698.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1610854900621.png" alt="" loading="lazy"></p>
+<h2 id="一点看法">一点看法</h2>
+<p>这篇工作虽然说是无监督，但是其实用了HoG描述子去监督训练网络，算是自己制作了伪真值去训练网络，最后得到的网络效果超过了HoG，证明了数据集如果够丰富，神经网络的泛化能力还是很强的。有点像MagicPoint和SuperPoint的detector，虽然最初的annotated label是人工设置的角点，但是最后训练得到的网络却具备更泛化的能力。论文中projective transformation用于拓展数据集，让网络学习（小）视角不变性，简单有效，值得参考。</p>
 ]]></content>
     </entry>
     <entry>
@@ -364,8 +394,41 @@ OVV的词典会随着环境的增大而逐渐增大。<strong>（值得改进）
         <link href="https://jinyu-m.github.io/post/fastap/">
         </link>
         <updated>2020-12-13T10:02:24.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="ap-loss-pdf-code">AP-Loss <a href="http://openaccess.thecvf.com/content_CVPR_2019/papers/Cakir_Deep_Metric_Learning_to_Rank_CVPR_2019_paper.pdf">pdf</a> <a href="https://github.com/kunhe/FastAP-metric-learning">code</a></h1>
-<p>目前基于深度学习的特征算法大多使用metric learning来进行训练，一般会使用pair-based，triplet-based的损失函数来进行无监督或弱监督的训练。doap和r2d2中使用了rank-based <strong>A</strong>verage <strong>P</strong>recision loss，很好的提升了效果。FastAP是doap作者在doap之后发表的一篇论文，是一种高效的AP loss，我感觉和doap中的损失函数有很多共同之处(btw, doap没有提供训练代码，r2d2中讲解不详细)，所以我研读了一下这篇论文，希望可以搞懂AP loss，用于自己的模型中。</p>
+        <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录了一些别出心裁的损失函数。在我看来，深度学习的主要改进就体现在网络结构和损失函数上，如何将待优化问题转换成数学公式实在是一门艺术。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<h2 id="cvpr-2019-average-precision-loss">[CVPR 2019] <strong>Average Precision Loss</strong></h2>
+<p>目前基于深度学习的特征算法大多使用metric learning来进行训练description，一般会使用pair-based，triplet-based的损失函数来进行无监督或弱监督的训练。doap和r2d2中使用了rank-based <strong>A</strong>verage <strong>P</strong>recision loss，很好的提升了效果。FastAP是doap作者在doap之后发表的一篇论文，是一种高效的AP loss，我感觉和doap中的损失函数有很多共同之处(btw, doap没有提供训练代码，r2d2中讲解不详细).</p>
+<hr>
+<h1 id="目录">目录</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#cvpr-2019-average-precision-loss">[CVPR 2019] <strong>Average Precision Loss</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#ap-loss-pdf-code">AP-Loss pdf code</a>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#learning-to-rank-with-average-precision">Learning to Rank with Average Precision</a>
+<ul>
+<li><a href="#fastap">FastAP</a></li>
+</ul>
+</li>
+<li><a href="#stochastic-optimization">Stochastic Optimization</a></li>
+<li><a href="#large-batch-training">Large-Batch Training</a></li>
+<li><a href="#minibatch-sampling">Minibatch Sampling</a></li>
+<li><a href="#code-with-comments">code with comments</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<hr>
+<h1 id="ap-loss-pdf-code">AP-Loss <a href="http://openaccess.thecvf.com/content_CVPR_2019/papers/Cakir_Deep_Metric_Learning_to_Rank_CVPR_2019_paper.pdf">pdf</a> <a href="https://github.com/kunhe/FastAP-metric-learning">code</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>作者基于learning to rank的方法提出了一种新的深度学习方法，FastAP，通过一种源自距离量化的近似方法来优化<strong>rank-based Average Precision</strong>。FastAP具有较低的复杂度，适应于stochastic gradient descent (SGD)。为了全面探索该方法的优势，作者还提出了一种新的minibatch sampling策略，一种允许large-batch training的新启发式方法。</p>
 <h2 id="introduction">Introduction</h2>
@@ -599,7 +662,40 @@ class FastAPLoss(torch.nn.Module):
         <link href="https://jinyu-m.github.io/post/dataset/">
         </link>
         <updated>2020-11-30T10:54:17.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset <a href="https://arxiv.org/abs/1903.06916v2">paper</a> <a href="https://visuallocalization.net">link</a></h1>
+        <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录了一些可能用到的数据集。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<h2 id="semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></h2>
+<p>这篇论文中，作者提出了一个数据集，包括不同视觉条件下同一场景的图像，以及图像间2D-2D点的真值匹配关系。在语义分割框架中，作者加入了特征匹配带来的语义一致性约束（即匹配到的特征点应该具有相同的语义标签），提升了语义分割算法的表现。</p>
+<hr>
+<h1 id="目录">目录</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset paper link</a>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#semantic-correspondence-loss">Semantic Correspondence Loss</a></li>
+<li><a href="#a-cross-season-correspondence-dataset">A Cross-Season Correspondence Dataset</a>
+<ul>
+<li><a href="#cmu-seasons-correspondence-dataset">CMU Seasons Correspondence Dataset</a></li>
+<li><a href="#oxford-robotcar-correspondence-dataset">Oxford RoBotCar Correspondence Dataset</a></li>
+</ul>
+</li>
+<li><a href="#inplementation-details">Inplementation Details</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<hr>
+<h1 id="cross-season-correspondence-dataset-paper-link">Cross-Season Correspondence Dataset <a href="https://arxiv.org/abs/1903.06916v2">paper</a> <a href="https://visuallocalization.net">link</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>这篇论文中，作者提出一种利用不同视觉条件下图像的2D-2D点匹配来训练语义分割网络的方法。通过要求匹配点的语义一致性，来让语义分割网络在不同视觉条件下更鲁棒。</p>
 <h2 id="introduction">Introduction</h2>
@@ -724,41 +820,39 @@ class FastAPLoss(torch.nn.Module):
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Deep Place Recognition]]></title>
-        <id>https://jinyu-m.github.io/post/deep-loop-closure/</id>
-        <link href="https://jinyu-m.github.io/post/deep-loop-closure/">
-        </link>
-        <updated>2020-11-07T02:55:58.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="calc-pdf-code">CALC <a href="https://arxiv.org/abs/1805.07703.pdf">pdf</a> <a href="https://github.com/rpng/calc">code</a></h1>
-<h2 id="abstract"><em>Abstract</em></h2>
-<p>这篇论文提出了一种无监督的神经网络，采用autoencoder的结构，但是重建的不是原始图像，而是图像的HoG描述子。</p>
-<h2 id="method"><em>Method</em></h2>
-<p>这篇论文作者设计了一个可以将高维的原始图像信息映射到低维特征空间的网络，对场景变化不敏感，训练方法不需要标注图像。<br>
-训练pipeline如下：<br>
-<img src="https://jinyu-m.github.io/post-images/1610854867832.png" alt="" loading="lazy"></p>
-<p>训练集中的每张图像被缩小到120x160，灰度图。通过projective transformations获得匹配图像。<br>
-HOG特征对网络提供了一个先验的几何约束，网络可以获得光照不变性，通过projective transformations来获得HOG所不具备的视角不变性。<br>
-获得训练的方法-projective transformations过程如下：<br>
-<img src="https://jinyu-m.github.io/post-images/1610854876928.png" alt="" loading="lazy"></p>
-<p>这个过程的目的是：根据一张真实图像I，通过随机的2D projective transformation获得一系列描述同场景、但视角不同的图像。<br>
-对于每张图像，从其四角的某一区域内各随机选一个点，作为生成图像的四个角点，获得四个点后，就可以获得从原图到生成图像的homograph，矫正之后就生成了新图像。<br>
-<img src="https://jinyu-m.github.io/post-images/1610854884737.png" alt="" loading="lazy"></p>
-<h2 id="performance"><em>Performance</em></h2>
-<p><img src="https://jinyu-m.github.io/post-images/1610854891056.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854894727.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854897698.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854900621.png" alt="" loading="lazy"></p>
-<h2 id="一点看法">一点看法</h2>
-<p>这篇工作虽然说是无监督，但是其实用了HoG描述子去监督训练网络，算是自己制作了伪真值去训练网络，最后得到的网络效果超过了HoG，证明了数据集如果够丰富，神经网络的泛化能力还是很强的。有点像MagicPoint和SuperPoint的detector，虽然最初的annotated label是人工设置的角点，但是最后训练得到的网络却具备更泛化的能力。论文中projective transformation用于拓展数据集，让网络学习（小）视角不变性，简单有效，值得参考。</p>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[BenchMark]]></title>
         <id>https://jinyu-m.github.io/post/a-comprehensive-comparison-of-vpr-under-changing-conditions/</id>
         <link href="https://jinyu-m.github.io/post/a-comprehensive-comparison-of-vpr-under-changing-conditions/">
         </link>
         <updated>2020-11-05T08:33:45.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="levelling-the-playing-field">Levelling the Playing Field</h1>
+        <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录一下不常见或新提出的benchmark。好的算法也需要好的评价规则来体现呀！</p>
+<hr>
+<h1 id="总结">总结</h1>
+<h2 id="place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></h2>
+<p>这篇论文中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
+<hr>
+<h1 id="目录">目录</h1>
+<p><ul class="markdownIt-TOC">
+<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#levelling-the-playing-field-a-comprehensive-comparison-of-visual-place-recognition-approaches-under-changing-conditions">Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</a>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#evaluation-datasets">Evaluation Datasets</a></li>
+<li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
+<li><a href="#performance">Performance</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<hr>
+<h1 id="levelling-the-playing-field-a-comprehensive-comparison-of-visual-place-recognition-approaches-under-changing-conditions">Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</h1>
 <p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>.  ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
 <h2 id="introduction">Introduction</h2>
 <p>本文是对一些VPR算法的比较。作者提出VPR的四个难点：<strong>Seasonal Variation, Viewpoint Variation, Illumination Variation, Dynamic Objects</strong>。在这篇文献中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
