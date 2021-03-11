@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-11T06:47:41.362Z</updated>
+    <updated>2021-03-11T06:55:14.912Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -27,116 +27,10 @@
 <p>这篇论文是在[OVV IROS 2009]的基础上拓展的期刊论文，在这篇论文中，作者对于词典的更新间隔进行了改进，不再是每隔m张图像更新一次词典，而是通过判断特征与单词的关联率来判断词典是否需要更新。并且，对于具有较少信息的分支，词典进行了剪枝，使得结构更加紧凑。</p>
 <hr>
 <h1 id="目录">目录</h1>
-<p><ul class="markdownIt-TOC">
-<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
-<ul>
-<li><a href="#iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></a></li>
-<li><a href="#tro-2012-automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping">[TRO 2012] <strong>Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping</strong></a></li>
-</ul>
-</li>
-<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
-<li><a href="#online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019-pdf">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019) pdf</a>
-<ul>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#visual-vocabulary">Visual Vocabulary</a>
-<ul>
-<li><a href="#vocabulary-building">Vocabulary Building</a></li>
-<li><a href="#cluster-characterization">Cluster Characterization</a></li>
-<li><a href="#cluster-merging">Cluster Merging</a></li>
-<li><a href="#convergence-criterion">Convergence criterion</a></li>
-<li><a href="#vocabulary-update">Vocabulary update</a></li>
-<li><a href="#linear-discriminant-analysis-lda">Linear Discriminant Analysis (LDA)</a></li>
-</ul>
-</li>
-<li><a href="#image-indexing">Image Indexing</a>
-<ul>
-<li><a href="#cluster-association">Cluster association</a></li>
-<li><a href="#image-re-indexing">Image re-indexing</a></li>
-<li><a href="#image-similarity">Image similarity</a></li>
-<li><a href="#cross-over-detection">Cross-over detection</a></li>
-</ul>
-</li>
-<li><a href="#experimental-results">Experimental Results</a></li>
-</ul>
-</li>
-<li><a href="#automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping-tro-2012-pdf">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012) pdf</a>
-<ul>
-<li><a href="#abstract-2">Abstract</a></li>
-<li><a href="#introduction-2">Introduction</a></li>
-<li><a href="#visual-vocabulary-2">Visual Vocabulary</a>
-<ul>
-<li><a href="#agglomerative-clustering">Agglomerative clustering</a></li>
-<li><a href="#vocabulary-building-2">Vocabulary building</a></li>
-<li><a href="#cluster-characterization-2">Cluster characterization</a>
-<ul>
-<li><a href="#cluster-updating">Cluster updating</a></li>
-</ul>
-</li>
-<li><a href="#cluster-merging-criterion">Cluster merging criterion</a></li>
-<li><a href="#convergence-criterion-2">Convergence Criterion</a></li>
-<li><a href="#adding-new-clusters">Adding New Clusters</a></li>
-<li><a href="#linear-disciminant-analysis">Linear Disciminant Analysis</a></li>
-<li><a href="#vocabulary-update-criterion">Vocabulary Update Criterion</a></li>
-</ul>
-</li>
-<li><a href="#image-indexing-2">Image Indexing</a>
-<ul>
-<li><a href="#cluster-association-2">Cluster Association</a>
-<ul>
-<li><a href="#image-reindexing">Image Reindexing</a></li>
-</ul>
-</li>
-<li><a href="#image-similarity-2">Image similarity</a></li>
-</ul>
-</li>
-<li><a href="#increasing-vocabulary-efficiency">Increasing Vocabulary Efficiency</a></li>
-<li><a href="#experiments">Experiments</a></li>
-</ul>
-</li>
-<li><a href="#dbow-tro-pdf">DBoW (TRO) pdf</a>
-<ul>
-<li><a href="#introduction-3"><em>Introduction</em></a></li>
-<li><a href="#image-database"><em>Image Database</em></a></li>
-<li><a href="#loop-detection-algorithm"><em>Loop Detection Algorithm</em></a>
-<ul>
-<li><a href="#database-query">Database query</a></li>
-<li><a href="#match-grouping">Match grouping</a></li>
-<li><a href="#temporal-consistency">Temporal consistency</a></li>
-<li><a href="#efficient-geometrical-consistency">Efficient geometrical consistency</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) pdf</a>
-<ul>
-<li><a href="#abstract-3"><strong>Abstract</strong></a></li>
-<li><a href="#introduction-4"><strong>Introduction</strong></a></li>
-<li><a href="#binary-descriptor"><strong>Binary Descriptor</strong></a>
-<ul>
-<li><a href="#proposed-method"><strong>Proposed Method</strong></a>
-<ul>
-<li><a href="#binary-code-calculation"><strong>Binary code calculation</strong></a></li>
-<li><a href="#binary-codes-matching"><strong>Binary codes matching</strong></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#calc-pdf-code">CALC pdf code</a>
-<ul>
-<li><a href="#abstract-4"><em>Abstract</em></a></li>
-<li><a href="#method"><em>Method</em></a></li>
-<li><a href="#performance"><em>Performance</em></a></li>
-<li><a href="#%E4%B8%80%E7%82%B9%E7%9C%8B%E6%B3%95">一点看法</a></li>
-</ul>
-</li>
-</ul>
-</p>
+<p><a href="#1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</a><br>
+<a href="#2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</a></p>
 <hr>
-<h1 id="online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019-pdf">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019) <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
+<h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>受到content-based image retrieval算法的启发，回环检测算法使用visual vocabularies来度量图像间的相似度。但是这类算法有两个缺陷：（1）他们需要很强的人工干预，即通过trial-and-error的方法来训练和调试参数，（2）他们只适合批处理数据，即所有数据在处理前都是已经获得的（应该是指算法只在见过的场景中表现良好）。因此，作者提出了一个算法，在线构建和更新vocabularies，来高效地表示场景中的图像，并且词典构建过程不需要人工干预。</p>
 <h2 id="introduction">Introduction</h2>
@@ -245,7 +139,7 @@
 <p>第二个实验是在水下数据集进行的，该数据集包含235张720x530的图像。回环检测结果依然由similarity matrix给出。（好像早期的研究偏向于similarity matrix做直观的显示，没有p-r曲线和p@r=1这样的指标）<br>
 <img src="https://jinyu-m.github.io/post-images/1615347862825.png" alt="" loading="lazy"></p>
 <hr>
-<h1 id="automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping-tro-2012-pdf">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012) <a href="https://doi.org/10.1109/TRO.2012.2192013">pdf</a></h1>
+<h1 id="span-id2automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping-tro-2012span-pdf"><span id="2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</span> <a href="https://doi.org/10.1109/TRO.2012.2192013">pdf</a></h1>
 <p>本文是Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)论文的期刊版。</p>
 <h2 id="abstract-2">Abstract</h2>
 <blockquote>
