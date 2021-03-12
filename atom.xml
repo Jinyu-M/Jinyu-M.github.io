@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-12T02:01:40.650Z</updated>
+    <updated>2021-03-12T02:18:14.411Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -24,7 +24,9 @@
 <p><a href="#0">论文主要内容总结</a><br>
 <a href="#1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</a><br>
 <a href="#2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</a><br>
-<a href="#3">Bags of Binary Words for Fast Place Recognition in Image Sequences (TRO 2012)</a></p>
+<a href="#3">Bags of Binary Words for Fast Place Recognition in Image Sequences (TRO 2012)</a><br>
+<a href="#4">Fast and Effective Visual PR using Binary Codes and Disparity Information (IROS 2014)</a><br>
+<a href="#5">Lightweight Unsupervised Deep Loop Closure (RSS 2018)</a></p>
 <hr>
 <h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
@@ -33,6 +35,9 @@
 <p>这篇论文是在[OVV IROS 2009]的基础上拓展的期刊论文，在这篇论文中，作者对于词典的更新间隔进行了改进，不再是每隔m张图像更新一次词典，而是通过判断特征与单词的关联率来判断词典是否需要更新。并且，对于具有较少信息的分支，词典进行了剪枝，使得结构更加紧凑。</p>
 <h2 id="tro-2012-bags-of-binary-words-for-fast-place-recognition-in-image-sequences">[TRO 2012] <strong>Bags of Binary Words for Fast Place Recognition in Image Sequences</strong></h2>
 <p>个人感觉是“离线训练词典，在线回环检测”这种检测策略的里程碑了，被广泛用于SLAM系统中，效果和实时性都很好。主要贡献是提出了一种更为鲁棒的二进制特征（改进自FAST+BRIEF），用一个树型词典去离散化特征空间，并在树的结构中加入了inverse index table和direct index table的结构，inverse index table储存了图像中单词的权重和图像出现的图像索引值，direct index table储存了图像中特征及其关联的叶节点（视觉单词）。</p>
+<h2 id="iros-2014-fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information">[IROS 2014] <strong>Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information</strong></h2>
+<h2 id="rss-2018-lightweight-unsupervised-deep-loop-closure">[RSS 2018] <strong>Lightweight Unsupervised Deep Loop Closure</strong></h2>
+<p>这篇论文，作者设计了一个CNN模型，用来模拟HoG特征，采用随机射影变换来进行数据增强，采用真值场景的图像，让网络学习到具有良好视觉不变性的全局描述子，该特征CALC在很多数据集上达到了良好的表现。</p>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -265,15 +270,15 @@ OVV的词典会随着环境的增大而逐渐增大。<br>
 <img src="https://jinyu-m.github.io/post-images/1615514141134.png" alt="" loading="lazy"><br>
 准确率-召回率曲线和最大召回率。这两个指标一般用于评测回环检测，对于SLAM系统来说，还是准确率为100%时最大召回率这个指标最为重要。</p>
 <hr>
-<h1 id="fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) <a href="https://www.researchgate.net/publication/263298223">pdf</a></h1>
-<h2 id="abstract-3"><strong>Abstract</strong></h2>
+<h1 id="span-id4fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-span-pdf"><span id="4">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) </span> <a href="https://www.researchgate.net/publication/263298223">pdf</a></h1>
+<h2 id="abstract-3">Abstract</h2>
 <p>这篇工作提出了一个基于二进制code和视差信息的双目场景识别算法。算法（ABLE-S）在全局框架中使用Local Difference Binary（LDB）描述子来获得鲁棒的全局图像描述，该描述是基于图像像素对间亮度和梯度之间差异的。LDB相比其他描述子，如仅依赖于图像亮度的BRIEF，有更好的描述能力。除此之外，作者还讲视差信息加入了二进制描述子（D-LDB）。视差可以提供一些有用的信息，来解决场景识别中常见的问题，如perceptual aliasing。<br>
 论文用KITTI数据集测试算法。并且，作者提供了一个回环的真值，以方便回环检测算法表现的比较。</p>
-<h2 id="introduction-4"><strong>Introduction</strong></h2>
+<h2 id="introduction-4">Introduction</h2>
 <p>作者提出FAB-MAP有一些缺陷，即需要事先训练环境的视觉词典和相关联的概率方法，使得算法无法适应实时的应用。<br>
 在这篇论文中，作者提出了一个用于视觉回环检测和场景识别的算法，该算法使用基于像素对的亮度、梯度和视差比较的全局二进制描述子，如图1所示。作者将视差信息加入了LDB，得到了D-LDB。在实验中，作者证明了视差的加入提供了更准确的视觉定位，减少了视觉场景识别中的常见问题，如perceptual aliasing。最后的实验证明，ABLE-S算法获得了超过FAB-MAP、WI-SURF、BRIEF-Gist的表现，并且计算消耗更低。<br>
 <img src="https://jinyu-m.github.io/post-images/1610877655376.png" alt="" loading="lazy"></p>
-<h2 id="binary-descriptor"><strong>Binary Descriptor</strong></h2>
+<h2 id="binary-descriptor">Binary Descriptor</h2>
 <p>二进制描述子最好的性质为可以用hamming距离进行高效的匹配。假设一个平滑后的图像块p，其中心为关键点(x,y)，那么二进制检测可以定义为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877660015.png" alt="" loading="lazy"><br>
 其中，f(i)是一个函数，返回p中特定pixel或cell的图像特征响应。f(i)可以采用如BRIEF、ORB和BRISK中二进制描述子一样的平滑后的图像灰度值。除此之外，f(i)也可以是如LDB和M-LDB中不同二进制比较结构的串联，比如平均图像灰度、p中特定cell的图像梯度Gx和Gy。<br>
@@ -282,33 +287,33 @@ OVV的词典会随着环境的增大而逐渐增大。<br>
 <img src="https://jinyu-m.github.io/post-images/1610877681169.png" alt="" loading="lazy"></p>
 <p>最后，合成的描述子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>n</mi></msub><mo>(</mo><mi>p</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d_n(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>为一个n次二进制检测的向量，n是描述子的维度，通常被矫正为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877692854.png" alt="" loading="lazy"></p>
-<h3 id="proposed-method"><strong>Proposed Method</strong></h3>
-<h4 id="binary-code-calculation"><strong>Binary code calculation</strong></h4>
+<h3 id="proposed-method">Proposed Method</h3>
+<h4 id="binary-code-calculation">Binary code calculation</h4>
 <p>在本文中，作者采用了LDB，因为LDB相对BRIEF加入了梯度信息。作者还加入了视差信息，得到D-LDB。视差是通过SGBM(Semi Global Block Matching)获得的。</p>
 <p>作者将图像块的大小定义为64x64，在提取全局二进制描述子之前将图像缩放到这一尺寸。更小的图像块会削弱场景识别算法的有效性，更大的分辨率也没有得到更好的表现。另外，作者将二进制描述子的维度定义为256比特。描述子通过LDB的随机比特挑选方法来满足维度要求。</p>
 <p>该全局描述子将缩放后图像块的中心作为关键点，来进行计算，没有显性的旋转和缩放。然而，可以采用其他替代方法，将图像划分为多个grids，将每个grid的中心视为关键点，然后计算每个grid的二进制描述子，拼接到一起得到最后的二进制code。这一方法可以考虑采用不同宽和高的grid(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>g</mi><mi>w</mi></msub><mo>×</mo><msub><mi>g</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">g_w \times g_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)。</p>
-<h4 id="binary-codes-matching"><strong>Binary codes matching</strong></h4>
+<h4 id="binary-codes-matching">Binary codes matching</h4>
 <p>对要分析的m个场景，提取二进制描述子，构成向量v。计算二进制描述子之间的hamming距离，得到距离矩阵M</p>
 <hr>
-<h1 id="calc-pdf-code">CALC <a href="https://arxiv.org/abs/1805.07703.pdf">pdf</a> <a href="https://github.com/rpng/calc">code</a></h1>
-<h2 id="abstract-4"><em>Abstract</em></h2>
-<p>这篇论文提出了一种无监督的神经网络，采用autoencoder的结构，但是重建的不是原始图像，而是图像的HoG描述子。</p>
-<h2 id="method"><em>Method</em></h2>
+<h1 id="span-id5lightweight-unsupervised-deep-loop-closure-rss-2018-span-pdf-code"><span id="5">Lightweight Unsupervised Deep Loop Closure (RSS 2018) </span> <a href="https://arxiv.org/abs/1805.07703.pdf">pdf</a> <a href="https://github.com/rpng/calc">code</a></h1>
+<h2 id="abstract-4">Abstract</h2>
+<p>这篇论文提出了一种无监督的神经网络CALC，采用autoencoder的结构，但是重建的不是原始图像，而是图像的HoG描述子。</p>
+<h2 id="method">Method</h2>
 <p>这篇论文作者设计了一个可以将高维的原始图像信息映射到低维特征空间的网络，对场景变化不敏感，训练方法不需要标注图像。<br>
 训练pipeline如下：<br>
-<img src="https://jinyu-m.github.io/post-images/1610854867832.png" alt="" loading="lazy"></p>
-<p>训练集中的每张图像被缩小到120x160，灰度图。通过projective transformations获得匹配图像。<br>
+<img src="https://jinyu-m.github.io/post-images/1615514752326.png" alt="" loading="lazy"><br>
+训练集中的每张图像被缩小到120x160，灰度图。通过projective transformations获得匹配图像。<br>
 HOG特征对网络提供了一个先验的几何约束，网络可以获得光照不变性，通过projective transformations来获得HOG所不具备的视角不变性。<br>
 获得训练的方法-projective transformations过程如下：<br>
-<img src="https://jinyu-m.github.io/post-images/1610854876928.png" alt="" loading="lazy"></p>
-<p>这个过程的目的是：根据一张真实图像I，通过随机的2D projective transformation获得一系列描述同场景、但视角不同的图像。<br>
+<img src="https://jinyu-m.github.io/post-images/1615514757180.png" alt="" loading="lazy"><br>
+这个过程的目的是：根据一张真实图像I，通过随机的2D projective transformation获得一系列描述同场景、但视角不同的图像。<br>
 对于每张图像，从其四角的某一区域内各随机选一个点，作为生成图像的四个角点，获得四个点后，就可以获得从原图到生成图像的homograph，矫正之后就生成了新图像。<br>
-<img src="https://jinyu-m.github.io/post-images/1610854884737.png" alt="" loading="lazy"></p>
-<h2 id="performance"><em>Performance</em></h2>
-<p><img src="https://jinyu-m.github.io/post-images/1610854891056.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854894727.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854897698.png" alt="" loading="lazy"><br>
-<img src="https://jinyu-m.github.io/post-images/1610854900621.png" alt="" loading="lazy"></p>
+<img src="https://jinyu-m.github.io/post-images/1615514761556.png" alt="" loading="lazy"></p>
+<h2 id="performance">Performance</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1615514767375.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615514771159.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615514780471.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615514785930.png" alt="" loading="lazy"></p>
 <h2 id="一点看法">一点看法</h2>
 <p>这篇工作虽然说是无监督，但是其实用了HoG描述子去监督训练网络，算是自己制作了伪真值去训练网络，最后得到的网络效果超过了HoG，证明了数据集如果够丰富，神经网络的泛化能力还是很强的。有点像MagicPoint和SuperPoint的detector，虽然最初的annotated label是人工设置的角点，但是最后训练得到的网络却具备更泛化的能力。论文中projective transformation用于拓展数据集，让网络学习（小）视角不变性，简单有效，值得参考。</p>
 ]]></content>
