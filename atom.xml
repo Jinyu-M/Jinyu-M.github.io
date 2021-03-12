@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-12T10:50:19.855Z</updated>
+    <updated>2021-03-12T10:51:41.459Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -13,12 +13,16 @@
     <rights>All rights reserved 2021, 年少万兜鍪</rights>
     <entry>
         <title type="html"><![CDATA[Place Recognition/Loop Closure Detection]]></title>
-        <id>https://jinyu-m.github.io/post/place-recognition/</id>
-        <link href="https://jinyu-m.github.io/post/place-recognition/">
+        <id>https://jinyu-m.github.io/post/traditional-place-recognition/</id>
+        <link href="https://jinyu-m.github.io/post/traditional-place-recognition/">
         </link>
         <updated>2020-12-25T08:09:14.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>硕士期间兜兜转转接触了很多领域的研究，但是回环检测依旧是自己的本职工作。这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。虽然看起来，回环检测的本质就是图像相似性检索，但是一些新颖的工作还是会让人眼前一亮、叹为观止。让机器像人一样，学会记忆，应该就是回环检测要解决的问题吧。</p>
+]]></summary>
         <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
 <p>硕士期间兜兜转转接触了很多领域的研究，但是回环检测依旧是自己的本职工作。这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。虽然看起来，回环检测的本质就是图像相似性检索，但是一些新颖的工作还是会让人眼前一亮、叹为观止。让机器像人一样，学会记忆，应该就是回环检测要解决的问题吧。</p>
+<!-- more -->
 <hr>
 <h1 id="目录">目录</h1>
 <p><a href="#0">论文主要内容总结</a><br>
