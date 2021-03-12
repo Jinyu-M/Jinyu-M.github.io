@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-11T06:55:14.912Z</updated>
+    <updated>2021-03-12T02:01:40.650Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -18,17 +18,21 @@
         </link>
         <updated>2020-12-25T08:09:14.000Z</updated>
         <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
-<p>这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。</p>
+<p>硕士期间兜兜转转接触了很多领域的研究，但是回环检测依旧是自己的本职工作。这篇日志是自己在回环检测领域看过的一些论文，有离线训练词典的，有增量式构建词典的，不一而足。就我个人感觉而言，回环检测目前的趋势还是增量式检测在SLAM中的应用，当前的SLAM系统大多还停留在离线训练词典的阶段，但是在我的实验中，我发现词典训练存在太多先验经验和trick，导致词典对应不同场景的适应性较差。因此如何高效地检索，如何构建泛化性较强的词典，如何解决回环检测中感知混淆问题，是这个领域尚待解决的课题。虽然看起来，回环检测的本质就是图像相似性检索，但是一些新颖的工作还是会让人眼前一亮、叹为观止。让机器像人一样，学会记忆，应该就是回环检测要解决的问题吧。</p>
 <hr>
-<h1 id="总结">总结</h1>
+<h1 id="目录">目录</h1>
+<p><a href="#0">论文主要内容总结</a><br>
+<a href="#1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</a><br>
+<a href="#2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</a><br>
+<a href="#3">Bags of Binary Words for Fast Place Recognition in Image Sequences (TRO 2012)</a></p>
+<hr>
+<h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
 <p>这篇论文提出了一个很完整的增量式构建词典树的方法，利用特征跟踪获得基本单元，自下而上构建词典树，词典树的根节点为视觉单词，叶节点为基本单元，词典树（视觉单词）的数量由一个目标函数优化得到，无需人工干预，很新颖。词典的更新构成采用了增量式地更新，利用一些方法避免了重复计算。使用LDA对特征进行降维。应用场景为水下场景的SfM算法。</p>
 <h2 id="tro-2012-automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping">[TRO 2012] <strong>Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping</strong></h2>
 <p>这篇论文是在[OVV IROS 2009]的基础上拓展的期刊论文，在这篇论文中，作者对于词典的更新间隔进行了改进，不再是每隔m张图像更新一次词典，而是通过判断特征与单词的关联率来判断词典是否需要更新。并且，对于具有较少信息的分支，词典进行了剪枝，使得结构更加紧凑。</p>
-<hr>
-<h1 id="目录">目录</h1>
-<p><a href="#1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</a><br>
-<a href="#2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</a></p>
+<h2 id="tro-2012-bags-of-binary-words-for-fast-place-recognition-in-image-sequences">[TRO 2012] <strong>Bags of Binary Words for Fast Place Recognition in Image Sequences</strong></h2>
+<p>个人感觉是“离线训练词典，在线回环检测”这种检测策略的里程碑了，被广泛用于SLAM系统中，效果和实时性都很好。主要贡献是提出了一种更为鲁棒的二进制特征（改进自FAST+BRIEF），用一个树型词典去离散化特征空间，并在树的结构中加入了inverse index table和direct index table的结构，inverse index table储存了图像中单词的权重和图像出现的图像索引值，direct index table储存了图像中特征及其关联的叶节点（视觉单词）。</p>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -221,30 +225,45 @@ OVV的词典会随着环境的增大而逐渐增大。<br>
 <img src="https://jinyu-m.github.io/post-images/1610877528466.png" alt="" loading="lazy"><br>
 作者比较了incremental indexing和full indexing的表现（对应着image reindexing节），说明增量式的方法在大幅度减少计算消耗的同时，还保持了不错的表现。</p>
 <hr>
-<h1 id="dbow-tro-pdf">DBoW (TRO) <a href="https://doi.org/10.1109/TRO.2012.2197158">pdf</a></h1>
-<h2 id="introduction-3"><em>Introduction</em></h2>
-<p>贡献点可以总结为几点：<br>
-1.使用了一种改进的FAST+BEIFF二进制特征；<br>
-2.把邻近图像联系起来，组成island，防止过于靠近的图像被匹配到（算是一种temporal constrant）；<br>
-3.在词典树中加入inverse index来实现快速的图像检索，加入direct index来保留图像间的correspondence，加快geometrical check的速度。</p>
-<h2 id="image-database"><em>Image Database</em></h2>
+<h1 id="span-id3bags-of-binary-words-for-fast-place-recognition-in-image-sequences-tro-2012span-pdf-code"><span id="3">Bags of Binary Words for Fast Place Recognition in Image Sequences (TRO 2012)</span> <a href="https://doi.org/10.1109/TRO.2012.2197158">pdf</a> <a href="http://webdiis.unizar.es/%E2%88%BCdorian">code</a></h1>
+<h2 id="introduction-3">Introduction</h2>
+<p>贡献点可以总结为几点：</p>
+<ol>
+<li>使用了一种改进的FAST+BEIFF二进制特征；</li>
+<li>把邻近图像联系起来，组成island，防止过于靠近的图像被匹配到（算是一种temporal constrant）；</li>
+<li>在词典树中加入inverse index来实现快速的图像检索，加入direct index来保留图像间的correspondence，加快geometrical check的速度。</li>
+</ol>
+<h2 id="binary-features">Binary Features</h2>
+<p>作者使用FAST来检测关键点，用BRIEF计算描述子，描述子维度为256维，由于描述子是二进制的，所以可以采用xor运算来计算描述子间的距离，加快计算速度。</p>
+<h2 id="image-database">Image Database</h2>
 <p>由于作者使用二进制描述子，所以构建了二进制词典树，使用K-means++ seeding初始化K-means的初始medians，medians中非二进制值得被置为0。<br>
 计算两个BoW向量得相似度时使用了L1分数：<br>
-<img src="https://jinyu-m.github.io/post-images/1610877562404.png" alt="" loading="lazy"></p>
-<p>在词典树中，作者使用了inverse index table来保留该单词出现过的图像索引值。当一张新的图像加入database，inverse index table会随之更新。<br>
+<img src="https://jinyu-m.github.io/post-images/1610877562404.png" alt="" loading="lazy"><br>
+在词典树中，作者使用了inverse index table来保留该单词出现过的图像索引值。当一张新的图像加入database，inverse index table会随之更新。<br>
 作者来使用了direct index table，对于每张图像，作者在direct index table中储存了该图像出现过的单词所属的位于l层的节点，以及该节点包含的局部特征。此结构可以用于在获得candidate loop时，准备进行geometrical check时计算同属于一个word或者同属于一个节点的特征的correspondence。</p>
-<h2 id="loop-detection-algorithm"><em>Loop Detection Algorithm</em></h2>
+<h2 id="loop-detection-algorithm">Loop Detection Algorithm</h2>
 <h3 id="database-query">Database query</h3>
 <p>对于每个query图像，利用词典树，搜索到一系列匹配的candidates以及对应的分数，由于这些分数受query image和它其中的单词分布影响，所以作者对分数进行了归一化：<br>
 <img src="https://jinyu-m.github.io/post-images/1610877572685.png" alt="" loading="lazy"></p>
 <h3 id="match-grouping">Match grouping</h3>
 <p>为了避免相邻的图像被匹配，作者将相邻图像构成了island，将其视为一个匹配。如果query匹配到的candidate的时间戳之间差距很小，那么就将这些candidate视为一个island，其匹配分数为：<br>
-<img src="https://jinyu-m.github.io/post-images/1610877580156.png" alt="" loading="lazy"></p>
-<p>具有最高匹配分数的island被挑选出来作为matching group，进入下一步的验证。</p>
+<img src="https://jinyu-m.github.io/post-images/1610877580156.png" alt="" loading="lazy"><br>
+具有最高匹配分数的island被挑选出来作为matching group，进入下一步的验证。</p>
 <h3 id="temporal-consistency">Temporal consistency</h3>
 <p>当获得最好的matching island后，对其进行时间一致性的检验，即其之前的k个query也必须被匹配到，当其通过检验后，挑选island中具有最高匹配分数的一个image作为当前query的匹配。</p>
 <h3 id="efficient-geometrical-consistency">Efficient geometrical consistency</h3>
 <p>作者的几何检验思路是计算匹配图像对的F矩阵，利用RANSAC，至少需要有12个匹配点对。为了加快特征匹配，作者用direct index去粗略搜索。</p>
+<h2 id="experiments-2">Experiments</h2>
+<h3 id="methodology">Methodology</h3>
+<p>实验采用的数据集如下，其中一些数据集没有回环的真值，所以作者人工标注了真值。<br>
+<img src="https://jinyu-m.github.io/post-images/1615513844713.png" alt="" loading="lazy"><br>
+作者在所有实验中，采用了相同的词典，K=10，L=6，用Bovisa 2008-09-01数据集中的10K张图像提取9M特征进行训练得到。<br>
+<img src="https://jinyu-m.github.io/post-images/1615514039431.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615514073268.png" alt="" loading="lazy"><br>
+运算效率很可观的。<br>
+<img src="https://jinyu-m.github.io/post-images/1615514114852.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1615514141134.png" alt="" loading="lazy"><br>
+准确率-召回率曲线和最大召回率。这两个指标一般用于评测回环检测，对于SLAM系统来说，还是准确率为100%时最大召回率这个指标最为重要。</p>
 <hr>
 <h1 id="fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information-iros-2014-pdf">Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information (IROS 2014) <a href="https://www.researchgate.net/publication/263298223">pdf</a></h1>
 <h2 id="abstract-3"><strong>Abstract</strong></h2>
