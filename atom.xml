@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-12T10:46:07.277Z</updated>
+    <updated>2021-03-12T10:47:58.236Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -770,13 +770,6 @@ class FastAPLoss(torch.nn.Module):
 <h2 id="performance"><em>Performance</em></h2>
 <p><img src="https://jinyu-m.github.io/post-images/1606275615688.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1606275618541.png" alt="" loading="lazy"></p>
-<hr>
-<h1 id="ibow-lcd-an-appearance-based-loop-closure-detection-approach-using-incremental-bags-of-binary-words-pdf-code">iBoW-LCD: An Appearance-based Loop Closure Detection Approach using incremental Bags of Binary Words <a href="https://arxiv.org/abs/1802.05909v2">pdf</a> <a href="https://github.com/emiliofidalgo/ibow-lcd">code</a></h1>
-<h2 id="abstract-2"><em>Abstract</em></h2>
-<p>这篇论文提出了iBoW-LCD算法，使用一个基于二进制描述子的增量式的BoW方法来检测回环，不需要传统BoW模型的离线训练阶段。除此之外，该算法建立在dynamic islands这一概念上，这是一个简单但有效的将时间上相邻的相似图像聚成一组的方法，可以减少Bayesian框架的计算时间。</p>
-<h2 id="introduction-2"><em>Introduction</em></h2>
-<p>这篇论文，作者提出了一个有效的appearance-based回环检测算法，称为iBoW-LCD （Incremental Bag-of-Words Loop Closure Detection)，该算法使用增量式的二进制词典，可以在线构建视觉词典，避免了离线训练的各种弊端。这一方法，与inverted index结构结合，可以很有效的检索到回环图像。接着，一个鲁棒回环检测方法被提出。它拓展并加强了island的概念，来防止将相邻图像检索为回环候选。<br>
-关于BoW模型，之前的一些工作只添加视觉单词，而没有遗忘（删除）无用的视觉单词，在这篇工作中，优化的词典不光添加单词，在单词被认为无用时也删除单词。实验证明，这样的处理可以用更少的词典达到相似的表现。关于回环检测，作者之前的工作是基于贝叶斯滤波的，但是随着图像数量的增多，处理时间会不断增加。所以这篇工作中，作者用一个简单但有效的基于dynamic island概念的机制来代替滤波器，可以用更少的时间来实现相似的表现。这篇论文提出的算法没有使用FLANN算法。</p>
 ]]></content>
     </entry>
     <entry>
