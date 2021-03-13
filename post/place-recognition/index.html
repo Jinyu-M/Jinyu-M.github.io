@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Place Recognition/Loop Closure Detection | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615598495037">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1615602508583">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Place Recognition/Loop Closure Detection | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615598495037" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1615602508583" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -83,7 +83,7 @@
                 2020-12-25
               </span>
               <span>
-                47 min read
+                51 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -101,11 +101,12 @@
 <h1 id="目录">目录</h1>
 <p><a href="#0">论文主要内容总结</a><br>
 <a href="#1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</a><br>
-<a href="#2">Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping (TRO 2012)</a><br>
-<a href="#3">Bags of Binary Words for Fast Place Recognition in Image Sequences (TRO 2012)</a><br>
+<a href="#2">Automatic Visual BoW for Online Robot Navigation and Mapping (TRO 2012)</a><br>
+<a href="#3">BoBW for Fast PR in Image Sequences (TRO 2012)</a><br>
 <a href="#4">Fast and Effective Visual PR using Binary Codes and Disparity Information (IROS 2014)</a><br>
-<a href="#5">Lightweight Unsupervised Deep Loop Closure (RSS 2018)</a><br>
-<a href="#6">iBoW-LCD: An Appearance-based LCD Approach using Incremental BoBW (RAL 2018)</a></p>
+<a href="#5">Lightweight Unsupervised Deep LC (RSS 2018)</a><br>
+<a href="#6">iBoW-LCD: An Appearance-based LCD Approach using Incremental BoBW (RAL 2018)</a><br>
+<a href="#7">IBuILD: Incremental BoBW for Appearance Based LCD (ICRA 2015)</a></p>
 <hr>
 <h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
@@ -120,6 +121,7 @@
 <p>这篇论文，作者设计了一个CNN模型，用来模拟HoG特征，采用随机射影变换来进行数据增强，采用真值场景的图像，让网络学习到具有良好视觉不变性的全局描述子，该特征CALC在很多数据集上达到了良好的表现。</p>
 <h2 id="ral-2018-ibow-lcd-an-appearance-based-loop-closure-detection-approach-using-incremental-bags-of-binary-words">[RAL 2018] <strong>iBoW-LCD: An Appearance-Based Loop-Closure Detection Approach Using Incremental Bags of Binary Words</strong></h2>
 <p>这篇论文，作者设计了一个增量式构建词典树的方法，算法通过inverse index table来检索具有共同视觉单词的历史图像，然后利用一种新提出的dynamic island的自适应的图像聚类方法，计算当前图像与islands之间的相似度，检索到最相似的island，然后以island中相似度最高的图像作为回环候选，利用极线一致性来完成后验。dynamic island是根据当前图像计算的，不是等长划分的，更能适应不同场景、不同拍摄条件的数据集。在检索过程中，新的特征加入，词典树会有更新视觉单词、增加视觉单词和删除视觉单词的过程。最后实验也证明了，删除无用单词，不会降低算法的表现，还能提升检索效率。</p>
+<h2 id="icra-2015-ibuild-incremental-bag-of-binary-words-for-appearance-based-loop-closure-detection">[ICRA 2015] <strong>IBuILD: Incremental Bag of Binary Words for Appearance Based Loop Closure Detection</strong></h2>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -462,6 +464,26 @@ P-R曲线是通过改版epipolar geometric check时RANSAC内点的数量得到�
 <img src="https://jinyu-m.github.io/post-images/1615545583307.png" alt="" loading="lazy"><br>
 相比之前的工作，iBoW-LCD的词典更紧凑，但是表现更好。<br>
 <img src="https://jinyu-m.github.io/post-images/1615545544426.png" alt="" loading="lazy"></p>
+<hr>
+<h1 id="span-id7-ibuild-incremental-bag-of-binary-words-for-appearance-based-loop-closure-detection-icra-2015-span-pdf"><span id="7"> IBuILD: Incremental Bag of Binary Words for Appearance Based Loop Closure Detection (ICRA 2015) </span> <a href="https://ieeexplore.ieee.org/document/7139959">pdf</a></h1>
+<h2 id="abstract-6">Abstract</h2>
+<p>本文提出了一个on-line，增量式的二进制词典构建方法，不需要事先的词典训练步骤，完全依赖于场景中的外观信息，不需要里程计和GPS信息。词典构建过程是基于连续图像间的特征跟踪来结合位姿不变性的。除此之外，该方法还与一个简单的似然函数相结合，来产生最可能的回环候选，并且用一个temporal consistency constraint来剔除不一致的回环。</p>
+<h2 id="introduction-6">Introduction</h2>
+<p>基于图的SLAM算法包含前端和后端两部分。前端处理原始数据，来产生节点和边约束；后端在给定边约束的情况下预测机器人位姿和landmarks的后验分布。回环检测就是在前端中当机器人再一次回到之前访问的地点时，产生节点间边约束的过程。回环检测的表现对于SLAM来说很重要，因为一个错误的边就会导致不一致的地图。后端一般不会检查边约束的对错，而是将这一问题留给前端。因此，为了让自动机器人构建全局一致的地图，回环检测需要在100%准确率的基础上尽可能达到高的召回率。（<strong>这段把回环检测的重要性和为什么采用R@P=1这一指标说的很清楚诶！棒！</strong>）<br>
+这篇论文提出了一个简单的视觉回环检测方法，它利用连续图像间的特征跟踪来实现online、增量式地词典构建，词典由二进制视觉词典构成。一个基于特征inverse occurence frequency的似然函数被用于产生最可能的回环候选。并且，一个temporal consistency检测被用于剔除不合理的候选。</p>
+<h2 id="pre-processing">Pre-Processing</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1615600135362.png" alt="" loading="lazy"><br>
+回环检测的流程如图1(a)所示，该流程分为两个部分：预处理和回环检测阶段。特征提取及描述子合并发生在预处理阶段。</p>
+<h3 id="feature-extraction">Feature extraction</h3>
+<p>流程中第一步是提取具有视觉不变性的特征。本文中使用了BRISK（Binary Robust Invariant Scalable Keypoint）特征，因为它具有尺度和旋转不变性，并且可以在减少计算和储存消耗的同时达到与SIFT、SURF相似的表现。<br>
+本文是从连续图像中提取匹配的特征，如图1(b)所示。使用匹配特征的目的是为了找到当机器人以不同位姿回到相同位置（回环）时最可能提取到的特征。为了匹配特征，本文使用hamming距离来计算相似度：<br>
+<img src="https://jinyu-m.github.io/post-images/1615600493839.png" alt="" loading="lazy"><br>
+其中符号表示异或，p是特征描述子向量的维度。当连续图像中的两个特征之间hamming距离小于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>δ</mi></mrow><annotation encoding="application/x-tex">\delta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span></span></span></span>，则认为他们是一个好的匹配，否则丢弃这段匹配。匹配特征的中心被视为他们的一个代表。中心值应当如下计算：<br>
+<img src="https://jinyu-m.github.io/post-images/1615600735354.png" alt="" loading="lazy"><br>
+在本文中，中心值在连续图像中计算，并被保存到t时刻的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mtext mathvariant="bold">D</mtext><mo stretchy="true">‾</mo></mover><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\overline{\textbf{D}}_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.03611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8861100000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord textbf">D</span></span></span></span><span style="top:-3.80611em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><br>
+(<strong>虽然感觉图中的公式和文中有点对不上，但是大体意思应该是只考虑用匹配特征，然后计算前后图像中匹配图像的中心值作为一个represetative</strong>)</p>
+<h3 id="merging-descriptors">Merging descriptors</h3>
+<p>预处理的第二步就是合并之前一步提取的特征，如图1(a)所示。这一步是为了删掉多于的相似特征，以防图像中有重复的纹理。令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mtext mathvariant="bold">D</mtext><mo stretchy="true">‾</mo></mover><mi>t</mi></msub><mo>=</mo><mo>[</mo><msubsup><mover accent="true"><mtext mathvariant="bold">d</mtext><mo stretchy="true">‾</mo></mover><mi>t</mi><mn>1</mn></msubsup><mo separator="true">,</mo><msubsup><mover accent="true"><mtext mathvariant="bold">d</mtext><mo stretchy="true">‾</mo></mover><mi>t</mi><mn>2</mn></msubsup><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msubsup><mover accent="true"><mtext mathvariant="bold">d</mtext><mo stretchy="true">‾</mo></mover><mi>t</mi><mi>m</mi></msubsup><msup><mo>]</mo><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">\overline{\textbf{D}}_{t} = [ \overline{\textbf{d}}^{1}_t, \overline{\textbf{d}}^{2}_t, ..., \overline{\textbf{d}}^{m}_t ]^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.03611em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8861100000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord textbf">D</span></span></span></span><span style="top:-3.80611em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3484479999999999em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.89444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord textbf">d</span></span></span></span><span style="top:-3.81444em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0984479999999999em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span><span style="top:-3.34734em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.89444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord textbf">d</span></span></span></span><span style="top:-3.81444em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0984479999999999em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span><span style="top:-3.34734em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.89444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord textbf">d</span></span></span></span><span style="top:-3.81444em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.948732em;"><span style="top:-2.4530000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span><span style="top:-3.34734em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">]</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span>（m为描述子的总数）代表连续图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">I_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">I_{t-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span>之间的匹配特征的中心值。（<strong>这里感觉和前面的对应不上诶...前面计算的中心值应该是一幅图像中所有匹配特征求质心，得到一个向量；但是这里感觉是每对匹配特征算一个质心，所以一幅图像由m对匹配特征，就有m个质心...不知道是自己理解错了还是论文写错了...</strong>）</p>
 
               </div>
               <div class="toc-container">
@@ -476,6 +498,7 @@ P-R曲线是通过改版epipolar geometric check时RANSAC内点的数量得到�
 <li><a href="#iros-2014-fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information">[IROS 2014] <strong>Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information</strong></a></li>
 <li><a href="#rss-2018-lightweight-unsupervised-deep-loop-closure">[RSS 2018] <strong>Lightweight Unsupervised Deep Loop Closure</strong></a></li>
 <li><a href="#ral-2018-ibow-lcd-an-appearance-based-loop-closure-detection-approach-using-incremental-bags-of-binary-words">[RAL 2018] <strong>iBoW-LCD: An Appearance-Based Loop-Closure Detection Approach Using Incremental Bags of Binary Words</strong></a></li>
+<li><a href="#icra-2015-ibuild-incremental-bag-of-binary-words-for-appearance-based-loop-closure-detection">[ICRA 2015] <strong>IBuILD: Incremental Bag of Binary Words for Appearance Based Loop Closure Detection</strong></a></li>
 </ul>
 </li>
 <li><a href="#span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  pdf</a>
@@ -600,6 +623,18 @@ P-R曲线是通过改版epipolar geometric check时RANSAC内点的数量得到�
 </ul>
 </li>
 <li><a href="#experimental-results-2">Experimental Results</a></li>
+</ul>
+</li>
+<li><a href="#span-id7-ibuild-incremental-bag-of-binary-words-for-appearance-based-loop-closure-detection-icra-2015-span-pdf"><span id="7"> IBuILD: Incremental Bag of Binary Words for Appearance Based Loop Closure Detection (ICRA 2015) </span> pdf</a>
+<ul>
+<li><a href="#abstract-6">Abstract</a></li>
+<li><a href="#introduction-6">Introduction</a></li>
+<li><a href="#pre-processing">Pre-Processing</a>
+<ul>
+<li><a href="#feature-extraction">Feature extraction</a></li>
+<li><a href="#merging-descriptors">Merging descriptors</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
