@@ -2,18 +2,26 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Deep Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1616497580008">
+<title>Features | 年少万兜鍪</title>
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1616498893356">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Deep Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="MagicPoint (Magic Leap) pdf
-Abstract
-论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二..." />
+    <meta name="description" content="目录
+MagicPoint 2017
+SuperPoint CVPRW 2018
+D2-Net CVPR 2019
+R2D2 NIPS 2019
+SEKD 2020
+L2-Net CVPR 2017
+DOAP CVPR 2018
+
+
+Mag..." />
     <meta name="keywords" content="Deep learning" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -23,7 +31,7 @@ Abstract
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1616497580008" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1616498893356" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -77,7 +85,7 @@ Abstract
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Deep Features
+              Features
             </h2>
             <div class="post-info">
               <span>
@@ -95,10 +103,20 @@ Abstract
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>
-<h2 id="abstract"><em>Abstract</em></h2>
+                <h1 id="目录">目录</h1>
+<p><a href="#1">MagicPoint 2017</a><br>
+<a href="#2">SuperPoint CVPRW 2018</a><br>
+<a href="#3">D2-Net CVPR 2019</a><br>
+<a href="#4">R2D2 NIPS 2019</a><br>
+<a href="#5">SEKD 2020</a><br>
+<a href="#6">L2-Net CVPR 2017</a><br>
+<a href="#7">DOAP CVPR 2018</a></p>
+<hr>
+<p><span id=1></span></p>
+<h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>
+<h2 id="abstract">Abstract</h2>
 <p>论文提出了一种基于两个DCN的point tracking system。第一个DCN就是MagicPoint，提取图像的显著二维坐标点（只有detector）；第二个DCN是MagicWrap，输入利用MagicPoint得到的一对图像中的二维坐标点信息，直接预测homography（不需要descriptor信息）。</p>
-<h2 id="introduction"><em>Introduction</em></h2>
+<h2 id="introduction">Introduction</h2>
 <p>作者先抛出了一个问题</p>
 <blockquote>
 <p>what would it take to build an ImageNet for SLAM?<br>
@@ -106,116 +124,119 @@ What would it take to build DeepSLAM?</p>
 </blockquote>
 <p>由于SLAM领域的真实数据往往无法获得很好的标注，而仿真数据无法囊括现实中的所有变化，所以可能引起domain adaptation issues和过拟合。所以用data-driven的深度学习方法去解决SLAM问题尚未解决。<br>
 作者提到了两个点，首先利用预测图像的DCN去估计ego-motion是可能得，作者没有使用直接用图像估计6DoF位姿的监督方法，而是更关注geometric consistency；其次作者发现对于SLAM系统来说，预测和对齐关键点已经足够去解算pose，那么就不用去预测整幅图像了，直接估计homography足以满足需求。</p>
-<h2 id="method"><em>Method</em></h2>
+<h2 id="method">Method</h2>
 <h3 id="overview">overview</h3>
 <figure data-type="image" tabindex="1"><img src="https://jinyu-m.github.io/post-images/1610855003571.png" alt="" loading="lazy"></figure>
 <h3 id="magicpoint">MagicPoint</h3>
 <p>作者设计MagicPoint的motivation就是认为hand-crafted detector需要过多的经验和技巧，往往无法cover所有的干扰，所以就直接用DCN去估计pixel-level的显著性，提取图像关键点。<br>
-<img src="https://jinyu-m.github.io/post-images/1610855041578.png" alt="" loading="lazy"></p>
-<p>结构类似于VGG。输入一个图像，得到一个同等分辨率的point response image，输出的每个pixel的值代表原图中这个位置是角点的概率。但是直接用encoder下采样-decoder上采样的结构恢复分辨率很耗算力，所以作者用网络得到了1/8大小的feature map，维度是65维（65个通道），这65个通道对应原图中不重叠的8x8的区域即一个dustbin通道（用于表示该8x8区域内无关键点），最后reshape到原本分辨率，这样decoder就没有参数了。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855041578.png" alt="" loading="lazy"><br>
+结构类似于VGG。输入一个图像，得到一个同等分辨率的point response image，输出的每个pixel的值代表原图中这个位置是角点的概率。但是直接用encoder下采样-decoder上采样的结构恢复分辨率很耗算力，所以作者用网络得到了1/8大小的feature map，维度是65维（65个通道），这65个通道对应原图中不重叠的8x8的区域即一个dustbin通道（用于表示该8x8区域内无关键点），最后reshape到原本分辨率，这样decoder就没有参数了。<br>
 训练时使用OpenCV作了一批虚拟的几何体，几何体的角点可以直接得到，然后加入噪声、光照变化等进行数据增强。训练时对feature map上每个cell计算cross-entropy loss。</p>
 <h3 id="magicwarp">MagicWarp</h3>
 <p>MagicWarp输入一对图像的关键点，然后估计homography。比如两幅120x160的图像输入MagicPoint，分别得到65x15x20的feature map。输入MagicWarp后，先从channel维度上进行concatenation，得到130x15x20的feature map，然后经过一个VGG型的encoder，再通过全连接层降维，得到一个9-d的向量，恢复成3x3的homography矩阵。<br>
-<img src="https://jinyu-m.github.io/post-images/1610855072152.png" alt="" loading="lazy"></p>
-<p>训练时，用虚拟数据采集虚拟三维几何体的图像，来获得训练数据，计算loss时，用估计的homography将图1的point投影到图2，然后计算投影误差，用L2-distance作为loss。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855072152.png" alt="" loading="lazy"><br>
+训练时，用虚拟数据采集虚拟三维几何体的图像，来获得训练数据，计算loss时，用估计的homography将图1的point投影到图2，然后计算投影误差，用L2-distance作为loss。<br>
 <img src="https://jinyu-m.github.io/post-images/1610855099118.png" alt="" loading="lazy"></p>
-<h2 id="一些看法"><em>一些看法</em></h2>
+<h2 id="一些看法">一些看法</h2>
 <p>MagicPoint学习了如何检测corner，基本取决于annotated data中keypoint的标注位置。比较有意思的点在于非参数上采样过程，depth-to-space的处理方法很有借鉴意义。后续SuperPoint也采用了这样上采样的方式，在recover resolution的同时参数也比较少。</p>
 <hr>
+<p><span id=2></span></p>
 <h1 id="superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) <a href="https://arxiv.org/abs/1712.07629.pdf">pdf</a> <a href="https://github.com/magicleap/SuperPointPretrainedNetwork">official code</a> <a href="https://github.com/rpautrat/SuperPoint">society code</a></h1>
-<h2 id="abstract-2"><em>Abstract</em></h2>
+<h2 id="abstract-2">Abstract</h2>
 <p>作者在MagicPoint的基础上增加了提取descriptor的部分，提出了homographic adaptation的数据增强方法，用来训练detector的repeatability，并且使得训练数据可以从虚拟的仿真数据拓展到MS-COCO等真实数据。</p>
-<h2 id="introduction-2"><em>Introduction</em></h2>
+<h2 id="introduction-2">Introduction</h2>
 <p>作者认为deep feature训练的关键在于带有标签的数据，但是人工标注的数据中，关键点往往是ill-defined，所以作者提出自监督方法训练，用网络本身去标注一批伪真值关键点，在此基础上进行训练，这样做，关键点更丰富，标注成本也更低。<br>
-<img src="https://jinyu-m.github.io/post-images/1610855133950.png" alt="" loading="lazy"></p>
-<p>第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
-<h2 id="architecture"><em>Architecture</em></h2>
-<figure data-type="image" tabindex="2"><img src="https://jinyu-m.github.io/post-images/1610855143136.png" alt="" loading="lazy"></figure>
-<p>SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855133950.png" alt="" loading="lazy"><br>
+第一步，其实就是之前提到的训练MagicPoint，先构建了一个仿真数据集Synthetic Shapes，训练了MagicPoint(b)。虽然之前的论文提到MagicPoint在应对各种干扰时重复率和准确率都很高，但是它丢失了一些潜在的关键点，为了解决这个问题，作者用Homographic Adaption去增强了MagicPoint标注的真实图像，得到了一个更符合预期的真实数据(b)，并用此去训练一个新的网络SuperPoint(c).</p>
+<h2 id="architecture">Architecture</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855143136.png" alt="" loading="lazy"><br>
+SuperPoint由一个共享参数的encoder和两个task-specific decoders构成，采用vgg结构，图像(H x W)通过encoder，得到一个1/8大小(Hc x Wc)的feature map。<br>
 在<strong>interest point decoder</strong>中，网络依旧延续MagicPoint的做法，采用非参数的上采样过程，feature map通过head降维到65 x Hc x Wc维，分别代表原图中与之对应的8x8区域内每个点是关键点的概率以及一个dustbin通道，dustbin用以表示该8x8区域内无关键点。<br>
 在<strong>descriptor decoder</strong>中，网络先提取了Hc x Wc的semi-dense descriptor，每个descriptor代表与之对应的8x8区域内关键点的256-d descriptor（根据interest point detector，每8x8区域内只可能存在1/0个关键点），然后采用bi-cubic插值恢复到原分辨率。</p>
-<h2 id="loss"><em>Loss</em></h2>
+<h2 id="loss">Loss</h2>
 <p>训练interest point detector依旧采用对每个cell计算cross-entropy loss的方法：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855179667.png" alt="" loading="lazy"></p>
-<p>为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855179667.png" alt="" loading="lazy"><br>
+为了使这部分Lp降低，需要让Y中为1的位置（即该点为关键点）在X中有较大的值，即增大该点为关键点的概率。<br>
 训练descriptor extractor时，需要先找到匹配的点，然后用匹配点的descriptor来计算loss，所以先找判断图1(h,w)和图2(h',w')是否是一组匹配点：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855207797.png" alt="" loading="lazy"></p>
-<p>p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855240388.png" alt="" loading="lazy"></p>
-<p>上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855207797.png" alt="" loading="lazy"><br>
+p是cell的中心位置，H是真值homography，所以上式就是判断两个cell在原图中中心是否是符合真值homography的，如果是，则这两个位置时一对匹配点，可以计算它们descriptor的距离了：<br>
+<img src="https://jinyu-m.github.io/post-images/1610855240388.png" alt="" loading="lazy"><br>
+上式中当图1和图2中两个点是匹配点时，s=1，则两个点的descriptor之间的cosine距离应该越大越好；而当两个点不匹配时，s=0，两个点的descriptor间的cosine距离越小越好。此处作者采用了hinge loss。<br>
 综上，SuperPoint训练使用的loss：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855269479.png" alt="" loading="lazy"></p>
-<p>分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
-<h2 id="training"><em>Training</em></h2>
+<img src="https://jinyu-m.github.io/post-images/1610855269479.png" alt="" loading="lazy"><br>
+分别计算图1和图2与真值图像的interest point loss，再计算图1与图2间的descriptor loss。</p>
+<h2 id="training">Training</h2>
 <p>作者先训练了SuperPoint中提取关键点的detector pathway，其实就是MagicPoint，发现在虚拟数据集上MP表现很好，在真实数据中，当场景中有大量角点时，效果很好，但是在自然场景中，MP效果不如传统特征，所以作者提出<strong>用自监督方法在真实场景中训练网络</strong>，即Homographic Adaptation。</p>
-<h2 id="homographic-adaptation"><em>Homographic Adaptation</em></h2>
-<figure data-type="image" tabindex="3"><img src="https://jinyu-m.github.io/post-images/1610855280230.png" alt="" loading="lazy"></figure>
-<p>可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
-<h2 id="一些见解"><em>一些见解</em></h2>
+<h2 id="homographic-adaptation">Homographic Adaptation</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855280230.png" alt="" loading="lazy"><br>
+可通过iterative homographic adaptation来提升效果。100次random homography效果较好。</p>
+<h2 id="一些见解">一些见解</h2>
 <p>作为MagicPoint的升级版，SuperPoint我感觉其实是作者发现了MagicPoint只是单纯的去学习检测人工标注的那些点，比较局限，所以提出了homographic adaptation去进一步提升自己。并且加入了descriptor decoder，让整个系统更完整了。但是对比后续出现的特征，SuperPoint特征在训练时依旧采用监督的方法去训练detector，导致效果有待提升。在我的试验中，Bag of SuperPoint会提升loop closure的表现，但是用于SLAM系统（ORB-SLAM2）时，SuperPoint从一幅图像提取的特征过少，可能无法满足SLAM初始化的要求。</p>
 <hr>
+<p><span id=3></span></p>
 <h1 id="d2-net-pdf-code">D2-net <a href="https://arxiv.org/abs/1905.03561.pdf">pdf</a> <a href="https://github.com/mihaidusmanu/d2-net">code</a></h1>
-<h2 id="abstract-3"><em>Abstract</em></h2>
+<h2 id="abstract-3">Abstract</h2>
 <p>D2-net的主要在于提出了detect-and-describe的特征提取方法，不再是传统的detect-then-describe方法。作者认为从高层语义信息（CNN的高层conv输出的feature map）中提取的关键点位置要比从低层结构信息中提取的更稳定一些。detector和descriptor的参数实现了完全的共享。</p>
-<h2 id="method-2"><em>Method</em></h2>
+<h2 id="method-2">Method</h2>
 <p>D2的detector和descriptor是基于相同的feature map获取的。输入图像通过一个前向网络，得到C x H x W feature map，被视为得到了H x W 个C维的稠密局部特征。<br>
 <img src="https://jinyu-m.github.io/post-images/1610855323128.png" alt="" loading="lazy"></p>
-<h2 id="hard-feature-detectiontest"><em>Hard feature detection(test)</em></h2>
+<h2 id="hard-feature-detectiontest">Hard feature detection(test)</h2>
 <p>由于D2得到feature map有很多层，每一层都可以作为一个detector去检测局部最大值进而提取local feature，所以在提取特征时，D2约定（i，j）为一个特征点当且仅当在该点具有最大值的那个detector中，该点是一个局部最大值：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855347489.png" alt="" loading="lazy"></p>
-<p>直观地来讲，就是对于每个点，我们需要先找到该点对应C个detector中最显著的那个detector，然后验证在该detector中，当前点是否是局部最大的。</p>
-<h2 id="soft-feature-detectiontraining"><em>Soft feature detection(training)</em></h2>
+<img src="https://jinyu-m.github.io/post-images/1610855347489.png" alt="" loading="lazy"><br>
+直观地来讲，就是对于每个点，我们需要先找到该点对应C个detector中最显著的那个detector，然后验证在该detector中，当前点是否是局部最大的。</p>
+<h2 id="soft-feature-detectiontraining">Soft feature detection(training)</h2>
 <p>但是上述detection方法是不可微的，所有无法用BP进行训练，为了实现end-to-end训练，作者soften了上述detection的方法。<br>
 首先soften筛选最显著detector的部分，计算当前detector的ratio-to-max用以表示其显著性<br>
-<img src="https://jinyu-m.github.io/post-images/1610855382324.png" alt="" loading="lazy"></p>
-<p>其次soften计算局部最优值的部分，计算了9邻域内某点的soft local-max占比<br>
-<img src="https://jinyu-m.github.io/post-images/1610855405362.png" alt="" loading="lazy"></p>
-<p>最后，综合两部分的分数，取最大值，并做image-level normalization得到一个用来表征像素是特征点的概率的score map。</p>
-<h2 id="multiscale-detection"><em>Multiscale detection</em></h2>
+<img src="https://jinyu-m.github.io/post-images/1610855382324.png" alt="" loading="lazy"><br>
+其次soften计算局部最优值的部分，计算了9邻域内某点的soft local-max占比<br>
+<img src="https://jinyu-m.github.io/post-images/1610855405362.png" alt="" loading="lazy"><br>
+最后，综合两部分的分数，取最大值，并做image-level normalization得到一个用来表征像素是特征点的概率的score map。</p>
+<h2 id="multiscale-detection">Multiscale detection</h2>
 <p>为了获取具有更强尺度不变性的特征，D2使用图像金字塔，在测试阶段，将图像分别缩放至0.5,1,2倍，输入D2，得到feature map，并将之前由低分辨率图像获得的feature map插值放大到当前分辨率，与当前feature map相加，获得更稳定的feature map，在此map上进行detection，之前提取的关键点也被上采样（最近邻）到当前尺度，纳入提取的特征中。</p>
-<h2 id="data"><em>Data</em></h2>
+<h2 id="data">Data</h2>
 <p>D2用megadepth数据集进行训练，megadepth提供了同一场景不同视角、光照、设备下的照片，以及深度信息，每个场景由COLMAP进行建图，由此获得2d-3d特征点的对应信息，利用sfm提供的信息，我们可以计算同一场景下两幅图像的overlap，在训练中，D2使用overlap&gt;0.5的图像对，并用depth信息进行验证，去除被遮挡的像素。</p>
-<h2 id="loss-2"><em>Loss</em></h2>
+<h2 id="loss-2">Loss</h2>
 <p>为了提升descriptor的区分度，需要让对应点的descriptor距离较小，非对应点的descriptor距离较大，所以D2使用了triplet margin loss。对于图1和图2中一对匹配点A和B，positive descriptor distance=<br>
-<img src="https://jinyu-m.github.io/post-images/1610855457062.png" alt="" loading="lazy"></p>
-<p>在计算negative descriptor distance时，先挑选hardest negatives：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855477079.png" alt="" loading="lazy"></p>
-<p>直观理解，N1为图1中位于A的邻域之外，与B最相似的点。N2同理。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855457062.png" alt="" loading="lazy"><br>
+在计算negative descriptor distance时，先挑选hardest negatives：<br>
+<img src="https://jinyu-m.github.io/post-images/1610855477079.png" alt="" loading="lazy"><br>
+直观理解，N1为图1中位于A的邻域之外，与B最相似的点。N2同理。<br>
 然后就可以分别计算A与N2，B与N1的descriptor距离，得到negative descriptor distance<br>
-<img src="https://jinyu-m.github.io/post-images/1610855500930.png" alt="" loading="lazy"></p>
-<p>最后，triplet margin loss如下：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855536914.png" alt="" loading="lazy"></p>
-<p>通过该loss可以让descriptor的distinctiveness提升，而为了挑选去更具重复性的特征，D2在triple margin loss前加了一个权重<br>
-<img src="https://jinyu-m.github.io/post-images/1610855560325.png" alt="" loading="lazy"></p>
-<p>这样的话，为了让loss降低，网络需要学习去提取区分度更高（m更小）并且可重复性更好（权重更大）的点，并且优化提取的descriptor。</p>
-<h2 id="training-test"><em>Training &amp; Test</em></h2>
+<img src="https://jinyu-m.github.io/post-images/1610855500930.png" alt="" loading="lazy"><br>
+最后，triplet margin loss如下：<br>
+<img src="https://jinyu-m.github.io/post-images/1610855536914.png" alt="" loading="lazy"><br>
+通过该loss可以让descriptor的distinctiveness提升，而为了挑选去更具重复性的特征，D2在triple margin loss前加了一个权重<br>
+<img src="https://jinyu-m.github.io/post-images/1610855560325.png" alt="" loading="lazy"><br>
+这样的话，为了让loss降低，网络需要学习去提取区分度更高（m更小）并且可重复性更好（权重更大）的点，并且优化提取的descriptor。</p>
+<h2 id="training-test">Training &amp; Test</h2>
 <p>D2采用了VGG-16网络模型（~conv4_3），加载imagenet预训练模型即可提取特征，如果进行finetune只需训练最后一层。在测试时，最后一个max-pooling改为average-pooling，并且stride改为1（不降低分辨率），conv4_1到conv4_3使用空洞卷积，这样得到的feature map是1/4大小的，D2使用SIFT中的local refinement方法去修正关键点位置，descriptor被双线性插值到矫正后的位置。</p>
-<h2 id="evaluation"><em>Evaluation</em></h2>
-<figure data-type="image" tabindex="4"><img src="https://jinyu-m.github.io/post-images/1610855731905.png" alt="" loading="lazy"></figure>
-<p>在HPatches上，D2表现较差，threshold小于6px时的MMA很低。D2提取的特征较多，匹配数量也较多。在camera localization和3D reconstruction实验中效果较好。</p>
-<h2 id="一些见解-2"><em>一些见解</em></h2>
+<h2 id="evaluation">Evaluation</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855731905.png" alt="" loading="lazy"><br>
+在HPatches上，D2表现较差，threshold小于6px时的MMA很低。D2提取的特征较多，匹配数量也较多。在camera localization和3D reconstruction实验中效果较好。</p>
+<h2 id="一些见解-2">一些见解</h2>
 <p>D2在strict matching上的表现较差，但是在localization和reconstruction任务上却表现不错。这其中的原因值得思考，我们一般做slam时要求特征更快更准，“更准”的要求真的必要么？<br>
 在inference的时候，网络的forward速度很快，~x ms，但是detection和恢复position误差的部分都需要~x00 ms。感觉可以从detection的方法上改进一下。<br>
 在我的试验中，发现D2其实提取的soft detection score还是很关注纹理复杂的区域的，但是这些区域很可能是dynamics，所以加入语义的方法进行筛选可能是个点。<br>
 D2定位精度差的原因，我觉得是因为它是在1/8的feature map上进行训练，在1/4的feature map上进行inference，所以直接插值到原分辨率造成了这种差异，因为在hpatches上threshold大于6px时D2的效果还是不错。<br>
 D2在训练时有考虑repeatable（因为直接用correspondence训练的）和disciminative，但是我觉得这种用triplets或者quadruplets去采样anchor、positive和negative会不会造成其实对disciminative的提升不大呢？</p>
 <hr>
+<p><span id=4></span></p>
 <h1 id="r2d2-pdf-code">R2D2 <a href="http://arxiv.org/abs/1906.06195">pdf</a> <a href="https://github.com/naver/r2d2">code</a></h1>
-<h2 id="abstract-4"><em>Abstract</em></h2>
+<h2 id="abstract-4">Abstract</h2>
 <p>作者在这篇工作中，提出一个观点：</p>
 <blockquote>
 <p>In this work, we argue that salient regions are not necessarily discriminative, and therefore an harm the performance of the description. Furthermore, we claim that descriptors should be learned only in regions for which matching can be performed with high confidence.</p>
 </blockquote>
 <p>简单来说，就是之前的训练detector的方法，都是更关注检测出的特征是否repeative，这样的特征可能不够discriminative，比如重复性的纹理。所以作者认为，这样的训练方法有弊端。并且由于提取的salient region不够discriminative，所以descriptor的训练也不够完善。所以这篇工作中，作者要提取sparse，repeative and disciminative特征，依旧使用detect-and-descibe的提取方法。</p>
-<h2 id="introduction-3"><em>Introduction</em></h2>
-<figure data-type="image" tabindex="5"><img src="https://jinyu-m.github.io/post-images/1610855776875.png" alt="" loading="lazy"></figure>
-<p>作者先更详细直观地阐述了一下motivation，就像上面这两幅示例图。第一幅图中，对于detector来说，只有黑三角形附近的区域是有利于提取keypoint的，但是所有包含该三角形的patch都可以提取同等可靠的descriptor，所以匹配的时候会有误差。第二幅图中，对于detector，所有棋盘网格的角点都可以提取出同等可靠的keypoint，但是它们都不利于提取descriptor，因为完全重复，匹配的时候会出现混淆。<br>
+<h2 id="introduction-3">Introduction</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855776875.png" alt="" loading="lazy"><br>
+作者先更详细直观地阐述了一下motivation，就像上面这两幅示例图。第一幅图中，对于detector来说，只有黑三角形附近的区域是有利于提取keypoint的，但是所有包含该三角形的patch都可以提取同等可靠的descriptor，所以匹配的时候会有误差。第二幅图中，对于detector，所有棋盘网格的角点都可以提取出同等可靠的keypoint，但是它们都不利于提取descriptor，因为完全重复，匹配的时候会出现混淆。<br>
 所以，在这篇论文，作者认为detection和description是不可分割的，要一起训练（其实就是detect-and-descibe），并且提取的特征不关要repeatable还需要reliable for matching（感觉就是discrimative）。所以R2D2会分别根据basenet输出的feature map得到两张repeatability confidence map和reliability confidence map，然后综合两张map提取特征。</p>
-<h2 id="methods"><em>Methods</em></h2>
-<figure data-type="image" tabindex="6"><img src="https://jinyu-m.github.io/post-images/1610855799281.png" alt="" loading="lazy"></figure>
-<p>R2D2采用全卷积网络结构，输入H x W大小的图像，输出三部分：第一部分D x H x W feature map X，视作H x W个D维局部特征，每个像素对应一个局部特征；第二部分是一个H x W heatmap S，每个位置上的值代表该点特征的sparse和repeatable，值在[0,1]之间，为了获得稀疏的特征，只提取S中局部最大值作为特征；第三部分是H x W heatmap R，对应特征的reliability或者说disciminativeness.<br>
+<h2 id="methods">Methods</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855799281.png" alt="" loading="lazy"><br>
+R2D2采用全卷积网络结构，输入H x W大小的图像，输出三部分：第一部分D x H x W feature map X，视作H x W个D维局部特征，每个像素对应一个局部特征；第二部分是一个H x W heatmap S，每个位置上的值代表该点特征的sparse和repeatable，值在[0,1]之间，为了获得稀疏的特征，只提取S中局部最大值作为特征；第三部分是H x W heatmap R，对应特征的reliability或者说disciminativeness.<br>
 网络的backbone选用L2-net（不降低分辨率），但是将最后一个8x8的卷积换做3个2x2卷积，来减少参数。D=128。为了获得S和R，在backbone后接了两个1x1卷积+softmax。</p>
-<h2 id="loss-3"><em>Loss</em></h2>
+<h2 id="loss-3">Loss</h2>
 <h3 id="repeatability">repeatability</h3>
 <p>首先训练特征的repeatability，作者认为</p>
 <blockquote>
@@ -224,136 +245,139 @@ D2在训练时有考虑repeatable（因为直接用correspondence训练的）和
 <p>就是用监督学习的训练方法，只是在学习那些现成的detector的检测策略（这个意义上讲，superpoint其实也是这样的，只不过通过homographic adaptation进行了一个data augmentation，去提升性能）。所以作者希望直接训练S，让其跟随图像变换而一起变换。<br>
 假设图1，图2，当图像是真实图像时，用optical flow或stereo matching的方法去获得两幅图像中像素级的对应关系U，当图像是虚拟的仿真图像时，那么U可以直接获得了。分别获得两幅图像的S1和S2，利用U将S2对应到S2U。如果S是covariant to transformations，那么S1和S2U应该是一致的。<br>
 所以，可以直接对S1和S2U求取cosine相似度，相似度越大，说明S的表现越好，但是warp后可能会出现occlusions、warp artifacts or border effects，所以作者用了一个局部的cosine相似度，求取多个patch的cosine相似度：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855826572.png" alt="" loading="lazy"></p>
-<p>Lcosine只能保证S1和S2U相似，但是容易导致S1和S2U变成常值。由于最后使用S是要挑选local maxima，所以还需要让S的局部峰值变大：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855848629.png" alt="" loading="lazy"></p>
-<p>最后，训练repeatability的loss就是以上两部分的加权：<br>
+<img src="https://jinyu-m.github.io/post-images/1610855826572.png" alt="" loading="lazy"><br>
+Lcosine只能保证S1和S2U相似，但是容易导致S1和S2U变成常值。由于最后使用S是要挑选local maxima，所以还需要让S的局部峰值变大：<br>
+<img src="https://jinyu-m.github.io/post-images/1610855848629.png" alt="" loading="lazy"><br>
+最后，训练repeatability的loss就是以上两部分的加权：<br>
 <img src="https://jinyu-m.github.io/post-images/1610855870194.png" alt="" loading="lazy"></p>
 <h3 id="reliability-ie-discriminativeness">Reliability, i.e., Discriminativeness</h3>
 <p>这部分是为了让具有得到一个可以度量discriminative的score map，让具有discriminative descriptor的区域具有较大的可信度。<br>
 使用Average Precision Loss进行训练descriptor，就是给一对ground-truth batch，计算batch1中每个descriptor与batch2中每个des之间的距离，然后计算batch中每个query的AP loss，用下面公式进行训练：<br>
-<img src="https://jinyu-m.github.io/post-images/1610855909261.png" alt="" loading="lazy"></p>
-<p>这篇论文中也用到了AP loss，区别在于原本AP loss使用标准的keypoint detector去提取ground-truth batch，而在这里根据前文可以知道，提供了U，所以直接用U就可以获得ground-truth batch了。<br>
+<img src="https://jinyu-m.github.io/post-images/1610855909261.png" alt="" loading="lazy"><br>
+这篇论文中也用到了AP loss，区别在于原本AP loss使用标准的keypoint detector去提取ground-truth batch，而在这里根据前文可以知道，提供了U，所以直接用U就可以获得ground-truth batch了。<br>
 在这一部分，作者还提出，想要提取利于匹配的特征，不光要考虑图像纹理的丰富度，还要考虑其是否discriminative。所以作者用R去筛选discriminative region中的特征，只有这部分特征会对网络训练产生影响。<br>
-<img src="https://jinyu-m.github.io/post-images/1610855931430.png" alt="" loading="lazy"></p>
-<p>使用这种loss，为了使loss减小，当AP(i,j)小于k时，即该点descriptor不够discriminative，那么Rij应当为0,；当该点descriptor足够discriminative时，Rij应当为1。</p>
-<h2 id="test"><em>Test</em></h2>
+<img src="https://jinyu-m.github.io/post-images/1610855931430.png" alt="" loading="lazy"><br>
+使用这种loss，为了使loss减小，当AP(i,j)小于k时，即该点descriptor不够discriminative，那么Rij应当为0,；当该点descriptor足够discriminative时，Rij应当为1。</p>
+<h2 id="test">Test</h2>
 <p>在测试时，也采用了图像金字塔去获取更丰富的特征，从原分辨率开始，逐渐下采样，直到图像小于128px。每次从图像中利用S的局部最大值提取特征，保存。最后从所有保存的特征中，根据SR挑选top-K特征。</p>
-<h2 id="training-2"><em>Training</em></h2>
+<h2 id="training-2">Training</h2>
 <p>R2D2需要获得图像间的ground-truth correspondence。所以作者提出两种方法，一种就是常规的图2是由图1经过一种确定的transformation变换而来的；另一种，是作者自己提出一种pipeline，区别于之前用完全利用sfm获得dense correspondence（感觉在说D2...），作者先用sfm生成图像的3D点与6DoF位姿（sparse），对于sufficient overlap图像，用sfm提供的2D correspondence计算F matrix（作者发现这比直接用图像位姿去算要更可靠），然后用EpicFlow获得高质量的dense correspondence，作者在DeepMatching中加入epipolar constraint去增强方法，在EpicFlow的第一步获得了semi-dense correspondence。但是光流法可能无法应对有遮挡的情况，所以对于DeepMatching的输出，作者计算了一个connected consistent neighbors的图，只保留属于较大（至少有20个matches）connected component的matches，然后用一个thresholded kernel density estimator在验证后的matches中估计一个mask，作为optical flow可信度的度量。</p>
-<h2 id="data-2"><em>Data</em></h2>
+<h2 id="data-2">Data</h2>
 <p>Oxford，Paris，Aachen Day-Night.</p>
-<h2 id="results"><em>Results</em></h2>
-<figure data-type="image" tabindex="7"><img src="https://jinyu-m.github.io/post-images/1610855953805.png" alt="" loading="lazy"></figure>
-<p>这张图很直观的表现出r2d2的优点，对于repeatability来说（第2行图），天空是可重复性很高的，但是对于特征来说，由于天空有大量重复纹理或无纹理，所以不利于区分，所以其上的特征reliability很低，r2d2综合考虑了这两点，所以提取的特征比较好。</p>
-<figure data-type="image" tabindex="8"><img src="https://jinyu-m.github.io/post-images/1610856008506.png" alt="" loading="lazy"></figure>
-<p>在hseq上效果也很好。</p>
-<h2 id="一些见解-3"><em>一些见解</em></h2>
+<h2 id="results">Results</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610855953805.png" alt="" loading="lazy"><br>
+这张图很直观的表现出r2d2的优点，对于repeatability来说（第2行图），天空是可重复性很高的，但是对于特征来说，由于天空有大量重复纹理或无纹理，所以不利于区分，所以其上的特征reliability很低，r2d2综合考虑了这两点，所以提取的特征比较好。<br>
+<img src="https://jinyu-m.github.io/post-images/1610856008506.png" alt="" loading="lazy"><br>
+在hseq上效果也很好。</p>
+<h2 id="一些见解-3">一些见解</h2>
 <p>r2d2很明确的定义了特征的两种特性，repeatability和reliability，其中reliability就是discriminativeness。<br>
 目前bag of others中据说效果很好的一种特征了，很显式的将特征的repeatable和disciminative纳入loss中，让网络去学习。<br>
 完全没有人工标记的特征点了，所以是网络自己去学习判断和提取特征——superpoint<br>
 在原分辨率的feature map上提取特征，定位准确度高了——D2<br>
 考虑到了local maxima可能并不全是利于匹配的特征，要考虑disciminative——D2+SuperPoint</p>
 <hr>
+<p><span id=5></span></p>
 <h1 id="sekd-pdf-code">SEKD <a href="http://arxiv.org/abs/2006.05077">pdf</a> <a href="https://github.com/aliyun/Self-Evolving-Keypoint-Demo">code</a></h1>
-<h2 id="abstract-5"><em>Abstract</em></h2>
+<h2 id="abstract-5">Abstract</h2>
 <p>论文提出，现存的一些特征提取方法（hand-crafted or learnt）都没有考虑到detector和descriptor之间的相互促进作用，所以导致效果或多或少不尽人意。所以这篇文章，其实是设计了一种自监督训练框架，强调repeatability和reliability，用完全无标注的自然图像去学习特征。</p>
-<h2 id="introduction-4"><em>Introduction</em></h2>
+<h2 id="introduction-4">Introduction</h2>
 <p>作者更加细化的分别定义了detector和descriptor的repeatability和reliability：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875758330.png" alt="" loading="lazy"></p>
-<p>总的来说就是两大特性，细分为四部分：（1）Repeatability：detector的repeatability体现在如果两幅图像描述了同一场景，那么在图1中“看到”的一个keypoint在图2中也应该可以看到；descriptor的repeatability体现在相同真实位置的关键点在不同图像中应该是invariant；（2）Reliability（其实可以理解为我们常说的disciminativeness）：detector的reliability体现在给定描述子的计算方法，一个detected keypoint应该可靠的区别于其他点，直白点说就是应该落在利于分辨的区域，避开重复性纹理区域；descriptor的reliability体现在给定了detection方法，计算出的描述子应该足够区分这些detected keypoints。<br>
+<img src="https://jinyu-m.github.io/post-images/1610875758330.png" alt="" loading="lazy"><br>
+总的来说就是两大特性，细分为四部分：（1）Repeatability：detector的repeatability体现在如果两幅图像描述了同一场景，那么在图1中“看到”的一个keypoint在图2中也应该可以看到；descriptor的repeatability体现在相同真实位置的关键点在不同图像中应该是invariant；（2）Reliability（其实可以理解为我们常说的disciminativeness）：detector的reliability体现在给定描述子的计算方法，一个detected keypoint应该可靠的区别于其他点，直白点说就是应该落在利于分辨的区域，避开重复性纹理区域；descriptor的reliability体现在给定了detection方法，计算出的描述子应该足够区分这些detected keypoints。<br>
 思考一下上面的这些特性，其实repeatability特性是detector和descriptor自己的inherent property，而reliability则体现了detector与descriptor之间的interactive property。<br>
 这篇论文别出心裁，不一起训练detector和descriptor（SuperPoint是先训detector后训descriptor，D2和R2D2是一起训），而是采用了一种iterative training strategy。利用上面说的inherent and interactive property，去直到训练。<br>
 简单的说，找出所有具有reliable descriptor的keypoints（descriptor repeatability），作为ground-truth去训练detector（detector reliability），用优化后的detector去检测keypoints（detector repeatability），基于这些keypoints训练descriptor（descriptor reliability）。重复这一过程，直到模型收敛。这就是self-evolving framework。整个训练过程不需要带有标注的数据。<br>
 （其实，我感觉和SuperPoint中提到的Iterative Homographic Adaptation有些相似，不过SEKD将这个流程变为一个end-to-end的训练过程，从零开始训练了）</p>
-<h2 id="architecture-2"><em>Architecture</em></h2>
-<figure data-type="image" tabindex="9"><img src="https://jinyu-m.github.io/post-images/1610875782335.png" alt="" loading="lazy"></figure>
-<p>SEKD采用了类似于SuperPoint的结构，backbone由1个卷积和9个ResNet_v2模块，得到1/4大小的feature map。detector branch由2个deconv和1个softmax构成，输出2 x H x W的map P，代表keypoint probability，为了提升定位精度，有两个来自低层feature map的shortcut。descriptor branch由1个ResNet_v2模块和1个bi_linear上采样层构成，输出C-d描述子。</p>
-<h2 id="self-evolving"><em>Self-Evolving !</em></h2>
-<figure data-type="image" tabindex="10"><img src="https://jinyu-m.github.io/post-images/1610875797640.png" alt="" loading="lazy"></figure>
-<p>在训练过程中，网络利用两方面的监督：（1）关键点的选取，有可靠descriptor的point被认为是keypoint；（2）不同图像间的keypoints correspondence，这个通过用一张图像，经过affine transformation获得匹配图像，因此correspondence也可以直接获得。<br>
+<h2 id="architecture-2">Architecture</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610875782335.png" alt="" loading="lazy"><br>
+SEKD采用了类似于SuperPoint的结构，backbone由1个卷积和9个ResNet_v2模块，得到1/4大小的feature map。detector branch由2个deconv和1个softmax构成，输出2 x H x W的map P，代表keypoint probability，为了提升定位精度，有两个来自低层feature map的shortcut。descriptor branch由1个ResNet_v2模块和1个bi_linear上采样层构成，输出C-d描述子。</p>
+<h2 id="self-evolving">Self-Evolving !</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610875797640.png" alt="" loading="lazy"><br>
+在训练过程中，网络利用两方面的监督：（1）关键点的选取，有可靠descriptor的point被认为是keypoint；（2）不同图像间的keypoints correspondence，这个通过用一张图像，经过affine transformation获得匹配图像，因此correspondence也可以直接获得。<br>
 训练的流程基本分为四步：<br>
 1.用detector branch得到keypoint probability map P，利用NMS筛选keypoint；<br>
 2.在这些keypoint上，通过增强descriptor的repeatability和reliability来更新descriptor branch；<br>
 3.计算keypoint，具有reliable（repeatable and distinct） descriptor的point被作为keypoints;<br>
 4.在这些新的keypoint上，根据detector的repeatability和reliability来更新detector branch。</p>
 <h3 id="1detect-keypoints-using-detector">1.Detect Keypoints using Detector</h3>
-<figure data-type="image" tabindex="11"><img src="https://jinyu-m.github.io/post-images/1610875823497.png" alt="" loading="lazy"></figure>
-<p>具有较高响应的点被视为可能的keypoint，经过NMS，每张图像可以获得1000个keypoint。但是由于不同图像条件下，可能没法取到一样的keypoint，所以作者采用了affine adaption方法，即对于原始图像进行random affine transformation和color jitter，获得新的图像后经过网络，获得不同图像条件下的P，最后映射回原图，取平均，得到最后的P.</p>
+<p><img src="https://jinyu-m.github.io/post-images/1610875823497.png" alt="" loading="lazy"><br>
+具有较高响应的点被视为可能的keypoint，经过NMS，每张图像可以获得1000个keypoint。但是由于不同图像条件下，可能没法取到一样的keypoint，所以作者采用了affine adaption方法，即对于原始图像进行random affine transformation和color jitter，获得新的图像后经过网络，获得不同图像条件下的P，最后映射回原图，取平均，得到最后的P.</p>
 <h3 id="2update-keypoint-descriptor">2.Update Keypoint Descriptor</h3>
 <p>根据上一节，获得了一张图像I中的keypoints Q，对I和Q进行random affine transformation和color jitter H，得到I^和Q^，并且可以获得特征的匹配关系&lt;Q,Q^&gt;，那么根据descriptor repeatability，匹配特征的des应该很靠近，根据descriptor reliability，不匹配的特征应该有很好的区分度。所以作者使用了triplet loss with hardest example mining去训练descriptor。<br>
-<img src="https://jinyu-m.github.io/post-images/1610875850474.png" alt="" loading="lazy"></p>
-<p>除此之外，由于网络使用共享参数的backbone，所以为了保证detection的结果不会变化，作者还加入了一个损失函数：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875864336.png" alt="" loading="lazy"></p>
-<p>其中N’表示更新后的N。所以，用于更新descriptor的总loss为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875850474.png" alt="" loading="lazy"><br>
+除此之外，由于网络使用共享参数的backbone，所以为了保证detection的结果不会变化，作者还加入了一个损失函数：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875864336.png" alt="" loading="lazy"><br>
+其中N’表示更新后的N。所以，用于更新descriptor的总loss为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610875877898.png" alt="" loading="lazy"></p>
 <h3 id="3compute-keypoints-via-descriptor">3.Compute Keypoints via Descriptor</h3>
 <p>更新了descriptor后，下一步是要从descriptor map中提取keypoint。特征的reliability可从repeatability和distinctiveness两方面度量。对于repeatability：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875894075.png" alt="" loading="lazy"></p>
-<p>D越低，说明descriptor在相同位置上更靠近，repeatability更好。而对于distinctiveness：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875901166.png" alt="" loading="lazy"></p>
-<p>D‘越大，说明descriptor在不同位置的差异越大，distinctiveness更好。所以综合两点，特征的reliability定义为：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875908312.png" alt="" loading="lazy"></p>
-<p>R越大，说明特征更reliable。<br>
+<img src="https://jinyu-m.github.io/post-images/1610875894075.png" alt="" loading="lazy"><br>
+D越低，说明descriptor在相同位置上更靠近，repeatability更好。而对于distinctiveness：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875901166.png" alt="" loading="lazy"><br>
+D‘越大，说明descriptor在不同位置的差异越大，distinctiveness更好。所以综合两点，特征的reliability定义为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875908312.png" alt="" loading="lazy"><br>
+R越大，说明特征更reliable。<br>
 由于匹配的图像对是用affine transformation获得的，所以图像中可能一些点没有对应的R，所以这里依然采用了之前所用的affine adaption方法来获得一张average R。<br>
 另外，计算D‘的计算量很大，所以作者在邻域内计算D'：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875919455.png" alt="" loading="lazy"></p>
-<p>在实验中，作者在1/4，1倍分辨率的descriptor map上分别计算R，然后将两个map融合，一起使用，以获得足够精细的R。</p>
+<img src="https://jinyu-m.github.io/post-images/1610875919455.png" alt="" loading="lazy"><br>
+在实验中，作者在1/4，1倍分辨率的descriptor map上分别计算R，然后将两个map融合，一起使用，以获得足够精细的R。</p>
 <h3 id="4update-keypoint-detector">4.Update Keypoint detector</h3>
 <p>根据descriptor计算出的keypoint可以看作ground-truth对detector进行训练，作者使用了focal loss：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875934008.png" alt="" loading="lazy"></p>
-<p>同时，为了减小匹配图像对上detection结果的差异，作者加入了：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875941039.png" alt="" loading="lazy"></p>
-<p>来训练detector的repeatability。并且还需要保证descriptor在这期间不受干扰，所以加入了：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875946516.png" alt="" loading="lazy"></p>
-<p>最后综合三部分，训练detector的loss为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875934008.png" alt="" loading="lazy"><br>
+同时，为了减小匹配图像对上detection结果的差异，作者加入了：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875941039.png" alt="" loading="lazy"><br>
+来训练detector的repeatability。并且还需要保证descriptor在这期间不受干扰，所以加入了：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875946516.png" alt="" loading="lazy"><br>
+最后综合三部分，训练detector的loss为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610875952090.png" alt="" loading="lazy"></p>
-<h2 id="training-3"><em>Training</em></h2>
+<h2 id="training-3">Training</h2>
 <p>特征在MS COCO验证集上完成训练。<br>
 训练进行了5个iteration，每个iteration中分别训练detector和descriptor20个epoches</p>
-<h2 id="model-size"><em>Model Size</em></h2>
-<figure data-type="image" tabindex="12"><img src="https://jinyu-m.github.io/post-images/1610875962237.png" alt="" loading="lazy"></figure>
-<h2 id="performance"><em>Performance</em></h2>
-<figure data-type="image" tabindex="13"><img src="https://jinyu-m.github.io/post-images/1610875967248.png" alt="" loading="lazy"></figure>
+<h2 id="model-size">Model Size</h2>
+<figure data-type="image" tabindex="2"><img src="https://jinyu-m.github.io/post-images/1610875962237.png" alt="" loading="lazy"></figure>
+<h2 id="performance">Performance</h2>
+<figure data-type="image" tabindex="3"><img src="https://jinyu-m.github.io/post-images/1610875967248.png" alt="" loading="lazy"></figure>
 <hr>
+<p><span id=6></span></p>
 <h1 id="l2-net-2017-pdf-code">L2-Net (2017) <a href="https://ieeexplore.ieee.org/document/8100132">pdf</a> <a href="https://github.com/yuruntian/L2-Net">code</a></h1>
-<h2 id="abstract-6"><em>Abstract</em></h2>
+<h2 id="abstract-6">Abstract</h2>
 <p>这篇论文提出了一种在欧拉空间中表现很好的CNN特征，突出点有四点：（1）提出了一种渐进的采样策略，使得网络可以在很少epoch内获得数以亿计的训练样本；（2）重视descriptor之间的相对距离；（3）对中间的feature map有格外的监督；（4）考虑des的compactness。</p>
-<h2 id="architecture-3"><em>Architecture</em></h2>
-<figure data-type="image" tabindex="14"><img src="https://jinyu-m.github.io/post-images/1610875975445.png" alt="" loading="lazy"></figure>
-<p>网络结构如上图，在BN层中，作者设置权重为1，方差为0，不进行更新。在输出层，作者使用了local response normalization layer（LRN）来输出单位des。L2-Net将32 x 32的patch转变为128维的des。作者也使用了central-surround L2-Net，将两个L2-Net concat，左边的网络输入的是原始输入，右边的网络输入的是原本patch经过crop和resize后的中心部分（据说是可以处理scale不变性）。</p>
-<h2 id="training-data"><em>Training data</em></h2>
+<h2 id="architecture-3">Architecture</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1610875975445.png" alt="" loading="lazy"><br>
+网络结构如上图，在BN层中，作者设置权重为1，方差为0，不进行更新。在输出层，作者使用了local response normalization layer（LRN）来输出单位des。L2-Net将32 x 32的patch转变为128维的des。作者也使用了central-surround L2-Net，将两个L2-Net concat，左边的网络输入的是原始输入，右边的网络输入的是原本patch经过crop和resize后的中心部分（据说是可以处理scale不变性）。</p>
+<h2 id="training-data">Training data</h2>
 <p>L2-Net用Hpatches和Brown数据集进行训练，这两个数据集都提供了matched pairs。<br>
 在加载训练数据时，从P个3D点中挑选p1个点，然后从P-p1中挑选p2个点，得到了p(p1+p2)个点，对每个p，随机获取一个匹配的patch，这样就获得了2p个训练数据作为网络的输入，记为X，X是32 x 32 x 2p维的。网路的输出记为Y，Y是128 x 2p维的。由于网络的输出经过了normalization，所以可以定义距离矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><mi>s</mi><mi>q</mi><mi>r</mi><mi>t</mi><mo>(</mo><mn>2</mn><mi>x</mi><mo>(</mo><mn>1</mn><mo>−</mo><msubsup><mi>Y</mi><mn>1</mn><mi>T</mi></msubsup><msub><mi>Y</mi><mn>2</mn></msub><mo>)</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">D=sqrt(2 x (1 - Y_1^T Y_2))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">t</span><span class="mopen">(</span><span class="mord">2</span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>。<br>
 D中包含了p x p个pairs，对角线上的p个pair是positive matched pair，非对角线上的pair是negative pairs。<strong>(Q: 点都是随机取得，那在原本的p点中就可能会出现相互匹配的点，那么非对角线上的pair也不一定都是negative吧)</strong></p>
-<h2 id="loss-function"><em>Loss function</em></h2>
+<h2 id="loss-function">Loss function</h2>
 <p>损失函数由三部分构成，第一部分，作者利用相对距离去约束匹配和非匹配的pair；第二部分，作者强调des的紧凑性，即des的各维信息之间应该没有相互关系；第三部分，作者对中间的feature map进行了约束。</p>
 <h3 id="descriptor-similarity">descriptor similarity</h3>
 <p>des之间的相互距离在pair是匹配的时候最小，所以体现在D中，就是对角线上的元素应当是行、列中最小的。定义行相似矩阵和列相似矩阵：<br>
-<img src="https://jinyu-m.github.io/post-images/1610875987633.png" alt="" loading="lazy"></p>
-<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">S^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">S^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率。为了让匹配的des之间距离减小，loss设计为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610875987633.png" alt="" loading="lazy"><br>
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>c</mi></msup></mrow><annotation encoding="application/x-tex">S^c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>S</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">S^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span></span></span></span></span></span></span>可以理解维<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">y_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>匹配到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">y_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的概率。为了让匹配的des之间距离减小，loss设计为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610875993516.png" alt="" loading="lazy"></p>
 <h3 id="descriptor-compactness">descriptor compactness</h3>
 <p>作者发现过拟合问题是由于des各维度之间的correlation（我理解的是des出现了冗余）。所以作者加入了对des compactness的考虑。<br>
 作者设计了一个correlation matrix R：<br>
-<img src="https://jinyu-m.github.io/post-images/1610876001934.png" alt="" loading="lazy"></p>
-<p>其中bi表示q个patch的des中第i维元素的集合，是个行向量。（我理解是对des的每一维调整均值后，计算cosine相似度，r=0，说明计算的两维des间正交，不相关）所以R的非对角线位置的元素需要靠近0。所以des compactness的loss为：<br>
-<img src="https://jinyu-m.github.io/post-images/1610876008803.png" alt="" loading="lazy"></p>
-<p>如果加入了LRN后，每维数据的均值为0，所以Rs的计算可以简化为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610876001934.png" alt="" loading="lazy"><br>
+其中bi表示q个patch的des中第i维元素的集合，是个行向量。（我理解是对des的每一维调整均值后，计算cosine相似度，r=0，说明计算的两维des间正交，不相关）所以R的非对角线位置的元素需要靠近0。所以des compactness的loss为：<br>
+<img src="https://jinyu-m.github.io/post-images/1610876008803.png" alt="" loading="lazy"><br>
+如果加入了LRN后，每维数据的均值为0，所以Rs的计算可以简化为：<br>
 <img src="https://jinyu-m.github.io/post-images/1610876023108.png" alt="" loading="lazy"></p>
 <h4 id="intermediate-feature-maps">Intermediate feature maps</h4>
 <p>用E1的loss去计算网络中间的feature map上的similarity matrix G，然后构建了loss：<br>
-<img src="https://jinyu-m.github.io/post-images/1610876030491.png" alt="" loading="lazy"></p>
-<p>作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
+<img src="https://jinyu-m.github.io/post-images/1610876030491.png" alt="" loading="lazy"><br>
+作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
 <hr>
+<p><span id=7></span></p>
 <h1 id="doap-2018-paperap-loss-code">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a><a href="https://github.com/kunhe/FastAP-metric-learning/blob/master/pytorch/FastAP_loss.py">AP loss code</a></h1>
 <p>为了看懂r2d2的AP loss，特地去看了这篇论文，算是用AP loss描述子的开山之作。</p>
-<h2 id="abstract-7"><em>Abstract</em></h2>
+<h2 id="abstract-7">Abstract</h2>
 <p>特征匹配，本质上就是特征描述子的最近邻检索。在这篇工作中，作者用神经网络直接优化ranking-based retrieval的指标，Average Precision。这一通用的方法可以视作比传统的local ranking方法更先进的listwise learning方法。</p>
-<h2 id="introduction-5"><em>Introduction</em></h2>
+<h2 id="introduction-5">Introduction</h2>
 <p>作者认为，特征的训练应该与其要嵌入的任务结合在一起。观察特征匹配任务，作者发现这其实就是一个最近邻检索问题。因此，作者基于对ranking-based retreval评价指标Average Precision（AP）的直接优化提出一种listwise learning方法，通过训练特征描述子来学习对特征进行排序（匹配）。本文的特征有二进制和浮点数两种形式的描述子。<br>
 本文工作的一大特点是其通用性，即模型直接优化的是与任务无关的最近邻匹配阶段。虽然如此，为了获得用于特征匹配的描述子，作者还是加入了一些专用于某些任务的改进。首先，作者利用Spatial Transformer Module来在不需要额外监督的情况下，有效地处理几何噪声，提升匹配的鲁棒性。在有挑战性的HPatches上，作者设计了一种基于聚类的方法，来挖掘patch-level的监督，以此提升描述子在图像匹配任务中的表现。</p>
-<h2 id="optimizing-descriptor-for-matching"><em>Optimizing Descriptor for Matching</em></h2>
+<h2 id="optimizing-descriptor-for-matching">Optimizing Descriptor for Matching</h2>
 <p>这一节作者先指出描述子匹配就是最近邻检索，然后讨论了一种learning to rank方法来优化ranking-based检索表现。</p>
 <h3 id="nearest-neighbor-matching">Nearest Neighbor Matching</h3>
 <p><img src="https://jinyu-m.github.io/post-images/1610876069384.png" alt="" loading="lazy"><br>
@@ -362,8 +386,8 @@ D中包含了p x p个pairs，对角线上的p个pair是positive matched pair，�
 <h3 id="optimizing-average-precision">Optimizing Average Precision</h3>
 <p>令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">X</mi></mrow><annotation encoding="application/x-tex">\mathcal{X}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span></span></span></span>为图像块空间，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo>⊂</mo><mi mathvariant="script">X</mi></mrow><annotation encoding="application/x-tex">S \subset \mathcal{X}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊂</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span></span></span></span>为database。对于每个query patch <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>q</mi><mo>∈</mo><mi mathvariant="script">X</mi></mrow><annotation encoding="application/x-tex">q \in \mathcal{X}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span></span></span></span>，令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>+</mo></msubsup></mrow><annotation encoding="application/x-tex">S^+_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>为它在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span>匹配的patches，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">S^-_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>为非匹配的。给定距离度量方式D，令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>x</mi><mi>n</mi></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">(x_1,x_2,...,x_n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>+</mo></msubsup><mo>⋃</mo><msubsup><mi>S</mi><mi>q</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">S^+_q \bigcup S^-_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">⋃</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>中所有元素依照与q的距离从小到大的排列。给定这一排序，AP是在不同位置测得准确度(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mi>r</mi><mi>e</mi><mi>c</mi><mi mathvariant="normal">@</mi><mi>K</mi></mrow><annotation encoding="application/x-tex">Prec@K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord mathdefault">c</span><span class="mord">@</span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span></span></span></span>)的平均值：<br>
 <img src="https://jinyu-m.github.io/post-images/1610876077110.png" alt="" loading="lazy"><br>
-AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>+</mo></msubsup></mrow><annotation encoding="application/x-tex">S^+_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>的patch都排在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">S^-_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>之前时，会达到最优值。</p>
-<p>AP的优化也可以当作一个metric learning问题，其目标是学习一个可以让AP在retrieval时达到最优的距离度量D。理想的来说，如果上述过程都可以用可微的方式表示出来，那么AP就可以利用链式法则来优化。然而，排序过程是不可微的，连续变化的输入会引起AP值不连续的跳变。因此，appropriate smoothing对于引出可微的近似AP很重要。</p>
+AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>+</mo></msubsup></mrow><annotation encoding="application/x-tex">S^+_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>的patch都排在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>S</mi><mi>q</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">S^-_q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.154439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-2.4530000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span>之前时，会达到最优值。<br>
+AP的优化也可以当作一个metric learning问题，其目标是学习一个可以让AP在retrieval时达到最优的距离度量D。理想的来说，如果上述过程都可以用可微的方式表示出来，那么AP就可以利用链式法则来优化。然而，排序过程是不可微的，连续变化的输入会引起AP值不连续的跳变。因此，appropriate smoothing对于引出可微的近似AP很重要。</p>
 <h4 id="binary-descriptor">Binary Descriptor</h4>
 <p>二进制描述子在应用中所需内存较少，匹配更快。<br>
 在这里，一个神经网络F被用于模拟一种映射，将patches映射到一个低维的hamming空间中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>:</mo><mi mathvariant="script">X</mi><mo>→</mo><msup><mrow><mo>{</mo><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo>}</mo></mrow><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">F: \mathcal{X} \rightarrow {\{-1,1\}}^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.14643em;">X</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.2390079999999999em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord"><span class="mopen">{</span><span class="mord">−</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">}</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9890079999999999em;"><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">b</span></span></span></span></span></span></span></span></span></span></span>，对于hamming距离，它取{0,1,...,b}间的整数，AP可以通过直方图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>h</mi><mo>+</mo></msup><mo>=</mo><mo>(</mo><msubsup><mi>h</mi><mn>0</mn><mo>+</mo></msubsup><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msubsup><mi>h</mi><mi>b</mi><mo>+</mo></msubsup><mo>)</mo></mrow><annotation encoding="application/x-tex">h^+=(h^+_0,...,h^+_b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.771331em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1127699999999998em;vertical-align:-0.3013079999999999em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.266308em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.3986920000000005em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">b</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013079999999999em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>的元素来封闭式计算，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>h</mi><mi>k</mi><mo>+</mo></msubsup><mo>=</mo><msub><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><msubsup><mi>S</mi><mi>q</mi><mo>+</mo></msubsup></mrow></msub><mtext mathvariant="bold">1</mtext><mo>[</mo><mi>D</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>k</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">h^+_k=\sum_{x \in S^+_q} \textbf{1}[D(q,x)=k]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1127699999999998em;vertical-align:-0.3013079999999999em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.3986920000000005em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013079999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.34713em;vertical-align:-0.5971299999999999em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.19215499999999985em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="mrel mtight">∈</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7026642857142856em;"><span style="top:-2.214em;margin-left:-0.05764em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">q</span></span></span><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">+</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.42488571428571426em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5971299999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord textbf">1</span></span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span>。封闭式的AP可以进一步被连续化放宽并对于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>h</mi><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">h^+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.771331em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.771331em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span>可微。<br>
@@ -385,81 +409,82 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 <p>triplets定义了local pairwise ranking losses，而本文的方法属于listwise，因为优化的评估指标AP是在一个ranked list上定义的。<br>
 作者指出，triplets是难以训练的，所以需要hardest negative mining，anchor swap， distance-weighted sampling等操作。如图2所示，listwise指标对于位置是敏感的，而local loss是不敏感的；在一个triplet中出现的错误，如果它出现在list的顶部，那么会对整个结果产生很大影响。因此，需要启发式的方法来减少high-rank errors。相反的，本文的方法直接优化了listwise评估指标，AP，所以不需要这些启发式方法。listwise优化已经隐性的包含了hard negative mining：因为它强制匹配的patches排在非匹配的之前，这一过程自动要求了hardest triplet的正确分类，而无需显性的使用它。<br>
 <img src="https://jinyu-m.github.io/post-images/1610876118607.png" alt="" loading="lazy"></p>
-<h2 id="task-specific-improvements"><em>Task-Specific Improvements</em></h2>
+<h2 id="task-specific-improvements">Task-Specific Improvements</h2>
 <h3 id="handling-geometric-noise">Handling Geometric Noise</h3>
 <p>为了提升特征在匹配时的鲁棒性，保证描述子对几何噪声的不敏感型很重要。作者使用了Spatial Transformer，通过预测6-DOF 仿射变化来对齐patches，无需额外的监督。在本文的实验中，他被用于矫正几何畸变，提升效果。</p>
 <h3 id="label-mining-for-image-matching">Label Mining for Image Matching</h3>
 <p>前面的优化过程是根据patch retrieval任务设计的，但是它也适用于更高层的任务。作者在HPatches上测试了算法，来验证算法在image matching任务上的表现。HPatches数据集的image matching任务与patch retrieval任务类似，都是从一些干扰项中检索匹配的图像（块）。但是，在patch retrieval任务中，不会挑选与query位于同一图像序列的图像块作为干扰项，以防止图像具有重复的纹理（干扰项看起来确实与query一样）。在image matching任务中，图像与同一序列的其他图像相匹配，所有干扰项都来自于同一序列。因此，图像匹配的表现可以用将同一序列干扰项加入优化patch retrieval来优化。<br>
 作者在优化HPatches上的patch retrieval时用label mining来增强干扰项。为了避免重复结构带来的有噪声的标签，作者用了一个简单的启发式方法：聚类。对于每个图像序列，作者根据视觉外观将所有patches聚类，然后，具有较高类内距离的patches被记为彼此的干扰项（要经过3D的验证）。要注意，label mining与hard negative mining无关，它的目的是增加额外的监督。</p>
-<h2 id="experiments"><em>Experiments</em></h2>
+<h2 id="experiments">Experiments</h2>
 <p>作者使用了L2Net的结构，网络的输入是32x32的灰度图，当加入Spatial Transformer module时，输入的尺寸被增加到42x42，用3个卷积层来预测一个6-DOF仿射变换，这一变换被用于采样32x32的patch。</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
 <li><a href="#magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) pdf</a>
 <ul>
-<li><a href="#abstract"><em>Abstract</em></a></li>
-<li><a href="#introduction"><em>Introduction</em></a></li>
-<li><a href="#method"><em>Method</em></a>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#method">Method</a>
 <ul>
 <li><a href="#overview">overview</a></li>
 <li><a href="#magicpoint">MagicPoint</a></li>
 <li><a href="#magicwarp">MagicWarp</a></li>
 </ul>
 </li>
-<li><a href="#%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95"><em>一些看法</em></a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95">一些看法</a></li>
 </ul>
 </li>
 <li><a href="#superpoint-magic-leap-pdf-official-code-society-code">SuperPoint (Magic Leap) pdf official code society code</a>
 <ul>
-<li><a href="#abstract-2"><em>Abstract</em></a></li>
-<li><a href="#introduction-2"><em>Introduction</em></a></li>
-<li><a href="#architecture"><em>Architecture</em></a></li>
-<li><a href="#loss"><em>Loss</em></a></li>
-<li><a href="#training"><em>Training</em></a></li>
-<li><a href="#homographic-adaptation"><em>Homographic Adaptation</em></a></li>
-<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3"><em>一些见解</em></a></li>
+<li><a href="#abstract-2">Abstract</a></li>
+<li><a href="#introduction-2">Introduction</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#loss">Loss</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#homographic-adaptation">Homographic Adaptation</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3">一些见解</a></li>
 </ul>
 </li>
 <li><a href="#d2-net-pdf-code">D2-net pdf code</a>
 <ul>
-<li><a href="#abstract-3"><em>Abstract</em></a></li>
-<li><a href="#method-2"><em>Method</em></a></li>
-<li><a href="#hard-feature-detectiontest"><em>Hard feature detection(test)</em></a></li>
-<li><a href="#soft-feature-detectiontraining"><em>Soft feature detection(training)</em></a></li>
-<li><a href="#multiscale-detection"><em>Multiscale detection</em></a></li>
-<li><a href="#data"><em>Data</em></a></li>
-<li><a href="#loss-2"><em>Loss</em></a></li>
-<li><a href="#training-test"><em>Training &amp; Test</em></a></li>
-<li><a href="#evaluation"><em>Evaluation</em></a></li>
-<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3-2"><em>一些见解</em></a></li>
+<li><a href="#abstract-3">Abstract</a></li>
+<li><a href="#method-2">Method</a></li>
+<li><a href="#hard-feature-detectiontest">Hard feature detection(test)</a></li>
+<li><a href="#soft-feature-detectiontraining">Soft feature detection(training)</a></li>
+<li><a href="#multiscale-detection">Multiscale detection</a></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#loss-2">Loss</a></li>
+<li><a href="#training-test">Training &amp; Test</a></li>
+<li><a href="#evaluation">Evaluation</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3-2">一些见解</a></li>
 </ul>
 </li>
 <li><a href="#r2d2-pdf-code">R2D2 pdf code</a>
 <ul>
-<li><a href="#abstract-4"><em>Abstract</em></a></li>
-<li><a href="#introduction-3"><em>Introduction</em></a></li>
-<li><a href="#methods"><em>Methods</em></a></li>
-<li><a href="#loss-3"><em>Loss</em></a>
+<li><a href="#abstract-4">Abstract</a></li>
+<li><a href="#introduction-3">Introduction</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#loss-3">Loss</a>
 <ul>
 <li><a href="#repeatability">repeatability</a></li>
 <li><a href="#reliability-ie-discriminativeness">Reliability, i.e., Discriminativeness</a></li>
 </ul>
 </li>
-<li><a href="#test"><em>Test</em></a></li>
-<li><a href="#training-2"><em>Training</em></a></li>
-<li><a href="#data-2"><em>Data</em></a></li>
-<li><a href="#results"><em>Results</em></a></li>
-<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3-3"><em>一些见解</em></a></li>
+<li><a href="#test">Test</a></li>
+<li><a href="#training-2">Training</a></li>
+<li><a href="#data-2">Data</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A7%81%E8%A7%A3-3">一些见解</a></li>
 </ul>
 </li>
 <li><a href="#sekd-pdf-code">SEKD pdf code</a>
 <ul>
-<li><a href="#abstract-5"><em>Abstract</em></a></li>
-<li><a href="#introduction-4"><em>Introduction</em></a></li>
-<li><a href="#architecture-2"><em>Architecture</em></a></li>
-<li><a href="#self-evolving"><em>Self-Evolving !</em></a>
+<li><a href="#abstract-5">Abstract</a></li>
+<li><a href="#introduction-4">Introduction</a></li>
+<li><a href="#architecture-2">Architecture</a></li>
+<li><a href="#self-evolving">Self-Evolving !</a>
 <ul>
 <li><a href="#1detect-keypoints-using-detector">1.Detect Keypoints using Detector</a></li>
 <li><a href="#2update-keypoint-descriptor">2.Update Keypoint Descriptor</a></li>
@@ -467,17 +492,17 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 <li><a href="#4update-keypoint-detector">4.Update Keypoint detector</a></li>
 </ul>
 </li>
-<li><a href="#training-3"><em>Training</em></a></li>
-<li><a href="#model-size"><em>Model Size</em></a></li>
-<li><a href="#performance"><em>Performance</em></a></li>
+<li><a href="#training-3">Training</a></li>
+<li><a href="#model-size">Model Size</a></li>
+<li><a href="#performance">Performance</a></li>
 </ul>
 </li>
 <li><a href="#l2-net-2017-pdf-code">L2-Net (2017) pdf code</a>
 <ul>
-<li><a href="#abstract-6"><em>Abstract</em></a></li>
-<li><a href="#architecture-3"><em>Architecture</em></a></li>
-<li><a href="#training-data"><em>Training data</em></a></li>
-<li><a href="#loss-function"><em>Loss function</em></a>
+<li><a href="#abstract-6">Abstract</a></li>
+<li><a href="#architecture-3">Architecture</a></li>
+<li><a href="#training-data">Training data</a></li>
+<li><a href="#loss-function">Loss function</a>
 <ul>
 <li><a href="#descriptor-similarity">descriptor similarity</a></li>
 <li><a href="#descriptor-compactness">descriptor compactness</a>
@@ -491,9 +516,9 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 </li>
 <li><a href="#doap-2018-paperap-loss-code">DOAP (2018) paperAP loss code</a>
 <ul>
-<li><a href="#abstract-7"><em>Abstract</em></a></li>
-<li><a href="#introduction-5"><em>Introduction</em></a></li>
-<li><a href="#optimizing-descriptor-for-matching"><em>Optimizing Descriptor for Matching</em></a>
+<li><a href="#abstract-7">Abstract</a></li>
+<li><a href="#introduction-5">Introduction</a></li>
+<li><a href="#optimizing-descriptor-for-matching">Optimizing Descriptor for Matching</a>
 <ul>
 <li><a href="#nearest-neighbor-matching">Nearest Neighbor Matching</a></li>
 <li><a href="#optimizing-average-precision">Optimizing Average Precision</a>
@@ -505,13 +530,13 @@ AP只有当所有来自<span class="katex"><span class="katex-mathml"><math><sem
 <li><a href="#comparison-with-other-ranking-approaches">Comparison with Other Ranking Approaches</a></li>
 </ul>
 </li>
-<li><a href="#task-specific-improvements"><em>Task-Specific Improvements</em></a>
+<li><a href="#task-specific-improvements">Task-Specific Improvements</a>
 <ul>
 <li><a href="#handling-geometric-noise">Handling Geometric Noise</a></li>
 <li><a href="#label-mining-for-image-matching">Label Mining for Image Matching</a></li>
 </ul>
 </li>
-<li><a href="#experiments"><em>Experiments</em></a></li>
+<li><a href="#experiments">Experiments</a></li>
 </ul>
 </li>
 </ul>
