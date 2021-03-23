@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-23T11:47:42.180Z</updated>
+    <updated>2021-03-23T11:52:38.222Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -1346,7 +1346,7 @@ D中包含了p x p个pairs，对角线上的p个pair是positive matched pair，�
 作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
 <hr>
 <p><span id=7></span></p>
-<h1 id="doap-2018-paperap-loss-code">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a><a href="https://github.com/kunhe/FastAP-metric-learning/blob/master/pytorch/FastAP_loss.py">AP loss code</a></h1>
+<h1 id="doap-2018-paper">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a></h1>
 <p>为了看懂r2d2的AP loss，特地去看了这篇论文，算是用AP loss描述子的开山之作。</p>
 <h2 id="abstract-7">Abstract</h2>
 <p>特征匹配，本质上就是特征描述子的最近邻检索。在这篇工作中，作者用神经网络直接优化ranking-based retrieval的指标，Average Precision。这一通用的方法可以视作比传统的local ranking方法更先进的listwise learning方法。</p>
