@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-27T02:02:19.605Z</updated>
+    <updated>2021-03-27T02:41:28.461Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -550,8 +550,12 @@ GNG迭代次数对算法的影响：<br>
         <link href="https://jinyu-m.github.io/post/fastap/">
         </link>
         <updated>2020-12-13T10:02:24.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录了一些别出心裁的损失函数。在我看来，深度学习的主要改进就体现在网络结构和损失函数上，如何将待优化问题转换成数学公式实在是一门艺术。</p>
+]]></summary>
         <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
 <p>这篇日志记录了一些别出心裁的损失函数。在我看来，深度学习的主要改进就体现在网络结构和损失函数上，如何将待优化问题转换成数学公式实在是一门艺术。</p>
+<!-- more -->
 <hr>
 <h1 id="总结">总结</h1>
 <h2 id="cvpr-2019-average-precision-loss">[CVPR 2019] <strong>Average Precision Loss</strong></h2>
@@ -818,8 +822,12 @@ class FastAPLoss(torch.nn.Module):
         <link href="https://jinyu-m.github.io/post/dataset/">
         </link>
         <updated>2020-11-30T10:54:17.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录了一些可能用到的数据集。</p>
+]]></summary>
         <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
 <p>这篇日志记录了一些可能用到的数据集。</p>
+<!-- more -->
 <hr>
 <h1 id="总结">总结</h1>
 <h2 id="semantic-segmentation-cross-season-correspondence-dataset">[semantic segmentation] <strong>Cross-Season Correspondence dataset</strong></h2>
@@ -885,8 +893,12 @@ class FastAPLoss(torch.nn.Module):
         <link href="https://jinyu-m.github.io/post/a-comprehensive-comparison-of-vpr-under-changing-conditions/">
         </link>
         <updated>2020-11-05T08:33:45.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>这篇日志记录一下不常见或新提出的benchmark。好的算法也需要好的评价规则来体现呀！</p>
+]]></summary>
         <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
 <p>这篇日志记录一下不常见或新提出的benchmark。好的算法也需要好的评价规则来体现呀！</p>
+<!-- more -->
 <hr>
 <h1 id="总结">总结</h1>
 <h2 id="place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></h2>
@@ -1134,14 +1146,73 @@ single_frame matching:<br>
         <link href="https://jinyu-m.github.io/post/deep-local-features/">
         </link>
         <updated>2020-10-01T01:30:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="目录">目录</h1>
-<p><a href="#1">MagicPoint 2017</a><br>
-<a href="#2">SuperPoint CVPRW 2018</a><br>
-<a href="#3">D2-Net CVPR 2019</a><br>
-<a href="#4">R2D2 NIPS 2019</a><br>
-<a href="#5">SEKD 2020</a><br>
-<a href="#6">L2-Net CVPR 2017</a><br>
-<a href="#7">DOAP CVPR 2018</a></p>
+        <summary type="html"><![CDATA[<p>Representation matters! (土拨鼠叫！)</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Representation matters! (土拨鼠叫！)</p>
+<!-- more -->
+<h1 id="目录">目录</h1>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>from</th>
+<th>dataset</th>
+<th>innovation</th>
+<th>loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#1">MagicPoint</a></td>
+<td>arxiv 2017</td>
+<td>OpenCV</td>
+<td>该论文用一个FCN去预测图像中中可能的关键点，将heatmap输入第二个FCN预测两幅图像间的H矩阵</td>
+<td>MagicPoint用交叉熵，MagicWarp用L2</td>
+</tr>
+<tr>
+<td><a href="#2">SuperPoint</a></td>
+<td>CVPRW 2018</td>
+<td>OpenCV+MS-COCO</td>
+<td>分步训练，在训练好MP的基础上，用homographic adaption方法增广真实数据，训练detector，然后训练descriptor</td>
+<td>detector用交叉熵，descriptor用hinge loss</td>
+</tr>
+<tr>
+<td><a href="#3">D2-Net</a></td>
+<td>CVPR 2019</td>
+<td>MegaDepth</td>
+<td>detect-and-describe，得到dense的feature map后，检测在通道维度最大并且局部最大的点作为关键点</td>
+<td>triplet loss，detector的heatmap作为权重</td>
+</tr>
+<tr>
+<td><a href="#4">R2D2</a></td>
+<td>NIPS 2019</td>
+<td>Oxford，Paris，Aachen Day-Night</td>
+<td>将特征的repeatability和reliability分开训练</td>
+<td>repeatability(S)用cosine+peaky loss，reliability(R+descriptor)用AP loss</td>
+</tr>
+<tr>
+<td><a href="#5">SEKD</a></td>
+<td>arxiv 2020</td>
+<td>MS-COCO</td>
+<td>self-evolving training，定义了detector和descriptor的repeatability(inherent)和reliability(interactive)性质，并以此迭代训练</td>
+<td>triplet loss, MSE, focal loss等</td>
+</tr>
+<tr>
+<td><a href="#6">L2-Net</a></td>
+<td>CVPR 2017</td>
+<td>Hpatches，Brown</td>
+<td>一种基于patch的描述子，提出一种训练样本采样方法，重视描述子间的相对距离，对中间层的feature map和descriptor的compactness有额外的监督</td>
+<td>见论文</td>
+</tr>
+<tr>
+<td><a href="#7">DOAP</a></td>
+<td>CVPR 2018</td>
+<td>UBC Phototour</td>
+<td>基于patch的描述子，可以产生二进制或浮点型描述子，直接优化特征的最近邻匹配过程</td>
+<td>AP loss</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <p><span id=1></span></p>
 <h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>

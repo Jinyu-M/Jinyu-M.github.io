@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1616810537242">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1616812879919">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -11,17 +11,25 @@
 
 
 
-    <meta name="description" content="目录
-MagicPoint 2017
-SuperPoint CVPRW 2018
-D2-Net CVPR 2019
-R2D2 NIPS 2019
-SEKD 2020
-L2-Net CVPR 2017
-DOAP CVPR 2018
+    <meta name="description" content="Representation matters! (土拨鼠叫！)
+
+目录
 
 
-Mag..." />
+
+Feature
+from
+dataset
+innovation
+loss
+
+
+
+
+MagicPoint
+arxiv 2017
+OpenCV
+该论文用一个FCN去预..." />
     <meta name="keywords" content="Deep learning" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -31,7 +39,7 @@ Mag..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1616810537242" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1616812879919" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -92,7 +100,7 @@ Mag..." />
                 2020-10-01
               </span>
               <span>
-                36 min read
+                38 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -103,14 +111,71 @@ Mag..." />
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="目录">目录</h1>
-<p><a href="#1">MagicPoint 2017</a><br>
-<a href="#2">SuperPoint CVPRW 2018</a><br>
-<a href="#3">D2-Net CVPR 2019</a><br>
-<a href="#4">R2D2 NIPS 2019</a><br>
-<a href="#5">SEKD 2020</a><br>
-<a href="#6">L2-Net CVPR 2017</a><br>
-<a href="#7">DOAP CVPR 2018</a></p>
+                <p>Representation matters! (土拨鼠叫！)</p>
+<!-- more -->
+<h1 id="目录">目录</h1>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>from</th>
+<th>dataset</th>
+<th>innovation</th>
+<th>loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#1">MagicPoint</a></td>
+<td>arxiv 2017</td>
+<td>OpenCV</td>
+<td>该论文用一个FCN去预测图像中中可能的关键点，将heatmap输入第二个FCN预测两幅图像间的H矩阵</td>
+<td>MagicPoint用交叉熵，MagicWarp用L2</td>
+</tr>
+<tr>
+<td><a href="#2">SuperPoint</a></td>
+<td>CVPRW 2018</td>
+<td>OpenCV+MS-COCO</td>
+<td>分步训练，在训练好MP的基础上，用homographic adaption方法增广真实数据，训练detector，然后训练descriptor</td>
+<td>detector用交叉熵，descriptor用hinge loss</td>
+</tr>
+<tr>
+<td><a href="#3">D2-Net</a></td>
+<td>CVPR 2019</td>
+<td>MegaDepth</td>
+<td>detect-and-describe，得到dense的feature map后，检测在通道维度最大并且局部最大的点作为关键点</td>
+<td>triplet loss，detector的heatmap作为权重</td>
+</tr>
+<tr>
+<td><a href="#4">R2D2</a></td>
+<td>NIPS 2019</td>
+<td>Oxford，Paris，Aachen Day-Night</td>
+<td>将特征的repeatability和reliability分开训练</td>
+<td>repeatability(S)用cosine+peaky loss，reliability(R+descriptor)用AP loss</td>
+</tr>
+<tr>
+<td><a href="#5">SEKD</a></td>
+<td>arxiv 2020</td>
+<td>MS-COCO</td>
+<td>self-evolving training，定义了detector和descriptor的repeatability(inherent)和reliability(interactive)性质，并以此迭代训练</td>
+<td>triplet loss, MSE, focal loss等</td>
+</tr>
+<tr>
+<td><a href="#6">L2-Net</a></td>
+<td>CVPR 2017</td>
+<td>Hpatches，Brown</td>
+<td>一种基于patch的描述子，提出一种训练样本采样方法，重视描述子间的相对距离，对中间层的feature map和descriptor的compactness有额外的监督</td>
+<td>见论文</td>
+</tr>
+<tr>
+<td><a href="#7">DOAP</a></td>
+<td>CVPR 2018</td>
+<td>UBC Phototour</td>
+<td>基于patch的描述子，可以产生二进制或浮点型描述子，直接优化特征的最近邻匹配过程</td>
+<td>AP loss</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <p><span id=1></span></p>
 <h1 id="magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) <a href="https://arxiv.org/abs/1707.07410.pdf">pdf</a></h1>
