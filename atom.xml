@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-27T04:04:29.382Z</updated>
+    <updated>2021-03-27T07:10:50.494Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -11,6 +11,25 @@
     <logo>https://jinyu-m.github.io/images/avatar.png</logo>
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 年少万兜鍪</rights>
+    <entry>
+        <title type="html"><![CDATA[Re-Localization]]></title>
+        <id>https://jinyu-m.github.io/post/re-localization/</id>
+        <link href="https://jinyu-m.github.io/post/re-localization/">
+        </link>
+        <updated>2021-03-27T07:03:10.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>相比回环检测和场景识别，重定位任务不光需要检测出“位置”，还需要计算出“姿态|，这就需要2D-3D的关联，并且重定位问题也面临着季节、光照、动态遮挡等外观变化和视角变化等因素的影响。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1>
+<p>相比回环检测和场景识别，重定位任务不光需要检测出“位置”，还需要计算出“姿态|，这就需要2D-3D的关联，并且重定位问题也面临着季节、光照、动态遮挡等外观变化和视角变化等因素的影响。</p>
+<!-- more -->
+<h1 id="目录">目录</h1>
+<p><a href="#1">*Posenet: A Convolutional Network for Real-Time 6-DOF Camera Relocalization(ICCV 2015)</a></p>
+<hr>
+<p><span id=1></span></p>
+<h1 id="posenet-a-convolutional-network-for-real-time-6-dof-camera-relocalizationiccv-2015-project">Posenet: A Convolutional Network for Real-Time 6-DOF Camera Relocalization(ICCV 2015) <a href="http://mi.eng.cam.ac.uk/projects/relocalisation/#dataset">project</a></h1>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Place Recognition/Loop Closure Detection]]></title>
         <id>https://jinyu-m.github.io/post/place-recognition/</id>
