@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-03-25T10:13:22.501Z</updated>
+    <updated>2021-03-27T01:44:22.094Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -50,6 +50,8 @@
 <p>这篇论文，作者设计了一个增量式构建词典树的方法，算法通过inverse index table来检索具有共同视觉单词的历史图像，然后利用一种新提出的dynamic island的自适应的图像聚类方法，计算当前图像与islands之间的相似度，检索到最相似的island，然后以island中相似度最高的图像作为回环候选，利用极线一致性来完成后验。dynamic island是根据当前图像计算的，不是等长划分的，更能适应不同场景、不同拍摄条件的数据集。在检索过程中，新的特征加入，词典树会有更新视觉单词、增加视觉单词和删除视觉单词的过程。最后实验也证明了，删除无用单词，不会降低算法的表现，还能提升检索效率。</p>
 <h2 id="icra-2015-ibuild-incremental-bag-of-binary-words-for-appearance-based-loop-closure-detection">[ICRA 2015] <strong>IBuILD: Incremental Bag of Binary Words for Appearance Based Loop Closure Detection</strong></h2>
 <p>这篇论文，作者提出了一个增量式构建词典的方法，词典中的视觉单词有前后帧图像中的特征匹配获得，匹配的图像经过合并（删除重复特征）后开始回环检测。整个流程为：先将视觉单词与词典中的单词相互匹配，匹配到的单词为旧单词，未匹配到的为新单词；基于旧单词，利用inverted index找到回环候选；基于新旧单词的数量和出现频率，利用似然估计得到候选的分数，分数最高的视为回环；此外，增加了temporal consistency constraint；检测完t时刻的回环，再利用当前图像中提取的新旧单词对词典树进行更新，新单词加入，旧单词更新出现频率和inverted index。思路简单明了，效果还不错，就是词典规模没有限制，会随着场景增大一直增加。</p>
+<h2 id="icra-2018-assigning-visual-words-to-places-for-loop-closure-detection">[ICRA 2018] <strong>Assigning Visual Words to Places for Loop Closure Detection</strong></h2>
+<p>这篇论文中，作者提出了一个增量式的回环检测方法，通过特征跟踪的情况来将图像序列动态地划分为places。在各places（即一段图像序列中）累积特征，利用GNG聚类方法来生成视觉单词。在检测时，对于搜索区域内的place进行投票，根据当前图像特征到已有视觉单词的关联对places进行投票。可以预想的，如果出现回环place，那么该place的票数应当更多，否则票数呈现随机分布的状态。在判断回环时，采用两个判断条件：1.二项分布概率小于阈值；2.累积视觉单词数大于某一阈值。找到回环候选的place后，对于place中的历史图像，找到具有相同描述子最多的图像，作为回环候选，经过几何验证和时序一致性验证后，得到回环。</p>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
