@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Place Recognition/Loop Closure Detection | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617076121728">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617246918520">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Place Recognition/Loop Closure Detection | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617076121728" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617246918520" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -83,7 +83,7 @@
                 2020-12-25
               </span>
               <span>
-                87 min read
+                94 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -114,7 +114,10 @@
 <a href="#8">*Assigning Visual Words to Places for LCD (ICRA 2018)</a><br>
 <a href="#9">*Fast and Incremental LCD with Deep Features and Proximity Graphs (arxiv 2020)</a><br>
 <a href="#10">*NetVLAD: CNN architecture for weakly supervised PR (CVPR 2016)</a><br>
-<a href="#11">*Patch-NetVLAD: Multi-Scale Fusion of Locally-Global Descriptors for PR (CVPR 2021)</a></p>
+<a href="#11">*Patch-NetVLAD: Multi-Scale Fusion of Locally-Global Descriptors for PR (CVPR 2021)</a><br>
+<a href="#12">*A Visual BoW Method for Interactive Qualitative Localization and Mapping (ICRA 2007)</a><br>
+<a href="#13">*Interactive learning of visual topological navigation (IROS 2008)</a><br>
+<a href="#14">*Fast and Incremental Method for LCD using BoVW (TRO 2008)</a></p>
 <hr>
 <h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
@@ -139,6 +142,10 @@
 <p>这篇经典的利用DL的PR论文中，作者受VLAD全局描述子的启发，将其转化为一个可微的CNN层，设计了一个可以end-to-end训练的全局描述子，并用谷歌街景获取triplet训练数据，用triplet ranking loss进行训练。构思非常巧妙，效果很好，算是里程碑式的一个工作吧。</p>
 <h2 id="cvpr-2021-patch-netvlad-multi-scale-fusion-of-locally-global-descriptors-for-place-recognition">[CVPR 2021] <strong>Patch-NetVLAD: Multi-Scale Fusion of Locally-Global Descriptors for Place Recognition</strong></h2>
 <p>这篇论文中，作者用original NetVLAD检索出top-K个候选相似图像后，利用patch-level NetVLAD descriptor进行了spatial score的计算，对候选图像进行了挑选和重排。作者利用patch作为局部区域，提取NetVLAD描述子，进行patch之间的匹配，用匹配分数作为spatial score。作者还提出融合多尺度patch的匹配分数，提升算法表现，利用integral VLAD特征图的技术避免了重复计算不同尺度的VLAD描述子。在实时性和检索精度上都获得了很好的表现，获得了ECCV2020 Facebook Mapillary Visual Place Recognition Challenge的冠军。</p>
+<h2 id="icra-2007-a-visual-bag-of-words-method-for-interactive-qualitative-localization-and-mapping">[ICRA 2007] <strong>A visual bag of words method for interactive qualitative localization and mapping</strong></h2>
+<p>很早期的incremental BoW研究，利用人机交互为机器人localization提供对错判断，为在线学习提供监督。采用两层投票机制来识别房间，使用三种特征进行描述，只有在第一层投票中投票质量够高和图像数量够多，才会进行第二层投票。incremental BoW是比较简单的将新特征与之前的单词进行关联，如果关联不上，则新建一个单词。</p>
+<h2 id="iros-2008-interactive-learning-of-visual-topological-navigation">[IROS 2008] <strong>Interactive learning of visual topological navigation</strong></h2>
+<h2 id="tro-2008-fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words">[TRO 2008] <strong>Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words</strong></h2>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -727,6 +734,58 @@ Patch-NetVLAD计算每对图像间的相似分数，度量了图像间的空间�
 <img src="https://jinyu-m.github.io/post-images/1617069862788.png" alt="" loading="lazy"><br>
 计算消耗时间：<br>
 <img src="https://jinyu-m.github.io/post-images/1617070304254.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=12></span></p>
+<h1 id="a-visual-bag-of-words-method-for-interactive-qualitative-localization-and-mapping-icra-2007-pdf">A visual bag of words method for interactive qualitative localization and mapping (ICRA 2007) <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4209698">pdf</a></h1>
+<h2 id="abstract-11">Abstract</h2>
+<p>作者提出了一种视觉定位和地图学习算法，可以从任何机器人位置增量式地学习识别公寓中的不同房间。在该系统中，作者将BoW模型修改为全增量式的，来实现用户交互式训练。经过短时间的学习，算法可以可靠地识别房间并长期稳定。</p>
+<h2 id="incremental-bag-of-words-method-for-visual-localization">Incremental Bag of Words Method for Visual Localization</h2>
+<p>在图像分类领域，词典构建和分类器训练是离线进行的，在这篇论文中，作者将其修改为增量式的。在当前任务中，有两个特性需要纳入考虑：</p>
+<ol>
+<li>一些图像属于不同类别，但是无法带来任何位置的信息，比如当所有房间的地板都是一样的时，一张地板的照片；</li>
+<li>一些图像描述了相同的房间，它们只是通过移动机器人的头部来采集的，这些图像应当被用于训练分类器。<br>
+这些特性使我们能够主动搜索信息: 可以根据图像所携带的信息来决定是否使用该图像，如果当前位置估计的质量不够高，可以考虑使用新的图像。在在线学习过程中，作者使用了根据人工反馈结果分类错误的图像，这样可以减少训练样本的需求，并且提升学习速率和算法学习精度。在本文算法中，这样的处理可以保证学习算法的稳定性，当表现逐渐提升，学习次数越来越少。作者采用投票机制，将不同的特征空间整合在一起，来应对不同的视觉场景。</li>
+</ol>
+<h2 id="visual-localization-and-mappiong-algorithm">Visual Localization and Mappiong algorithm</h2>
+<h3 id="localization">Localization</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1617242495939.png" alt="" loading="lazy"><br>
+本文使用一种两阶段的投票机制来估计机器人位置，提取图像特征，找到词典中对应的单词，单词首先在第一层房间层进行投票，这些单词至少在这些房间中出现过一次。作者只使用了对应着一个已知单词的特征，对于那些每个房间中都出现的单词不进行投票，因为它们不具备分辨信息。那些未被关联的单词用于在线学习。<br>
+投票结果的质量是通过最大票数和第二个最大票数之差所代表的投票百分比来计算的:<br>
+<img src="https://jinyu-m.github.io/post-images/1617242743141.png" alt="" loading="lazy"><br>
+其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>n</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">n_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是类别i中的票数。<br>
+为了只考虑信息丰富的图像，只有当质量和单词数超过一定的阈值时，获胜类别才会在第二级投票。<br>
+这一过程在其他特征空间和新图像中重复，直到第二级的投票质量达到阈值（0.5）或者图像数量达到10.这时，如果投票质量超过阈值，该房间被识别出来。或者当图像数量达到阈值后，房间依旧无法被识别。用于定位的新图像是在新的随机头部方向下拍摄的。<br>
+<img src="https://jinyu-m.github.io/post-images/1617243076914.png" alt="" loading="lazy"><br>
+实验表明，质量阈值在减少错误识别方面非常有效，因此必须谨慎选择，在犯错和不做决定之间进行权衡。虽然从直觉上看，更多的投票应该导致更可靠的结果，但投票数量的阈值实际上对算法表现几乎没有影响。</p>
+<h3 id="mapping">Mapping</h3>
+<p>建图过程是交互的，当localization过程结束后，根据用户的反馈处理图像。如果用户任务定位的结果不对，学习过程要基于所有用于localization的特征以及用户提供的位置标签来进行训练。地图学习包括两部分，构建词典和为分类器收集数据。这一过程是增量式的，并且只需要很少的计算消耗。<br>
+词典构建依靠于一个增量式的最近邻分类器。对于一个新的特征，在当前词典中找到它最近的单词。如果单词于特征之间的距离小于某一阈值，这个单词被识别，否则利用该特征初始化一个新的单词。这个方法容易受到特征的噪声和特征提取顺序的干扰。使用k-means等批处理方法解决了这些问题。然而，我们的方法是完全增量的，这些限制在我们的应用程序中似乎不是问题。<br>
+当因为我们使用投票方法作为分类器，地图学习简单地要求记忆在哪个类别的一个给定的单词已经被感知，即用位置的标签标记图像的所有单词。<br>
+<img src="https://jinyu-m.github.io/post-images/1617243895437.png" alt="" loading="lazy"><br>
+用于字典构造的阈值影响几个因素。增加阈值会减少单词的数量，从而加快搜索特征对应的单词的速度，但会降低localization的性能。特别是阈值的增加使得单词统计有意义这一过程更加漫长（<strong>因为单词少了，不容易达到阈值</strong>），从而增加了地图学习过程开始时的定位错误数量。</p>
+<h3 id="image-features">Image Features</h3>
+<p>本文使用了SIFT、Local color histogram、Local normalized grey level histogram三种特征。使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="normal">X</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\Chi^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">X</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>距离作为度量：<br>
+<img src="https://jinyu-m.github.io/post-images/1617244218926.png" alt="" loading="lazy"></p>
+<h2 id="experiments-4">Experiments</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1617244372917.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1617244406852.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=13></span></p>
+<h1 id="interactive-learning-of-visual-topological-navigation-iros-2008-pdf">Interactive learning of visual topological navigation (IROS 2008) <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4650681">pdf</a></h1>
+<h2 id="abstract-12">Abstract</h2>
+<p>使用纯视觉方案，利用人机交互进行持续学习，使用BoW模型，更能适应不同场景的变化。</p>
+<h2 id="incremental-bag-of-words-method-for-bobotics">Incremental Bag of Words Method for Bobotics</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1617246284095.png" alt="" loading="lazy"><br>
+作者使用了BoW模型，并将其改进为增量式的。依旧延续作者在ICRA 2007论文[A visual bag of words method for interactive qualitative localization and mapping]中的增量式构建方法。由于直接检索词典中的单词耗时太久，作者用一个树型结构来加快这一过程。</p>
+<hr>
+<p><span id=13></span></p>
+<h1 id="fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words-tro-2008-pdf">Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words (TRO 2008) <a href="https://ieeexplore.ieee.org/document/4633680">pdf</a></h1>
+<h2 id="abstract-13">Abstract</h2>
+<p>作者提出了一种基于局部形状和颜色信息的在线检测回环的方法。该方法使用了在图像分类领域中使用的Bo<br>
+W模型，并将其拓展为增量式方法，依靠贝叶斯过滤器来预测回环的可能性。该算法在具有较强感知混淆情况的室内和室外数据集上进行了验证。</p>
+<h2 id="introduction-10">Introduction</h2>
+<p>在这篇论文中，作者提出一种实时的、基于视觉的方法来检测回环，该方法基于贝叶斯过滤器：每输入一张新的图像，算法计算了当前图像采自访问过场景的可能性。为此，作者基于增量式的BoW模型设计了一个场景识别算法。高于某阈值的候选回环通过几何一致性约束验证。</p>
+<h2 id="visual-dictionary">Visual Dictionary</h2>
 
               </div>
               <div class="toc-container">
@@ -746,6 +805,9 @@ Patch-NetVLAD计算每对图像间的相似分数，度量了图像间的空间�
 <li><a href="#arxiv-2020-fast-and-incremental-loop-closure-detection-with-deep-features-and-proximity-graphs">[arxiv 2020] <strong>Fast and Incremental Loop Closure Detection with Deep Features and Proximity Graphs</strong></a></li>
 <li><a href="#cvpr-2016-netvlad-cnn-architecture-for-weakly-supervised-place-recognition">[CVPR 2016] <strong>NetVLAD: CNN architecture for weakly supervised place recognition</strong></a></li>
 <li><a href="#cvpr-2021-patch-netvlad-multi-scale-fusion-of-locally-global-descriptors-for-place-recognition">[CVPR 2021] <strong>Patch-NetVLAD: Multi-Scale Fusion of Locally-Global Descriptors for Place Recognition</strong></a></li>
+<li><a href="#icra-2007-a-visual-bag-of-words-method-for-interactive-qualitative-localization-and-mapping">[ICRA 2007] <strong>A visual bag of words method for interactive qualitative localization and mapping</strong></a></li>
+<li><a href="#iros-2008-interactive-learning-of-visual-topological-navigation">[IROS 2008] <strong>Interactive learning of visual topological navigation</strong></a></li>
+<li><a href="#tro-2008-fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words">[TRO 2008] <strong>Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words</strong></a></li>
 </ul>
 </li>
 <li><a href="#span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  pdf</a>
@@ -979,6 +1041,33 @@ Patch-NetVLAD计算每对图像间的相似分数，度量了图像间的空间�
 <li><a href="#results">Results</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#a-visual-bag-of-words-method-for-interactive-qualitative-localization-and-mapping-icra-2007-pdf">A visual bag of words method for interactive qualitative localization and mapping (ICRA 2007) pdf</a>
+<ul>
+<li><a href="#abstract-11">Abstract</a></li>
+<li><a href="#incremental-bag-of-words-method-for-visual-localization">Incremental Bag of Words Method for Visual Localization</a></li>
+<li><a href="#visual-localization-and-mappiong-algorithm">Visual Localization and Mappiong algorithm</a>
+<ul>
+<li><a href="#localization">Localization</a></li>
+<li><a href="#mapping">Mapping</a></li>
+<li><a href="#image-features">Image Features</a></li>
+</ul>
+</li>
+<li><a href="#experiments-4">Experiments</a></li>
+</ul>
+</li>
+<li><a href="#interactive-learning-of-visual-topological-navigation-iros-2008-pdf">Interactive learning of visual topological navigation (IROS 2008) pdf</a>
+<ul>
+<li><a href="#abstract-12">Abstract</a></li>
+<li><a href="#incremental-bag-of-words-method-for-bobotics">Incremental Bag of Words Method for Bobotics</a></li>
+</ul>
+</li>
+<li><a href="#fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words-tro-2008-pdf">Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words (TRO 2008) pdf</a>
+<ul>
+<li><a href="#abstract-13">Abstract</a></li>
+<li><a href="#introduction-10">Introduction</a></li>
+<li><a href="#visual-dictionary">Visual Dictionary</a></li>
 </ul>
 </li>
 </ul>
