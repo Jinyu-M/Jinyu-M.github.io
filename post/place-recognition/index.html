@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Place Recognition/Loop Closure Detection | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617679656674">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617692733273">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Place Recognition/Loop Closure Detection | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617679656674" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617692733273" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -123,7 +123,7 @@
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
 <p>这篇论文提出了一个很完整的增量式构建词典树的方法，利用特征跟踪获得基本单元，自下而上构建词典树，词典树的根节点为视觉单词，叶节点为基本单元，词典树（视觉单词）的数量由一个目标函数优化得到，无需人工干预，很新颖。词典的更新构成采用了增量式地更新，利用一些方法避免了重复计算。使用LDA对特征进行降维。应用场景为水下场景的SfM算法。</p>
 <h2 id="tro-2012-automatic-visual-bag-of-words-for-online-robot-navigation-and-mapping">[TRO 2012] <strong>Automatic Visual Bag-of-Words for Online Robot Navigation and Mapping</strong></h2>
-<p>这篇论文是在[OVV IROS 2009]的基础上拓展的期刊论文，在这篇论文中，作者对于词典的更新间隔进行了改进，不再是每隔m张图像更新一次词典，而是通过判断特征与单词的关联率来判断词典是否需要更新。并且，对于具有较少信息的分支，词典进行了剪枝，使得结构更加紧凑。</p>
+<p>这篇论文是在<a href="#1">OVV IROS 2009</a>的基础上拓展的期刊论文，在这篇论文中，作者对于词典的更新间隔进行了改进，不再是每隔m张图像更新一次词典，而是通过判断特征与单词的关联率来判断词典是否需要更新。并且，对于具有较少信息的分支，词典进行了剪枝，使得结构更加紧凑。</p>
 <h2 id="tro-2012-bags-of-binary-words-for-fast-place-recognition-in-image-sequences">[TRO 2012] <strong>Bags of Binary Words for Fast Place Recognition in Image Sequences</strong></h2>
 <p>个人感觉是“离线训练词典，在线回环检测”这种检测策略的里程碑了，被广泛用于SLAM系统中，效果和实时性都很好。主要贡献是提出了一种更为鲁棒的二进制特征（改进自FAST+BRIEF），用一个树型词典去离散化特征空间，并在树的结构中加入了inverse index table和direct index table的结构，inverse index table储存了图像中单词的权重和图像出现的图像索引值，direct index table储存了图像中特征及其关联的叶节点（视觉单词）。</p>
 <h2 id="iros-2014-fast-and-effective-visual-place-recognition-using-binary-codes-and-disparity-information">[IROS 2014] <strong>Fast and Effective Visual Place Recognition using Binary Codes and Disparity Information</strong></h2>
@@ -148,7 +148,7 @@
 <p>上一篇论文的改进版，加入了增量式词典构建的过程，和visual homing模块。增量式词典构建是从零开始，如果节点中关联的特征过多，则将其利用k-means继续划分，得到词典树。localization中估计位置和homing中估计目标角度都是用voting的方法，避免了学习过程重复学习之前的数据。采用SIFT和local color histogram两种特征。</p>
 <h2 id="tro-2008-fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words">[TRO 2008] <strong>Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words</strong></h2>
 <hr>
-<h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
+<h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2009span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>受到content-based image retrieval算法的启发，回环检测算法使用visual vocabularies来度量图像间的相似度。但是这类算法有两个缺陷：（1）他们需要很强的人工干预，即通过trial-and-error的方法来训练和调试参数，（2）他们只适合批处理数据，即所有数据在处理前都是已经获得的（应该是指算法只在见过的场景中表现良好）。因此，作者提出了一个算法，在线构建和更新vocabularies，来高效地表示场景中的图像，并且词典构建过程不需要人工干预。</p>
 <h2 id="introduction">Introduction</h2>
@@ -846,7 +846,7 @@ W模型，并将其拓展为增量式方法，依靠Bayesian filtering来预测�
 <li><a href="#tro-2008-fast-and-incremental-method-for-loop-closure-detection-using-bags-of-visual-words">[TRO 2008] <strong>Fast and Incremental Method for Loop-Closure Detection Using Bags of Visual Words</strong></a></li>
 </ul>
 </li>
-<li><a href="#span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2019span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2019)</span>  pdf</a>
+<li><a href="#span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2009span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</span>  pdf</a>
 <ul>
 <li><a href="#abstract">Abstract</a></li>
 <li><a href="#introduction">Introduction</a></li>
