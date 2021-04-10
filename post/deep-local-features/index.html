@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617692733273">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1618049143856">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -39,7 +39,7 @@ Open..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617692733273" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1618049143856" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -100,7 +100,7 @@ Open..." />
                 2020-10-01
               </span>
               <span>
-                43 min read
+                44 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -195,6 +195,30 @@ Open..." />
 <td>ImageNet</td>
 <td>用CNN实现BoW，算是一种全局描述子。每个SFM代表一个语义类别，从每个SFM中提取若干视觉单词。把原FC的参数转换到卷积核。</td>
 <td>classification loss, similarity loss, sparsity loss</td>
+</tr>
+<tr>
+<td>NetVLAD</td>
+<td>CVPR 2016</td>
+<td>Google Street-View</td>
+<td>用CNN实现VLAD描述子</td>
+<td>triplet loss</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feature-matching">Feature Matching</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>from</th>
+<th>innovation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#9">SuperGlue</a></td>
+<td>CVPR 2020</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -426,7 +450,7 @@ R越大，说明特征更reliable。<br>
 <figure data-type="image" tabindex="3"><img src="https://jinyu-m.github.io/post-images/1610875967248.png" alt="" loading="lazy"></figure>
 <hr>
 <p><span id=6></span></p>
-<h1 id="l2-net-2017-pdf-code">L2-Net (2017) <a href="https://ieeexplore.ieee.org/document/8100132">pdf</a> <a href="https://github.com/yuruntian/L2-Net">code</a></h1>
+<h1 id="l2-net-pdf-code">L2-Net <a href="https://ieeexplore.ieee.org/document/8100132">pdf</a> <a href="https://github.com/yuruntian/L2-Net">code</a></h1>
 <h2 id="abstract-6">Abstract</h2>
 <p>这篇论文提出了一种在欧拉空间中表现很好的CNN特征，突出点有四点：（1）提出了一种渐进的采样策略，使得网络可以在很少epoch内获得数以亿计的训练样本；（2）重视descriptor之间的相对距离；（3）对中间的feature map有格外的监督；（4）考虑des的compactness。</p>
 <h2 id="architecture-3">Architecture</h2>
@@ -457,7 +481,7 @@ D中包含了p x p个pairs，对角线上的p个pair是positive matched pair，�
 作者称之为Discriminative Intermediate Feature maps (DIF)，并且发现在BN层后面加入DIF会提升效果，所以作者在第一个和最后一个BN层后计算了DIF。</p>
 <hr>
 <p><span id=7></span></p>
-<h1 id="doap-2018-paper">DOAP (2018) <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a></h1>
+<h1 id="doap-paper">DOAP <a href="https://openaccess.thecvf.com/content_cvpr_2018/papers/He_Local_Descriptors_Optimized_CVPR_2018_paper.pdf">paper</a></h1>
 <p>为了看懂r2d2的AP loss，特地去看了这篇论文，算是用AP loss描述子的开山之作。</p>
 <h2 id="abstract-7">Abstract</h2>
 <p>特征匹配，本质上就是特征描述子的最近邻检索。在这篇工作中，作者用神经网络直接优化ranking-based retrieval的指标，Average Precision。这一通用的方法可以视作比传统的local ranking方法更先进的listwise learning方法。</p>
@@ -506,7 +530,7 @@ AP的优化也可以当作一个metric learning问题，其目标是学习一个
 <p>作者使用了L2Net的结构，网络的输入是32x32的灰度图，当加入Spatial Transformer module时，输入的尺寸被增加到42x42，用3个卷积层来预测一个6-DOF仿射变换，这一变换被用于采样32x32的patch。</p>
 <hr>
 <p><span id=8></span></p>
-<h1 id="e2bows-an-end-to-end-bag-of-words-model-via-deep-convolutional-neural-network-pdf-code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span>: An End-to-End Bag-of-Words Model via Deep Convolutional Neural Network <a href="https://www.sciencedirect.com/science/article/pii/S0925231219309105">pdf</a> <a href="https://github.com/liu-xb/E2BoWs">code</a></h1>
+<h1 id="e2bows-pdf-code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span> <a href="https://www.sciencedirect.com/science/article/pii/S0925231219309105">pdf</a> <a href="https://github.com/liu-xb/E2BoWs">code</a></h1>
 <h2 id="abstract-8">Abstract</h2>
 <p>传统的BoW模型需要很多步骤来构建BoW模型，如提取局部特征、训练词典、特征量化等。这些步骤彼此独立，难以一起优化。并且，由于依赖于人工设计的局部特征，BoW模型难以包含高层的语义信息。这些问题阻碍了BoW模型在一些大规模图像应用场景中的使用。因此，本文作者提出了一个可以end-to-end训练的BoW模型，模型输入一张图像，识别并分离出其中的语义目标，最后输出一个具有高语义分辨能力的视觉单词。更明确的说，模型首先通过卷积神经网络生成了对应不同物体类别的语义特征图（SFMs），然后引入BoW层来对每个特征图产生视觉单词。作者也引入了新的学习算法来提升所生成的BoW模型的稀疏性。</p>
 <h2 id="introduction-6">Introduction</h2>
@@ -539,6 +563,12 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 <img src="https://jinyu-m.github.io/post-images/1617075819644.png" alt="" loading="lazy"></p>
 <h2 id="experiments-2">Experiments</h2>
 <figure data-type="image" tabindex="5"><img src="https://jinyu-m.github.io/post-images/1617076021083.png" alt="" loading="lazy"></figure>
+<hr>
+<p><span id=9></span></p>
+<h1 id="superglue-pdf-code">SuperGlue <a href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Sarlin_SuperGlue_Learning_Feature_Matching_With_Graph_Neural_Networks_CVPR_2020_paper.pdf">pdf</a> <a href="https://github.com/magicleap/SuperGluePretrainedNetwork">code</a></h1>
+<h2 id="abstract-9">Abstract</h2>
+<p>本文提出的神经网络模型SuperGlue可以对两组特征进行匹配，得到correspondences并且丢弃未匹配到的点。这一分配问题是通过求解一个可微分的最优运输问题来估计的，该问题的损失是用图神经网络来预测的。我们引入了一种基于注意力的灵活的上下文聚合机制，使SuperGlue能够推理出潜在的3D场景和特征分配。与传统人工设计的启发式方法相比，我们的方法通过对图像对进行端到端的训练，学习三维世界的几何变换和规律。</p>
+<h2 id="introduction-7">Introduction</h2>
 
               </div>
               <div class="toc-container">
@@ -547,6 +577,7 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 <ul>
 <li><a href="#local-feature">Local Feature</a></li>
 <li><a href="#global-feature">Global Feature</a></li>
+<li><a href="#feature-matching">Feature Matching</a></li>
 </ul>
 </li>
 <li><a href="#magicpoint-magic-leap-pdf">MagicPoint (Magic Leap) pdf</a>
@@ -624,7 +655,7 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 <li><a href="#performance">Performance</a></li>
 </ul>
 </li>
-<li><a href="#l2-net-2017-pdf-code">L2-Net (2017) pdf code</a>
+<li><a href="#l2-net-pdf-code">L2-Net pdf code</a>
 <ul>
 <li><a href="#abstract-6">Abstract</a></li>
 <li><a href="#architecture-3">Architecture</a></li>
@@ -641,7 +672,7 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 </li>
 </ul>
 </li>
-<li><a href="#doap-2018-paper">DOAP (2018) paper</a>
+<li><a href="#doap-paper">DOAP paper</a>
 <ul>
 <li><a href="#abstract-7">Abstract</a></li>
 <li><a href="#introduction-5">Introduction</a></li>
@@ -666,7 +697,7 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 <li><a href="#experiments">Experiments</a></li>
 </ul>
 </li>
-<li><a href="#e2bows-an-end-to-end-bag-of-words-model-via-deep-convolutional-neural-network-pdf-code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span>: An End-to-End Bag-of-Words Model via Deep Convolutional Neural Network pdf code</a>
+<li><a href="#e2bows-pdf-code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span> pdf code</a>
 <ul>
 <li><a href="#abstract-8">Abstract</a></li>
 <li><a href="#introduction-6">Introduction</a></li>
@@ -679,6 +710,12 @@ SFMs是通过将全连接层的参数转化到卷积层中实现的。如图2所
 </ul>
 </li>
 <li><a href="#experiments-2">Experiments</a></li>
+</ul>
+</li>
+<li><a href="#superglue-pdf-code">SuperGlue pdf code</a>
+<ul>
+<li><a href="#abstract-9">Abstract</a></li>
+<li><a href="#introduction-7">Introduction</a></li>
 </ul>
 </li>
 </ul>

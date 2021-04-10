@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Loss Function | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1617692733273">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1618049143856">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Loss Function | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -27,7 +27,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1617692733273" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1618049143856" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -104,32 +104,9 @@
 <p>目前基于深度学习的特征算法大多使用metric learning来进行训练description，一般会使用pair-based，triplet-based的损失函数来进行无监督或弱监督的训练。doap和r2d2中使用了rank-based <strong>A</strong>verage <strong>P</strong>recision loss，很好的提升了效果。FastAP是doap作者在doap之后发表的一篇论文，是一种高效的AP loss，我感觉和doap中的损失函数有很多共同之处(btw, doap没有提供训练代码，r2d2中讲解不详细).</p>
 <hr>
 <h1 id="目录">目录</h1>
-<p><ul class="markdownIt-TOC">
-<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
-<ul>
-<li><a href="#cvpr-2019-average-precision-loss">[CVPR 2019] <strong>Average Precision Loss</strong></a></li>
-</ul>
-</li>
-<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
-<li><a href="#ap-loss-pdf-code">AP-Loss pdf code</a>
-<ul>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#learning-to-rank-with-average-precision">Learning to Rank with Average Precision</a>
-<ul>
-<li><a href="#fastap">FastAP</a></li>
-</ul>
-</li>
-<li><a href="#stochastic-optimization">Stochastic Optimization</a></li>
-<li><a href="#large-batch-training">Large-Batch Training</a></li>
-<li><a href="#minibatch-sampling">Minibatch Sampling</a></li>
-<li><a href="#code-with-comments">code with comments</a></li>
-</ul>
-</li>
-</ul>
-</p>
+<p><a href="#0">*Average-Precision Loss (CVPR 2019)</a></p>
 <hr>
+<p><span id=0></span></p>
 <h1 id="ap-loss-pdf-code">AP-Loss <a href="http://openaccess.thecvf.com/content_CVPR_2019/papers/Cakir_Deep_Metric_Learning_to_Rank_CVPR_2019_paper.pdf">pdf</a> <a href="https://github.com/kunhe/FastAP-metric-learning">code</a></h1>
 <h2 id="abstract">Abstract</h2>
 <p>作者基于learning to rank的方法提出了一种新的深度学习方法，FastAP，通过一种源自距离量化的近似方法来优化<strong>rank-based Average Precision</strong>。FastAP具有较低的复杂度，适应于stochastic gradient descent (SGD)。为了全面探索该方法的优势，作者还提出了一种新的minibatch sampling策略，一种允许large-batch training的新启发式方法。</p>
