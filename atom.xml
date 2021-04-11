@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-04-11T02:06:20.105Z</updated>
+    <updated>2021-04-11T02:45:16.775Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -11,6 +11,27 @@
     <logo>https://jinyu-m.github.io/images/avatar.png</logo>
     <icon>https://jinyu-m.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 年少万兜鍪</rights>
+    <entry>
+        <title type="html"><![CDATA[Linux常用指令]]></title>
+        <id>https://jinyu-m.github.io/post/linux-chang-yong-zhi-ling/</id>
+        <link href="https://jinyu-m.github.io/post/linux-chang-yong-zhi-ling/">
+        </link>
+        <updated>2021-04-11T02:40:02.000Z</updated>
+        <summary type="html"><![CDATA[<p>记录一下linux常用的指令🤠</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>记录一下linux常用的指令🤠</p>
+<!-- more -->
+<p><ul class="markdownIt-TOC">
+<li><a href="#ubuntu%E6%9F%A5%E7%9C%8B%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84opencv%E7%9A%84%E7%89%88%E6%9C%AC%E5%92%8C%E5%BA%93">Ubuntu查看已安装的OpenCV的版本和库</a></li>
+</ul>
+</p>
+<hr>
+<h1 id="ubuntu查看已安装的opencv的版本和库">Ubuntu查看已安装的OpenCV的版本和库</h1>
+<pre><code>pkg-config --modversion opencv
+pkg-config --libs opencv
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Re-Localization]]></title>
         <id>https://jinyu-m.github.io/post/re-localization/</id>
