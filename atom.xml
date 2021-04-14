@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-04-14T14:15:07.110Z</updated>
+    <updated>2021-04-14T14:19:48.266Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -1525,25 +1525,19 @@ single_frame matching:<br>
 <tr>
 <th>Feature</th>
 <th>from</th>
-<th>dataset</th>
 <th>innovation</th>
-<th>loss</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="#8"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span></a></td>
 <td>neurocomputing 2020</td>
-<td>ImageNet</td>
 <td>用CNN实现BoW，算是一种全局描述子。每个SFM代表一个语义类别，从每个SFM中提取若干视觉单词。把原FC的参数转换到卷积核。</td>
-<td>classification loss, similarity loss, sparsity loss</td>
 </tr>
 <tr>
 <td>NetVLAD</td>
 <td>CVPR 2016</td>
-<td>Google Street-View</td>
 <td>用CNN实现VLAD描述子</td>
-<td>triplet loss</td>
 </tr>
 </tbody>
 </table>
