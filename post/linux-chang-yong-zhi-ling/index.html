@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux常用指令及常见问题记录 | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619164061538">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619178458339">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Linux常用指令及常见问题记录 | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -34,7 +34,7 @@ ROS..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619164061538" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619178458339" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -95,7 +95,7 @@ ROS..." />
                 2021-04-11
               </span>
               <span>
-                1 min read
+                2 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/LPBshCuJa/" class="post-tag">
@@ -124,6 +124,11 @@ ROS..." />
 <li><a href="#rosbag">rosbag</a></li>
 </ul>
 </li>
+<li><a href="#%E5%91%BD%E4%BB%A4">命令</a>
+<ul>
+<li><a href="#tmux">tmux</a></li>
+</ul>
+</li>
 </ul>
 </p>
 <hr>
@@ -148,6 +153,24 @@ ROS..." />
 <code>rosbag play --pause ***.bag</code><br>
 -常用命令：<br>
 <img src="https://jinyu-m.github.io/post-images/1619075085711.png" alt="" loading="lazy"></p>
+<h1 id="命令">命令</h1>
+<h2 id="tmux">tmux</h2>
+<p>-启动新的会话<br>
+<code>tmux new -s name</code><br>
+-退出会话<br>
+<code>ctrl B + D</code><br>
+-在会话中新建窗口<br>
+<code>ctrl B + C</code><br>
+-在会话中切换窗口<br>
+<code>ctrl B + id</code><br>
+-查看所有会话<br>
+<code>tmux ls</code><br>
+-回到某会话中<br>
+<code>tmux a -t name</code><br>
+-重命名会话<br>
+<code>tmux rename -t source target</code><br>
+-关闭某会话<br>
+<code>tmux kill-session -t name</code></p>
 
               </div>
               <div class="toc-container">
@@ -165,6 +188,11 @@ ROS..." />
 <li><a href="#ros">ROS</a>
 <ul>
 <li><a href="#rosbag">rosbag</a></li>
+</ul>
+</li>
+<li><a href="#%E5%91%BD%E4%BB%A4">命令</a>
+<ul>
+<li><a href="#tmux">tmux</a></li>
 </ul>
 </li>
 </ul>
