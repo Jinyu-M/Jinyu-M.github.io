@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux常用指令及常见问题记录 | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619008117350">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619164061538">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Linux常用指令及常见问题记录 | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -14,13 +14,17 @@
     <meta name="description" content="记录一下linux常用的指令和常见问题的解决办法🤠
 
 
-Ubuntu查看已安装的OpenCV的版本和库
-
-
+OpenCV
 
 Ubuntu查看已安装的OpenCV的版本和库
-pkg-config --modversion opencv
-pkg-confi..." />
+
+
+APT
+
+Could not get lock /var/lib/dpkg/lock-frontend
+
+
+ROS..." />
     <meta name="keywords" content="tools" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -30,7 +34,7 @@ pkg-confi..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619008117350" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619164061538" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -105,19 +109,64 @@ pkg-confi..." />
                 <p>记录一下linux常用的指令和常见问题的解决办法🤠</p>
 <!-- more -->
 <p><ul class="markdownIt-TOC">
+<li><a href="#opencv">OpenCV</a>
+<ul>
 <li><a href="#ubuntu%E6%9F%A5%E7%9C%8B%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84opencv%E7%9A%84%E7%89%88%E6%9C%AC%E5%92%8C%E5%BA%93">Ubuntu查看已安装的OpenCV的版本和库</a></li>
+</ul>
+</li>
+<li><a href="#apt">APT</a>
+<ul>
+<li><a href="#could-not-get-lock-varlibdpkglock-frontend">Could not get lock /var/lib/dpkg/lock-frontend</a></li>
+</ul>
+</li>
+<li><a href="#ros">ROS</a>
+<ul>
+<li><a href="#rosbag">rosbag</a></li>
+</ul>
+</li>
 </ul>
 </p>
 <hr>
-<h1 id="ubuntu查看已安装的opencv的版本和库">Ubuntu查看已安装的OpenCV的版本和库</h1>
-<pre><code>pkg-config --modversion opencv
-pkg-config --libs opencv
-</code></pre>
+<h1 id="opencv">OpenCV</h1>
+<h2 id="ubuntu查看已安装的opencv的版本和库">Ubuntu查看已安装的OpenCV的版本和库</h2>
+<p><code>pkg-config --modversion opencv</code><br>
+<code>pkg-config --libs opencv</code></p>
+<h1 id="apt">APT</h1>
+<h2 id="could-not-get-lock-varlibdpkglock-frontend">Could not get lock /var/lib/dpkg/lock-frontend</h2>
+<p><a href="https://blog.csdn.net/lun55423/article/details/108907779">解决方案</a></p>
+<h1 id="ros">ROS</h1>
+<h2 id="rosbag">rosbag</h2>
+<p>-查看数据包中的信息<br>
+<code>rosbag info ***.bag</code><br>
+-回放数据包中包含的topic内容（要在另一个终端内先启动ROS master，即roscore）<br>
+<code>rosbag play ***.bag</code><br>
+-N倍速回放<br>
+<code>rosbag play -r N ***.bag</code><br>
+-循环播放<br>
+<code>rosbag play ***.bag -l [--loop]</code><br>
+-暂停<br>
+<code>rosbag play --pause ***.bag</code><br>
+-常用命令：<br>
+<img src="https://jinyu-m.github.io/post-images/1619075085711.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
+<li><a href="#opencv">OpenCV</a>
+<ul>
 <li><a href="#ubuntu%E6%9F%A5%E7%9C%8B%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84opencv%E7%9A%84%E7%89%88%E6%9C%AC%E5%92%8C%E5%BA%93">Ubuntu查看已安装的OpenCV的版本和库</a></li>
+</ul>
+</li>
+<li><a href="#apt">APT</a>
+<ul>
+<li><a href="#could-not-get-lock-varlibdpkglock-frontend">Could not get lock /var/lib/dpkg/lock-frontend</a></li>
+</ul>
+</li>
+<li><a href="#ros">ROS</a>
+<ul>
+<li><a href="#rosbag">rosbag</a></li>
+</ul>
+</li>
 </ul>
 
               </div>
