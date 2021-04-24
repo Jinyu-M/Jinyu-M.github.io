@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Transformer in Visual Tasks | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619178458339">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619244291337">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Transformer in Visual Tasks | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -29,7 +29,7 @@ Description
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619178458339" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619244291337" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -117,6 +117,11 @@ Description
 <td><a href="#1">Visual Transformers</a></td>
 <td>arxiv 2020</td>
 <td>利用CNN提取低层特征图，聚类获得少量visual tokens来表示图像，输入transformer，增强tokens，然后reproject到原特征图，增强特征表征能力，在分类和分割任务上提升了baseline的效果</td>
+</tr>
+<tr>
+<td>LoFTR</td>
+<td>CVPR 2021</td>
+<td>利用FPN提取coarse和fine的特征图，利用LoFTR module(多层self-和cross-attention)来增强描述子的表征能力，进行coarse-level matching，得到的匹配在fine特征图中找到对应区域，输入LoFTR module进行增强，计算correlation matrix，参考SuperGlue的方式用optimal transport的方法计算fine-level matches</td>
 </tr>
 </tbody>
 </table>
