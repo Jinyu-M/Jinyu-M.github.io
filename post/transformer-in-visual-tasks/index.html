@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Transformer in Visual Tasks | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619244291337">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619693373516">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Transformer in Visual Tasks | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -29,7 +29,7 @@ Description
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619244291337" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619693373516" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -90,7 +90,7 @@ Description
                 2021-04-17
               </span>
               <span>
-                26 min read
+                29 min read
               </span>
               
             </div>
@@ -122,6 +122,11 @@ Description
 <td>LoFTR</td>
 <td>CVPR 2021</td>
 <td>利用FPN提取coarse和fine的特征图，利用LoFTR module(多层self-和cross-attention)来增强描述子的表征能力，进行coarse-level matching，得到的匹配在fine特征图中找到对应区域，输入LoFTR module进行增强，计算correlation matrix，参考SuperGlue的方式用optimal transport的方法计算fine-level matches</td>
+</tr>
+<tr>
+<td><a href="#2">ViT</a></td>
+<td>ICLR 2021</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -319,6 +324,30 @@ projection过程是有必要的，原特征图中包含着一些细节信息。<
 与其他基于attention的增强版ResNet相比较，VT效果更好，FLOP更低。<br>
 <img src="https://jinyu-m.github.io/post-images/1618824542362.png" alt="" loading="lazy"><br>
 在语义分割上，比baseline更好。</p>
+<h1 id="an-image-is-worth-16x16-words-transformer-for-image-recognition-at-scale-pdf-code">An Image is Worth 16x16 Words: Transformer for Image Recognition at Scale <a href="https://openreview.net/forum?id=YicbFdNTTy">pdf</a> <a href="https://github.com/google-research/vision_transformer">code</a></h1>
+<p><span id=2></span></p>
+<h2 id="abstract-2">Abstract</h2>
+<p>作者提出，可以不用卷积结构，完全用transformer去处理图像块序列，也可以在视觉任务上达到很好的效果。</p>
+<h2 id="introduction-2">Introduction</h2>
+<p>作者将图像分割成图像块，并用线性映射将图像块映射为tokens，作为transformer的输入。当模型在中等大小的数据集上训练时，如ImageNet，模型相比有同等大小的ResNet表现稍差，说明transformer缺少CNNs固有的归纳偏差，比如平移不变性和局部性，因此当训练数据不够时，泛化能力不强。但是，当模型在大规模数据集上训练时，作者发现大规模训练要优于归纳偏差。迁移后的ViT模型可以达到很好的效果。</p>
+<h2 id="method">Method</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1619687700332.png" alt="" loading="lazy"><br>
+模型基本参照原本NLP任务中的transformer结构。</p>
+<h3 id="visiontransformer-vit">VisionTransformer (ViT)</h3>
+<p>作者将图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>H</mi><mo>×</mo><mi>W</mi><mo>×</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">x\in \mathbb{R}^{H \times W \times C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.08125em;">H</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.13889em;">W</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span>reshape为一组flattened 2D图像块<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>p</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>N</mi><mo>×</mo><mo>(</mo><msup><mi>P</mi><mn>2</mn></msup><mo>⋅</mo><mi>C</mi><mo>)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">x_p\in \mathbb{R}^{N \times (P^2 \cdot C)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8252079999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9869199999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9869199999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">×</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913142857142857em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mbin mtight">⋅</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span>，其中H和W是图像分辨率，C为通道数，(P,P)是图像块的分辨率，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>=</mo><mi>H</mi><mi>W</mi><mi mathvariant="normal">/</mi><msup><mi>P</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">N=HW/P^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>为图像块的数量。Transformer需要定长的输出向量，所以作者将图像块展平，并通过一个可训练的线性映射将图像块向量映射为D维的向量，称为patch embeddings.<br>
+<img src="https://jinyu-m.github.io/post-images/1619691554375.png" alt="" loading="lazy"><br>
+同时，作者在embedding中加入了一个class token (<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>z</mi><mn>0</mn><mn>0</mn></msubsup><mo>=</mo><msub><mi>x</mi><mrow><mi>c</mi><mi>l</mi><mi>a</mi><mi>s</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">z^0_0 = x_{class}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0622159999999998em;vertical-align:-0.24810799999999997em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.4518920000000004em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，从Transformer encoder输出时的状态<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>z</mi><mi>L</mi><mn>0</mn></msubsup></mrow><annotation encoding="application/x-tex">z^0_L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>作为图像表征y。在预训练和fine-tuning阶段，在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>z</mi><mi>L</mi><mn>0</mn></msubsup></mrow><annotation encoding="application/x-tex">z^0_L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.089439em;vertical-align:-0.275331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.424669em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.275331em;"><span></span></span></span></span></span></span></span></span></span>上连接一个classification head。该分类head在预训练阶段通过一个有一个隐层的MLP实现，在fine-tuning阶段通过一个单全连接层实现。<br>
+作者在patch embeddings中加入了1D的position embeddings。<br>
+tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP模块，在每个模块前加入LayerNorm(LN)，在每个模块后加入residual connection。MLP模块中有两层和一个GELU非线性函数。<br>
+<img src="https://jinyu-m.github.io/post-images/1619692129910.png" alt="" loading="lazy"></p>
+<h3 id="fine-tuning-and-higher-resolution">Fine-tuning and Higher Resolution</h3>
+<p>作者在大数据集上预训练ViT模型，然后在下流任务上fine-tune。在fine-tune时，去掉预训练的prediction head，用一个初始化为0的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>×</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">D \times K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span></span></span></span>全连接层代替，其中K是下流任务的分类数量。在比pre-training更高的分辨率上进行fine-tuning效果会比较好。当输入更高分辨率的图像时，作者固定了patch size，选择将patch序列的长度变大。ViT可以处理任何长度的序列，但是预训练好的position embeddings可能就没有意义了，所以作者根据position embeddings在原图中的位置来进行2D插值。要注意，这种分辨率调节和patch提取是唯一手动加入ViT模型的关于图像2D结构的感知偏差。</p>
+<h2 id="experiments-2">Experiments</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1619693111217.png" alt="" loading="lazy"><br>
+模型的几种变型。<br>
+<img src="https://jinyu-m.github.io/post-images/1619693138449.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1619693311436.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1619693327672.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
@@ -398,6 +427,19 @@ projection过程是有必要的，原特征图中包含着一些细节信息。<
 </li>
 <li><a href="#using-visual-transformers-in-vision-models">Using Visual Transformers in Vision Models</a></li>
 <li><a href="#experiments">Experiments</a></li>
+</ul>
+</li>
+<li><a href="#an-image-is-worth-16x16-words-transformer-for-image-recognition-at-scale-pdf-code">An Image is Worth 16x16 Words: Transformer for Image Recognition at Scale pdf code</a>
+<ul>
+<li><a href="#abstract-2">Abstract</a></li>
+<li><a href="#introduction-2">Introduction</a></li>
+<li><a href="#method">Method</a>
+<ul>
+<li><a href="#visiontransformer-vit">VisionTransformer (ViT)</a></li>
+<li><a href="#fine-tuning-and-higher-resolution">Fine-tuning and Higher Resolution</a></li>
+</ul>
+</li>
+<li><a href="#experiments-2">Experiments</a></li>
 </ul>
 </li>
 </ul>

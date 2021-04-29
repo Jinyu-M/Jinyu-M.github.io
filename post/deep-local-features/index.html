@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619244291337">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1619693373516">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -39,7 +39,7 @@ Open..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619244291337" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1619693373516" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -100,7 +100,7 @@ Open..." />
                 2020-10-01
               </span>
               <span>
-                64 min read
+                67 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -218,6 +218,11 @@ Open..." />
 <td><a href="#10">LoFTR</a></td>
 <td>CVPR 2021</td>
 <td>提出基于Transformer的LoFTR模块来将特征转换为更易于匹配的特征，利用1/8分辨率的特征进行粗略匹配，利用1/2分辨率的特征对粗略匹配进行微调。可以在无纹理区域也获得稠密的匹配。</td>
+</tr>
+<tr>
+<td><a href="#11">AdaLAM</a></td>
+<td>ECCV 2020</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -702,6 +707,31 @@ Transformer Encoder是由顺序连接的encoder层构成的。如图3(a)所示�
 <img src="https://jinyu-m.github.io/post-images/1618562663882.png" alt="" loading="lazy"></p>
 <h4 id="ablation-study-2">Ablation Study</h4>
 <figure data-type="image" tabindex="9"><img src="https://jinyu-m.github.io/post-images/1618562863597.png" alt="" loading="lazy"></figure>
+<hr>
+<h1 id="adalam-revisiting-handcrafted-outlier-detection-pdf-code">AdaLAM: Revisiting Handcrafted Outlier Detection <a href="https://arxiv.org/abs/2006.04250">pdf</a> <a href="https://github.com/cavalli1234/AdaLAM">code</a></h1>
+<h2 id="abstract-11">Abstract</h2>
+<p>这篇论文中，作者设计了一个handcrafted hierarchical pipeline来有效地检测匹配中的外点。AdaLAM可以有效地利用现代并行硬件，从而非常快并且非常准确地滤除外点。</p>
+<h2 id="introduction-9">Introduction</h2>
+<p>在这篇文章中，作者回顾了人工设计的的外点滤除方法。根据这一研究领域的最佳实践，作者提出了一种基于样本自适应阈值的局部仿射运动验证的外点滤除方法，命名为Adaptive Locally-Affine Matching(AdaLAM)。此外，AdaLAM可以有效地利用现代并行硬件，在一块现代GPU上，每对图像只需不到20毫秒的时间在8000个关键点中过滤匹配。本文的贡献如下：</p>
+<ol>
+<li>提出了AdaLAM，将过去很多在空间匹配上的方法统一、鲁棒、高并行化地结合在一起，来实现快速的外点滤除；</li>
+<li>由于该模型基于几何假设，在不同的场景下具有不同的分辨能力，我们提出了一种新的方法，自适应地弱化我们的假设，以实现更好的泛化到不同的领域，同时仍然从每个图像领域中挖掘尽可能多的信息。</li>
+<li>实验表明，自适应方法改进了泛化能力，AdaLAM优于当前最先进的方法。</li>
+</ol>
+<h2 id="hierarchical-adaptive-affine-verification">Hierarchical Adaptive Affine Verification</h2>
+<p>给定图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">I_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>中关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">K_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">K_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，M是从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">K_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">K_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的最近邻匹配。在实际中，由于描述子的限制，M中有大量不正确的匹配，因此，本文的目标即是找到一个子集<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>M</mi><mo mathvariant="normal">′</mo></msup><mo>⊂</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">M&#x27;\subset M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.790992em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊂</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>，这个子集是全部正确内点的几何<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mo>∗</mo><mo>⊂</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">M*\subset M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord">∗</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊂</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>的近似。<br>
+<img src="https://jinyu-m.github.io/post-images/1619340732163.png" alt="" loading="lazy"><br>
+该算法的主要流程为：</p>
+<ol>
+<li>选择有限个可信的、分布较好的匹配，作为seed points；</li>
+<li>对于每个seed point，选择邻近区域内可以相容的correspondences；</li>
+<li>通过高度并行的RANSACs方法来验证每个seed points的邻域内的局部affine consistency，该RANSAC方法使用sample-adaptive inlier threshold。输出seed points中有足够强支持（每个seed point都有自己的inlier threshold）的内点作为匹配M'。</li>
+</ol>
+<h3 id="preliminaries-and-core-assumptions">Preliminaries and core assumptions</h3>
+<p>从两个视角看3D空间中的平面具有单应性，这一性质可以用图像空间中的affine transformation来局部近似。这种仿射变换对于正确的关键点correspondence有很强的空间一致性约束，可以作为一个非常可靠的过滤器。但是，这种平面、局部和正确的映射的假设在真实图像中往往无法满足：</p>
+<ol>
+<li>3D点所处的表面可能不是平面。三维切平面的某一点与实际曲面之间的偏移会产生非切平面上所有三维点投影的非线性偏差，这种偏差随着曲面曲率的增大而越来越显著。</li>
+</ol>
 
               </div>
               <div class="toc-container">
@@ -923,6 +953,17 @@ Transformer Encoder是由顺序连接的encoder层构成的。如图3(a)所示�
 <li><a href="#ablation-study-2">Ablation Study</a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#adalam-revisiting-handcrafted-outlier-detection-pdf-code">AdaLAM: Revisiting Handcrafted Outlier Detection pdf code</a>
+<ul>
+<li><a href="#abstract-11">Abstract</a></li>
+<li><a href="#introduction-9">Introduction</a></li>
+<li><a href="#hierarchical-adaptive-affine-verification">Hierarchical Adaptive Affine Verification</a>
+<ul>
+<li><a href="#preliminaries-and-core-assumptions">Preliminaries and core assumptions</a></li>
 </ul>
 </li>
 </ul>
