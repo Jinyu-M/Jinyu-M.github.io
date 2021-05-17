@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621048409316">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621261062135">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -39,7 +39,7 @@ Open..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621048409316" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621261062135" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -100,7 +100,7 @@ Open..." />
                 2020-10-01
               </span>
               <span>
-                87 min read
+                91 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/dJ8NdBIXq/" class="post-tag">
@@ -195,7 +195,7 @@ Open..." />
 </thead>
 <tbody>
 <tr>
-<td><a href="#8"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>E</mi><mn>2</mn></msup><mi>B</mi><mi>o</mi><mi>W</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">E^2BoWs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord mathdefault">s</span></span></span></span></a></td>
+<td><a href="#8">E2BoWs</a></td>
 <td>neurocomputing 2020</td>
 <td>用CNN实现BoW，算是一种全局描述子。每个SFM代表一个语义类别，从每个SFM中提取若干视觉单词。把原FC的参数转换到卷积核。</td>
 </tr>
@@ -203,6 +203,11 @@ Open..." />
 <td>NetVLAD</td>
 <td>CVPR 2016</td>
 <td>用CNN实现VLAD描述子</td>
+</tr>
+<tr>
+<td><a href="#13">MSCFP</a></td>
+<td>ICMR 2020</td>
+<td>对CNN提取的dense local feature，先进行多尺度的max-pooling，拼接后用NetVLAD进行聚合，得到全局描述子，提出一种triplet mining方法，提取semi-hard和hard triplets</td>
 </tr>
 </tbody>
 </table>
@@ -846,6 +851,38 @@ DCN通过额外学习了采样的偏置（<span class="katex"><span class="katex
 <img src="https://jinyu-m.github.io/post-images/1621047045137.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1621047102343.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1621047118276.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=13></span></p>
+<h1 id="image-retrieval-using-multi-scale-cnn-features-pooling-pdf">Image Retrieval using Multi-scale CNN Features Pooling <a href="https://arxiv.org/pdf/2004.09695v1.pdf">pdf</a></h1>
+<h2 id="abstract-13">Abstract</h2>
+<p>作者基于NetVLAD进行了多尺度特征的pooling，得到一个高效的图像表征，用于基于内容的图像检索。</p>
+<h2 id="introduction-11">Introduction</h2>
+<p>在这篇论文中，作者提出了一种多尺度CNN regions pooling方法，在NetVLAD aggregation之前对特征进行聚合。该方法与3-stream siamese network一起利用end-to-end方法进行训练，来优化图像表征。这篇论文还提出了一种triplet mining过程，来提供不同的semi-hard和hard triplets，避免hard triplets阻碍学习。</p>
+<h2 id="the-proposed-method">The Proposed Method</h2>
+<p>本篇论文与现有算法的主要区别在于：1）特征利用两种不同的方法聚合，首先对两个尺度的特征进行max-pooling聚合，然后利用VLAD聚合；2）提出triplet mining方法来训练3-stream siamese，选取semi-hard和hard triplets，避免采集到那些由于重叠部分少、剧烈缩放造成的视觉相似度非常低的extremely hard样本，这些样本可能导致过拟合和丢掉泛化性。</p>
+<h3 id="pooling-of-local-cnn-features">Pooling of local CNN features</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1621252826774.png" alt="" loading="lazy"><br>
+分别用2x2 max-pooling和3x3 max-pooling（步长都为1）来对卷积层得到的feature map进行pooling，得到精细的和更大感受野的细节信息。每一点上，得到f个activation maps，视为一个1x1xf的column feature。这个过程如图2所示，类似于稠密的grid-based采样描述子。column feature被拼接在一起，来获得图像的multi-scale描述子。<br>
+<img src="https://jinyu-m.github.io/post-images/1621257470749.png" alt="" loading="lazy"><br>
+所有局部CNN特征用NetVLAD层聚合，得到图像内容的全局描述子。NetVLAD层用K-Means聚类初始化。在NetVLAD中，设置K=64，得到32k维的描述子。<br>
+<img src="https://jinyu-m.github.io/post-images/1621257616587.png" alt="" loading="lazy"></p>
+<h3 id="training-and-triplet-mining">Training and Triplet Mining</h3>
+<p>这篇论文中，作者使用基于图像三元组的ranking loss。这一方法的基本意图为学习一个让相关图像的表征比不相关图像的表征更相似的描述子。使用平方欧式距离来度量描述子间的相似度，triplet loss表述为：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>=</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mi>α</mi><mo>+</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo><mo>−</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>n</mi><mo>)</mo><mo separator="true">,</mo><mn>0</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">L=max(\alpha+d(q,p)-d(q,n),0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">\alpha=0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">1</span></span></span></span>。<br>
+在该方法中一个很重要的问题是如何选择triplets，随机的选择可能会导致triplet不产生任何的loss，因此无法优化模型。作者提出triplet会根据它们自身的复杂度来对训练过程产生不同的影响。因此，作者将triplet划分为以下几类：<br>
+<strong>easy triplets</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo><mo>&lt;</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo><mo>+</mo><mi>α</mi><mo>&lt;</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d(q,p)&lt;d(q,p)+\alpha&lt;d(q,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>对模型没有帮助；<br>
+<strong>semi-hard triplets</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo><mo>&lt;</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d(q,p)&lt;d(q,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>但是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo><mo>+</mo><mi>α</mi><mo>&gt;</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d(q,p)+\alpha&gt;d(q,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，这些triplet会提供一些有用信息，但是不够多<br>
+<strong>hard triplets</strong>：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>n</mi><mo>)</mo><mo>&lt;</mo><mi>d</mi><mo>(</mo><mi>q</mi><mo separator="true">,</mo><mi>p</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">d(q,n)&lt;d(q,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mclose">)</span></span></span></span>会产生较大的loss。<br>
+<img src="https://jinyu-m.github.io/post-images/1621259674739.png" alt="" loading="lazy"><br>
+使用算法1可以用如下逻辑规则以50%的概率产生semi-hard triplets或hard triplets：<br>
+<strong>case A</strong>：关于query搜索第一个negative的索引j。如果j&gt;2，那么设置positive的索引为j-1（第15行），产生一个semi-hard triplet；<br>
+<strong>case B</strong>：否则，在第一个negative之后搜索第一个positive的索引值，产生一个hard triplet（第18-19行）；<br>
+<strong>case C</strong>：处理非常困难的triplets，这是positive和query相距很远（第21行），这种情况下triplets被丢弃。<br>
+算法1中，类别数量k被视为512，mining_batch_size设为2048，每个类别只挑选一个triplet（第28行），平均产生250个triplet。<br>
+作者用Google Landmark V2数据集进行训练，用cleaned版本中的train数据集，包含1580470张图像和81313个标签，每8次迭代进行一次mining。</p>
+<h2 id="experiments-7">Experiments</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1621260856368.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1621260925166.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1621260949541.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
@@ -1110,6 +1147,19 @@ DCN通过额外学习了采样的偏置（<span class="katex"><span class="katex
 <li><a href="#results-2">Results</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#image-retrieval-using-multi-scale-cnn-features-pooling-pdf">Image Retrieval using Multi-scale CNN Features Pooling pdf</a>
+<ul>
+<li><a href="#abstract-13">Abstract</a></li>
+<li><a href="#introduction-11">Introduction</a></li>
+<li><a href="#the-proposed-method">The Proposed Method</a>
+<ul>
+<li><a href="#pooling-of-local-cnn-features">Pooling of local CNN features</a></li>
+<li><a href="#training-and-triplet-mining">Training and Triplet Mining</a></li>
+</ul>
+</li>
+<li><a href="#experiments-7">Experiments</a></li>
 </ul>
 </li>
 </ul>
