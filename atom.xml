@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-05-18T03:45:38.945Z</updated>
+    <updated>2021-05-18T03:47:48.672Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -2240,7 +2240,7 @@ single_frame matching:<br>
 <tr>
 <td><a href="#14">BoWNet</a></td>
 <td>CVPR 2020</td>
-<td></td>
+<td>使用自监督方法训练图像的BoW表征，先用于训练模型提取dense local feature，用预训练词典量化，得到真值BoW向量。对图像施加扰动，通过网络预测扰动图像的BoW向量，用真值BoW向量监督，得到更鲁棒的BoW向量</td>
 </tr>
 </tbody>
 </table>
