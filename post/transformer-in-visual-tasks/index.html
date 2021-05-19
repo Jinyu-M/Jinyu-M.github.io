@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Transformer in Visual Tasks | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621389886482">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621394451913">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Transformer in Visual Tasks | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -29,7 +29,7 @@ Description
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621389886482" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621394451913" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -90,7 +90,7 @@ Description
                 2021-04-17
               </span>
               <span>
-                37 min read
+                39 min read
               </span>
               
             </div>
@@ -132,6 +132,11 @@ Description
 <td><a href="#3">VidTr</a></td>
 <td>arxiv 2021</td>
 <td>在视频动作分类任务中应用transformer，使用时空两个维度的注意力机制，为了减少内存消耗，将时空注意力机制解耦，先进行时间维度上的注意力，并下采样具有信息的帧，然后进行空间维度的注意力</td>
+</tr>
+<tr>
+<td><a href="#4">CaTiLoc</a></td>
+<td>ICASSP 2021</td>
+<td>用MobileNet提取特征图，输入ViT，输出接全连接层，估计3D位置和4D四元数信息</td>
 </tr>
 </tbody>
 </table>
@@ -398,6 +403,35 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 <img src="https://jinyu-m.github.io/post-images/1621323730564.png" alt="" loading="lazy"><br>
 在Charades、Something-something-V2、UCF和HMDB数据集上的结果<br>
 <img src="https://jinyu-m.github.io/post-images/1621323753251.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=4></span></p>
+<h1 id="catiloc-camera-image-transformer-for-indoor-localization-pdf">CaTiLoc: Camera Image Transformer for Indoor Localization <a href="https://ieeexplore.ieee.org/abstract/document/9414939">pdf</a></h1>
+<h2 id="abstract-4">Abstract</h2>
+<p>对image transformer进行了一些适应性的改动来对每张图像估计3D位置和4D四元数信息。</p>
+<h2 id="introduction-4">Introduction</h2>
+<p>本文提出的系统有如下性质：</p>
+<ol>
+<li>输入为RGB图像</li>
+<li>不需要深度信息</li>
+<li>不需要部署额外的设备</li>
+<li>可以在具有动态物体的多变环境中使用</li>
+<li>在用部分遮挡物体时依然有效</li>
+<li>实时性好，可以用于真实场景<br>
+这篇论文的创新性在于：</li>
+<li>用transformer结构代替传统使用的CNN结构来实现相机定位</li>
+<li>提出一种将transformer与CNN提取的特征相结合的工程技巧，在保留位置信息的同时考虑空间信息;</li>
+<li>提出一种应用双重掩膜的工程技巧，可以提高整个系统对环境变化和物体运动结果的鲁棒性。</li>
+</ol>
+<h2 id="the-proposed-architecture">The Proposed Architecture</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1621392606431.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1621392937534.png" alt="" loading="lazy"><br>
+对比ViT，用CNN提取特征，输入Transformer Encoder，修改了输出维度。</p>
+<h3 id="processing-pipeline">Processing Pipeline</h3>
+<p><img src="https://jinyu-m.github.io/post-images/1621393908657.png" alt="" loading="lazy"><br>
+输入一个大小为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>×</mo><msub><mi>W</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">H_1 \times W_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的图像<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi>R</mi><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>×</mo><msub><mi>W</mi><mn>1</mn></msub><mo>×</mo><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">x \in R^{H_1 \times W_1 \times 3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.08125em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.13889em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span>，缩放到224x224。使用MobileNet v1结构的前三层提取特征，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>112</mn><mi>x</mi><mn>112</mn><mi>x</mi><mn>64</mn></mrow><annotation encoding="application/x-tex">112x112x64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">1</span><span class="mord">2</span><span class="mord mathdefault">x</span><span class="mord">1</span><span class="mord">1</span><span class="mord">2</span><span class="mord mathdefault">x</span><span class="mord">6</span><span class="mord">4</span></span></span></span>的特征，每个特征图被reshape为展平的2D patches，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>p</mi></msub><mo>∈</mo><msup><mi>R</mi><mrow><mi>N</mi><mo>×</mo><mo>(</mo><msup><mi>P</mi><mn>2</mn></msup><mo>⋅</mo><mi>C</mi><mo>)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">x_p \in R^{N \times (P^2 \cdot C)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8252079999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9869199999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9869199999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">×</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913142857142857em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mbin mtight">⋅</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span>，其中(P,P)为patch的分辨率，C是通道数（C=64），<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo>=</mo><msub><mi>H</mi><mn>2</mn></msub><msub><mi>W</mi><mn>2</mn></msub><mi mathvariant="normal">/</mi><msup><mi>P</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">N=H_2W_2/P^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mn>2</mn></msub><mo>=</mo><msub><mi>W</mi><mn>2</mn></msub><mo>=</mo><mn>112</mn></mrow><annotation encoding="application/x-tex">H_2=W_2=112</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">1</span><span class="mord">2</span></span></span></span>。然后将64维的patches排列起来输入12个transformer encoders的栈。transformer栈的输出然后输入一个有512个神经元的全连接层，dropout=0.15，然后通过两个全连接层得到3D位置和4D四元数向量。</p>
+<h2 id="experiments-4">Experiments</h2>
+<p>用7scenes训练。输入图像的10%被随机删除，并用其他像素的平均值加上高斯噪声来填充，来让模型对环境变换和移动物体产生鲁棒性。另外，掩去tranformer encoder15%的输入，让模型感知图像patches的位置关系。通过这两种mask，模型可以很好的感知patches在图像中的位置。<br>
+<img src="https://jinyu-m.github.io/post-images/1621394218167.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
@@ -508,6 +542,18 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 </ul>
 </li>
 <li><a href="#experiments-3">Experiments</a></li>
+</ul>
+</li>
+<li><a href="#catiloc-camera-image-transformer-for-indoor-localization-pdf">CaTiLoc: Camera Image Transformer for Indoor Localization pdf</a>
+<ul>
+<li><a href="#abstract-4">Abstract</a></li>
+<li><a href="#introduction-4">Introduction</a></li>
+<li><a href="#the-proposed-architecture">The Proposed Architecture</a>
+<ul>
+<li><a href="#processing-pipeline">Processing Pipeline</a></li>
+</ul>
+</li>
+<li><a href="#experiments-4">Experiments</a></li>
 </ul>
 </li>
 </ul>
