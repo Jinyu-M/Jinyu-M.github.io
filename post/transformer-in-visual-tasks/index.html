@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Transformer in Visual Tasks | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621394451913">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621394720152">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Transformer in Visual Tasks | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -29,7 +29,7 @@ Description
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621394451913" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621394720152" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -409,15 +409,10 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 <h2 id="abstract-4">Abstract</h2>
 <p>对image transformer进行了一些适应性的改动来对每张图像估计3D位置和4D四元数信息。</p>
 <h2 id="introduction-4">Introduction</h2>
-<p>本文提出的系统有如下性质：</p>
+<p>本文提出的系统有如下性质：<br>
+1.输入为RGB图像; 2. 不需要深度信息; 3. 不需要部署额外的设备; 4. 可以在具有动态物体的多变环境中使用; 5. 在用部分遮挡物体时依然有效; 6. 实时性好，可以用于真实场景;<br>
+这篇论文的创新性在于：</p>
 <ol>
-<li>输入为RGB图像</li>
-<li>不需要深度信息</li>
-<li>不需要部署额外的设备</li>
-<li>可以在具有动态物体的多变环境中使用</li>
-<li>在用部分遮挡物体时依然有效</li>
-<li>实时性好，可以用于真实场景<br>
-这篇论文的创新性在于：</li>
 <li>用transformer结构代替传统使用的CNN结构来实现相机定位</li>
 <li>提出一种将transformer与CNN提取的特征相结合的工程技巧，在保留位置信息的同时考虑空间信息;</li>
 <li>提出一种应用双重掩膜的工程技巧，可以提高整个系统对环境变化和物体运动结果的鲁棒性。</li>
