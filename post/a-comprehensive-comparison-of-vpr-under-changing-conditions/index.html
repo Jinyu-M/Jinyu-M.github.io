@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BenchMark | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621502620465">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621563116173">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="BenchMark | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -12,12 +12,12 @@
 
 
     <meta name="description" content="写在前面
-这篇日志记录一下不常见或新提出的benchmark。好的算法也需要好的评价规则来体现呀！
+这篇日志记录一些benchmark。好的算法也需要好的评价规则来体现呀！
 
 
 总结
-[place recognition] Levelling the Playing Field
-这篇论文中，作者从Matching..." />
+[visual place recognition] Levelling the Playing Field
+这篇论文中，作者从Matching ..." />
     <meta name="keywords" content="Place recognition" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -27,7 +27,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621502620465" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621563116173" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -88,7 +88,7 @@
                 2020-11-05
               </span>
               <span>
-                2 min read
+                3 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -100,35 +100,20 @@
             <div class="post-content-wrapper">
               <div class="post-content">
                 <h1 id="写在前面">写在前面</h1>
-<p>这篇日志记录一下不常见或新提出的benchmark。好的算法也需要好的评价规则来体现呀！</p>
+<p>这篇日志记录一些benchmark。好的算法也需要好的评价规则来体现呀！</p>
 <!-- more -->
 <hr>
 <h1 id="总结">总结</h1>
-<h2 id="place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></h2>
+<h2 id="visual-place-recognition-levelling-the-playing-field">[visual place recognition] <strong>Levelling the Playing Field</strong></h2>
 <p>这篇论文中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
+<h2 id="visual-place-recognition-vpr-bench">[visual place recognition] <strong>VPR-Bench</strong></h2>
 <hr>
 <h1 id="目录">目录</h1>
-<p><ul class="markdownIt-TOC">
-<li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
-<ul>
-<li><a href="#place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></a></li>
-</ul>
-</li>
-<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
-<li><a href="#levelling-the-playing-field-a-comprehensive-comparison-of-visual-place-recognition-approaches-under-changing-conditions">Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</a>
-<ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#evaluation-datasets">Evaluation Datasets</a></li>
-<li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
-<li><a href="#performance">Performance</a></li>
-</ul>
-</li>
-</ul>
-</p>
+<p><a href="#1">*Levelling the Playing Field: A Comprehensive Comparison of VPR Approaches under Changing Conditions (ICRAW 2019)</a><br>
+<a href="#2">*VPR-Bench: An Open-Source VPR Evaluation Framework with Quatifiable Viewpoint and Appearance Change (IJCV 2021)</a></p>
 <hr>
+<p><span id=1></span></p>
 <h1 id="levelling-the-playing-field-a-comprehensive-comparison-of-visual-place-recognition-approaches-under-changing-conditions">Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</h1>
-<p>Zaffar, Mubariz and Khaliq, Ahmad and Ehsan, Shoaib and Milford, Michael and McDonald-Maier, Klaus. <em>Levelling the Playing Field: A Comprehensive Comparison of Visual Place Recognition Approaches under Changing Conditions</em>.  ICRA 2019 Workshop on Database Generation and Benchmarking of SLAM Algorithms for Robotics and VR/AR</p>
 <h2 id="introduction">Introduction</h2>
 <p>本文是对一些VPR算法的比较。作者提出VPR的四个难点：<strong>Seasonal Variation, Viewpoint Variation, Illumination Variation, Dynamic Objects</strong>。在这篇文献中，作者从Matching Performance, Matching Time, Memory Footprint三个角度分析了10种算法。</p>
 <h2 id="evaluation-datasets">Evaluation Datasets</h2>
@@ -139,15 +124,26 @@
 <img src="https://jinyu-m.github.io/post-images/1610853267787.png" alt="" loading="lazy"></p>
 <h2 id="evaluation-metrics">Evaluation Metrics</h2>
 <p>作者使用AUC来评估算法的matching performance：<br>
-<img src="https://jinyu-m.github.io/post-images/1610853272896.png" alt="" loading="lazy"></p>
-<p>作者记录了每个算法对每张query image匹配所需的时间，包括query image的feature encoding time和利用描述子匹配R张reference image的时间。</p>
-<p>作者还第一次将每个算法特征描述子所需的储存空间进行了比较。</p>
+<img src="https://jinyu-m.github.io/post-images/1610853272896.png" alt="" loading="lazy"><br>
+作者记录了每个算法对每张query image匹配所需的时间，包括query image的feature encoding time和利用描述子匹配R张reference image的时间。<br>
+作者还第一次将每个算法特征描述子所需的储存空间进行了比较。</p>
 <h2 id="performance">Performance</h2>
 <p><img src="https://jinyu-m.github.io/post-images/1610853281610.png" alt="" loading="lazy"><br>
 在Berilin Kudamm Dataset上NetVLAD表现最好。在Gardens Point Dataset上，Cross-Region-BoW获得最佳表现，NetVLAD、HybridNet和AMOSNet也获得了相似的不错表现。在Nordland数据集上，Region-VLAD、NetVLAD和Cross-Region-BoW表现较好。<br>
 <img src="https://jinyu-m.github.io/post-images/1610853289214.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1610853296288.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1610853301967.png" alt="" loading="lazy"></p>
+<hr>
+<p>#VPR-Bench: An Open-Source Visual Place Recognition Evaluation Framework with Quatifiable Viewpoint and Appearance Change <a href="https://github.com/Jinyu-M/VPR-Bench">code</a></p>
+<h2 id="introduction-2">Introduction</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1621503637284.png" alt="" loading="lazy"><br>
+本文提出一种评估VPR算法的开源框架，框架示意图如图1所示。<br>
+<img src="https://jinyu-m.github.io/post-images/1621503759111.png" alt="" loading="lazy"><br>
+作者发现，如图2所示，由于数据集和评估规则的使用不规范，VPR的精度并不是一直提升的。</p>
+<h2 id="vpr-bench-framework">VPR-Bench Framework</h2>
+<h3 id="framework-design">Framework Design</h3>
+<p>整体框架的设计有两个关键点：1）一个全面的、完全集成的、易于使用的VPR性能评估框架；2）模块化和方便定期更新和未来一致性的模板。框架的代码结构如图3所示。<br>
+<img src="https://jinyu-m.github.io/post-images/1621511838137.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
@@ -155,7 +151,8 @@
 <li><a href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2">写在前面</a></li>
 <li><a href="#%E6%80%BB%E7%BB%93">总结</a>
 <ul>
-<li><a href="#place-recognition-levelling-the-playing-field">[place recognition] <strong>Levelling the Playing Field</strong></a></li>
+<li><a href="#visual-place-recognition-levelling-the-playing-field">[visual place recognition] <strong>Levelling the Playing Field</strong></a></li>
+<li><a href="#visual-place-recognition-vpr-bench">[visual place recognition] <strong>VPR-Bench</strong></a></li>
 </ul>
 </li>
 <li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
@@ -165,6 +162,12 @@
 <li><a href="#evaluation-datasets">Evaluation Datasets</a></li>
 <li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
 <li><a href="#performance">Performance</a></li>
+<li><a href="#introduction-2">Introduction</a></li>
+<li><a href="#vpr-bench-framework">VPR-Bench Framework</a>
+<ul>
+<li><a href="#framework-design">Framework Design</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
