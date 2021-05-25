@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-05-25T01:54:27.022Z</updated>
+    <updated>2021-05-25T08:11:13.836Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -447,14 +447,14 @@ FOV和KB模型计算非常慢，因为KB模型包含了很耗时间的三角函�
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Transformer in Visual Tasks]]></title>
+        <title type="html"><![CDATA[NLP in Visual Tasks]]></title>
         <id>https://jinyu-m.github.io/post/transformer-in-visual-tasks/</id>
         <link href="https://jinyu-m.github.io/post/transformer-in-visual-tasks/">
         </link>
         <updated>2021-04-17T02:43:22.000Z</updated>
-        <summary type="html"><![CDATA[<p>Transformer在CV领域又掀起一股热潮呀，这种具有global receptive field的结构可以给模型带来某些传统CNN结构难以实现的能力，了解一下，万一也入坑了呢😎</p>
+        <summary type="html"><![CDATA[<p>Transformer在CV领域又掀起一股热潮呀，这种具有global receptive field的结构可以给模型带来某些传统CNN结构难以实现的能力。MLP最近也很火热。了解一下，万一也入坑了呢😎</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>Transformer在CV领域又掀起一股热潮呀，这种具有global receptive field的结构可以给模型带来某些传统CNN结构难以实现的能力，了解一下，万一也入坑了呢😎</p>
+        <content type="html"><![CDATA[<p>Transformer在CV领域又掀起一股热潮呀，这种具有global receptive field的结构可以给模型带来某些传统CNN结构难以实现的能力。MLP最近也很火热。了解一下，万一也入坑了呢😎</p>
 <!-- more -->
 <table>
 <thead>
@@ -494,6 +494,11 @@ FOV和KB模型计算非常慢，因为KB模型包含了很耗时间的三角函�
 <td><a href="#4">CaTiLoc</a></td>
 <td>ICASSP 2021</td>
 <td>用MobileNet提取特征图，输入ViT，输出接全连接层，估计3D位置和4D四元数信息</td>
+</tr>
+<tr>
+<td><a href="#5">MLP-Mixer</a></td>
+<td>arxiv 2021</td>
+<td>提出了一种完全基于MLP的图像分类结构，包含两种MLP块，分别为channel-mixing MLPs和token-mixing MLPs</td>
 </tr>
 </tbody>
 </table>
@@ -784,6 +789,20 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 <h2 id="experiments-4">Experiments</h2>
 <p>用7scenes训练。输入图像的10%被随机删除，并用其他像素的平均值加上高斯噪声来填充，来让模型对环境变换和移动物体产生鲁棒性。另外，掩去tranformer encoder15%的输入，让模型感知图像patches的位置关系。通过这两种mask，模型可以很好的感知patches在图像中的位置。<br>
 <img src="https://jinyu-m.github.io/post-images/1621394218167.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=5></span></p>
+<h1 id="mlp-mixer-an-all-mlp-architecture-for-vision-pdfcode">MLP-Mixer: An all-MLP Architecture for Vision <a href="https://arxiv.org/abs/2105.01601v1">pdf</a><a href="https://github.com/google-research/vision_transformer">code</a></h1>
+<h2 id="abstract-5">Abstract</h2>
+<p>作者用提出了一个完全基于多层感知机MLP的结果，MLP-Mixer。MLP-Mixer包含两种层，一种是在每个图像patch上独立处理的MLP（混合每个位置上的特征），一种是在patches之间处理的MLP（混合空间信息）。在大规模数据集上训练或者使用先进的正则化策略，预训练的MLP-Mixer可以在图像分类任务上获得很好的表现，并且计算消耗与SOTA算法相差不多。</p>
+<h2 id="introduction-5">Introduction</h2>
+<p>作者提出了一种有效但是理论上很简单的结果，MLP-Mixer，不使用卷积和自注意力机制。Mixer完全基于多层感知机结构，只依赖矩阵乘法运算、数据形状改变和标量非线性化。<br>
+<img src="https://jinyu-m.github.io/post-images/1621928618717.png" alt="" loading="lazy"><br>
+图1给出了Mixer的宏观结构。它的输入是一串线性映射的图像patches（tokens），视作一个形状为“patches x channels&quot;的表。Mixer采用两种MLP层，channel-mixing MLPs和token-mixing MLPs。channel-mixing MLPs在不同channel间作用，他们单独处理每个token，将表中的每一行作为输入。token-mixing MLPs在不同空间位置（token）间作用，单独处理每个channel，将表中的每一列作为输入。两种结构交互排列，来让输入的不同维度间彼此交互。<br>
+该模型也可以看做是一个非常特殊的CNN结构，用1x1卷积来进行channel mixing，和一个共享参数的、单通道的、全感受野depth-wise卷积来进行token mixing。</p>
+<h2 id="mixer-architecture">Mixer Architecture</h2>
+<p>如图1所示，Mixer的输入是一串S个彼此不重叠的图像patch，每个patch被线性映射到为C维向量，产生了一个二维真值输入表，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mi>S</mi><mo>×</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">X\in \mathbb{R}^{S\times C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72243em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span>.如果输入图像大小为HxW，每个patch的大小为PxP，那么patches的数量为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><mo>=</mo><mi>H</mi><mi>W</mi><mi mathvariant="normal">/</mi><msup><mi>P</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">S=HW/P^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>.所有patches都被相同的投影矩阵线性映射。Mixer包含多个相同大小的层，每个层包含两个MLP块。第一个为token-mixing MLP块：在X的列上处理，或者说它的输入是X的转置<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>X</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">X^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span>，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="double-struck">R</mi><mi>S</mi></msup><mo>−</mo><mo>&gt;</mo><msup><mi mathvariant="double-struck">R</mi><mi>S</mi></msup></mrow><annotation encoding="application/x-tex">\mathbb{R}^S-&gt;\mathbb{R}^S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.924661em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span></span></span></span></span></span></span></span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05764em;">S</span></span></span></span></span></span></span></span></span></span></span>，在各列间共享参数；第二个为channel-mixing MLP块，在X的行上处理，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="double-struck">R</mi><mi>C</mi></msup><mo>−</mo><mo>&gt;</mo><msup><mi mathvariant="double-struck">R</mi><mi>C</mi></msup></mrow><annotation encoding="application/x-tex">\mathbb{R}^C-&gt;\mathbb{R}^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.924661em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span>，在各行间共享参数。每个MLP块包含两个全连接层和一个非线性层，对输入的每一行独立处理。Mixer层可以为写为：<br>
+<img src="https://jinyu-m.github.io/post-images/1621929998947.png" alt="" loading="lazy"><br>
+其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>是非线性函数GELU。</p>
 ]]></content>
     </entry>
     <entry>
