@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Features | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621675333581">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621907657177">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Features | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -39,7 +39,7 @@ Open..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621675333581" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621907657177" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -213,6 +213,11 @@ Open..." />
 <td><a href="#14">BoWNet</a></td>
 <td>CVPR 2020</td>
 <td>使用自监督方法训练图像的BoW表征，先用于训练模型提取dense local feature，用预训练词典量化，得到真值BoW向量。对图像施加扰动，通过网络预测扰动图像的BoW向量，用真值BoW向量监督，得到更鲁棒的BoW向量</td>
+</tr>
+<tr>
+<td><a href="#15">REMAP</a></td>
+<td>TIP 2019</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -936,6 +941,11 @@ strategy to train strong classifiers with localizable features.）。根据CutMi
 <img src="https://jinyu-m.github.io/post-images/1621309443674.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1621309493022.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1621309534632.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=15></span></p>
+<h1 id="remap-multi-layer-entropy-guided-pooling-of-dense-cnn-features-for-image-retrieval-pdf">REMAP: Multi-Layer Entropy-Guided Pooling of Dense CNN Features for Image Retrieval <a href="https://ieeexplore.ieee.org/document/8720226">pdf</a></h1>
+<h2 id="abstract-15">Abstract</h2>
+<p>本篇论文提出了一种基于CNN的全局描述子，称为REMAP，从多个CNN层学习并聚合深度特征的层次，并用triplet loss进行端到端训练。REMAP明确地学习在不同语义层次的视觉抽象概念上相互支持和互补的有区力的特征。这些局部特征在聚合为一个全局描述子之前，先在多尺度相互重叠的区域内，在每层中被空间上max-pooled。为了识别出语义上对检索有用的区域和层，作者提出用KL散度计算每个区域和层的信息增益。该系统在训练过程中有效的学习不同区域和层的重要性，并相应地给他们加权。</p>
 
               </div>
               <div class="toc-container">
@@ -1227,6 +1237,11 @@ strategy to train strong classifiers with localizable features.）。根据CutMi
 </ul>
 </li>
 <li><a href="#experiments-8">Experiments</a></li>
+</ul>
+</li>
+<li><a href="#remap-multi-layer-entropy-guided-pooling-of-dense-cnn-features-for-image-retrieval-pdf">REMAP: Multi-Layer Entropy-Guided Pooling of Dense CNN Features for Image Retrieval pdf</a>
+<ul>
+<li><a href="#abstract-15">Abstract</a></li>
 </ul>
 </li>
 </ul>
