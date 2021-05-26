@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Place Recognition/Loop Closure Detection | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621998457553">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1621999919455">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Place Recognition/Loop Closure Detection | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621998457553" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1621999919455" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -83,7 +83,7 @@
                 2020-12-25
               </span>
               <span>
-                147 min read
+                150 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/GeAoLJzNN/" class="post-tag">
@@ -120,8 +120,12 @@
 <a href="#14">*Fast and Incremental Method for LCD using BoVW (TRO 2008)</a><br>
 <a href="#15">*Encoding the Description of Image Sequences: A Two-Layered Pipeline for LCD (IROS 2016)</a><br>
 <a href="#16">*Where is your place, VPR? (arxiv 2021)</a><br>
-<a href="#17">*CoHOG: A Light-Weight, Compute-Efficient, and Training-Free VPR Technique for Changing Environments (RAL 2020)</a></p>
-<p><a href="#21">*CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual LC (IROS 2019)</a></p>
+<a href="#17">*CoHOG: A Light-Weight, Compute-Efficient, and Training-Free VPR Technique for Changing Environments (RAL 2020)</a><br>
+<a href="#18">*Improving Condition- and Enviroment- Invariant PR with Semantic Place Categorization (IROS 2017)</a><br>
+<a href="#19">*LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics (RSS 2018)</a><br>
+<a href="#20">*Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition (ICRA 2018)</a><br>
+<a href="#21">*X-View: Graph-Based Semantic Multi-View Localization (RAL 2018)</a><br>
+<a href="#22">*CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual LC (IROS 2019)</a></p>
 <hr>
 <h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
@@ -163,6 +167,16 @@
 对于全局描述子，如果不增加训练数据，提升viewpoint-invariance必定会损失appearance-invariance。</p>
 <h2 id="ral-2020-cohog-a-light-weight-compute-efficient-and-training-free-visual-place-recognition-technique-for-changing-environments">[RAL 2020] <strong>CoHOG: A Light-Weight, Compute-Efficient, and Training-Free Visual Place Recognition Technique for Changing Environments</strong></h2>
 <p>计算图像像素的熵，然后进一步计算图像区域的熵，选择大于阈值的区域作为信息丰富的区域，计算区域内的HOG描述子，匹配query与reference图像中region HOG descriptor，得到匹配分数，求平均作为图像匹配分数。</p>
+<h2 id="iros-2017-improving-condition-and-enviroment-invariant-place-recognition-with-semantic-place-categorization">[IROS 2017] <strong>Improving Condition- and Enviroment- Invariant Place Recognition with Semantic Place Categorization</strong></h2>
+<p>利用语义信息将图像序列划分，代替了SeqSLAM中固定尺寸的划窗策略，提升在一些条件多变场景中的鲁棒性。在获得图像的语义标签时，先用CNN获得分类概率，再输入HMM，根据图像的时间连续性，来获得图像的语义标签。</p>
+<h2 id="rss-2018-lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics">[RSS 2018] <strong>LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics</strong></h2>
+<p>结合基于语义和外观的全局描述子，和空间一致的局部关键点对应关系来进行场景识别。由语义标签和卷积特征图获得一种全局特征描述子LoST，对于匹配图像，提取特征图中响应值最大的位置作为关键点，进行特征匹配，进行空间一致性验证。可以应对相对视角的问题。</p>
+<h2 id="icra-2018-dont-look-back-robustifying-place-categorization-for-viewpoint-and-condition-invariant-place-recognition">[ICRA 2018] <strong>Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition</strong></h2>
+<p>利用Place365网络提取特征，得到具备视角不变性的全局描述子，对全局描述子进行标准化，得到外观不变性。利用SeqSLAM框架搜索匹配的图像。为了解决相对视角的问题，从图像左右分别提取区域，提取两个全局描述子，分别计算距离，取较小值作为相似度。</p>
+<h2 id="ral-2018-x-view-graph-based-semantic-multi-view-localization">[RAL 2018] <strong>X-View: Graph-Based Semantic Multi-View Localization</strong></h2>
+<p>提取图像语义块作为拓扑图节点，根据3D空间中的相邻关系定义边。利用random walk描述子描述拓扑图，匹配图像。</p>
+<h2 id="iros-2019-calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure">[IROS 2019] <strong>CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure</strong></h2>
+<p>设计了一个单输入、多输出的VAE网络，让网络同时预测语义信息和重建RGB信息，结合了几何信息、外观信息和语义信息。利用triplet loss进行训练。中间层的隐含变量作为全局描述子。从conv5层的特征图中提取每个划窗中的最大响应区域作为特征关键点，去掉重复特征。参考BRIEF描述子，得到关键点的描述子。在回环检测时，先用全局描述子检索可能的回环，再用关键点匹配验证。</p>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2009span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -952,7 +966,7 @@ W模型，并将其拓展为增量式方法，依靠Bayesian filtering来预测�
 <img src="https://jinyu-m.github.io/post-images/1621675122801.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1621675171687.png" alt="" loading="lazy"></p>
 <hr>
-<p><span id=17></span></p>
+<p><span id=18></span></p>
 <h1 id="improving-condition-and-enviroment-invariant-place-recognition-with-semantic-place-categorization-pdf">Improving Condition- and Enviroment- Invariant Place Recognition with Semantic Place Categorization <a href="https://arxiv.org/abs/1706.07144">pdf</a></h1>
 <h2 id="abstract-16">Abstract</h2>
 <p>论文提出place recognition可以分为两个子问题：特定场景识别和场景分类。这篇论文的创新点在于&quot;use place context to inform place recognition&quot;，即把两个子问题结合起来，相互补充。场景识别得到的语义信息，可以帮助PR提升在昼夜、光照、室内外变化时的表现。</p>
@@ -993,7 +1007,7 @@ t时刻观测到状态i的概率为：<br>
 <h2 id="一点看法-2">一点看法</h2>
 <p>这篇论文究其根本，是利用语义信息来讲reference image进行划分，代替了SeqSLAM中固定尺寸的sliding window策略，借此提升了在一些跨场景数据集中的表现，这种变长的sliding window可以拓展下应用，在利用temporal consistency的算法中都可以参考借鉴的。</p>
 <hr>
-<p><span id=18></span></p>
+<p><span id=19></span></p>
 <h1 id="lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics-pdf-code">LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics <a href="https://arxiv.org/abs/1804.05526">pdf</a> <a href="https://github.com/oravus/lostX">code</a></h1>
 <h2 id="abstract-17">Abstract</h2>
 <p>We first propose a novel Local Semantic Tensor (LoST) descriptor of images using the convolutional feature maps from a state-of-the-art dense semantic segmentation network. Then, to verify the spatial semantic arrangement of the top matching candidates, we develop a novel approach for mining semantically-salient keypoint correspondences.</p>
@@ -1035,7 +1049,7 @@ sequence matching:<br>
 single_frame matching:<br>
 <img src="https://jinyu-m.github.io/post-images/1610876414942.png" alt="" loading="lazy"></p>
 <hr>
-<p><span id=19></span></p>
+<p><span id=20></span></p>
 <h1 id="dont-look-back-robustifying-place-categorization-for-viewpoint-and-condition-invariant-place-recognition-pdf">Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition <a href="https://arxiv.org/abs/1801.05078">pdf</a></h1>
 <h2 id="abstract-18">Abstract</h2>
 <p>In this work, we develop a novel methodology for using the semantics-aware higher-order layers of deep neural networks for recognizing specific places from within a reference database. To further improve the robustness to appearance change, we develop a descriptor normalization scheme that builds on the success of normalization schemes for pure appearance-based techniques such as SeqSLAM.</p>
@@ -1073,7 +1087,7 @@ single_frame matching:<br>
 <h2 id="一点看法-3">一点看法</h2>
 <p>这篇论文通过利用分类网络的高层全连接层来获得语义信息，解决视角不变性。采用cropped regions的方法来解决front v.s. rear view的问题，但是我感觉有些局限，相当于已知视角变化是相同方向或相反方向加一个小视角偏移。像X-view适用的范围更广，所以，图模型大有可为😎</p>
 <hr>
-<p><span id=20></span></p>
+<p><span id=21></span></p>
 <h1 id="x-view-graph-based-semantic-multi-view-localization-pdf">X-View: Graph-Based Semantic Multi-View Localization <a href="https://arxiv.org/abs/1709.09905">pdf</a></h1>
 <h2 id="abstract-19">Abstract</h2>
 <p>在这篇论文中，作者希望利用人造环境中的语义信息来解决剧烈视角变化的问题。利用语义图的描述子来实现定位，来实现aerial-to-ground、ground-to-ground的剧烈视角变化时的定位问题。</p>
@@ -1102,7 +1116,7 @@ single_frame matching:<br>
 <h2 id="一点看法-4">一点看法</h2>
 <p>X-view构建语义拓扑图和利用random walk描述子来表示图像的方法很新颖、高效。但是算法要求理想的分割结果，以我自己的工程经验而言，即使在KITTI这种比较理想的真实数据集上，语义分割的效果也不足以构建如X-view论文中所需的拓扑图...所以算法的实际效果有待考证，官方代码还没开源，所以只能默默等待了。</p>
 <hr>
-<p><span id=21></span></p>
+<p><span id=22></span></p>
 <h1 id="calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure-pdf-code">CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure <a href="https://arxiv.org/abs/1910.14103">pdf</a> <a href="https://github.com/rpng/calc2.0">code</a></h1>
 <h2 id="abstract-20">Abstract</h2>
 <p>作者认为现有的基于CNN的回环检测算法虽然使用了语义、外观或者几何特征信息，但是没有很充分的利用一张图像可以提供过的全部信息（语义、外观、几何信息等），并且需要人工设置参数去完成实际的回环检测。这篇论文中，作者提出了一个专为场景识别设计的神经网络，由semantic segmentator、Variational Autoencoder(VAE)和triplet embedding network组成。该网络用于提取一个全局特征空间来描述图像的外观和语义分布。然后从低层卷积特征图中提取最大响应的区域作为局部关键点，关键点描述子也参考hand-crafted特征的思路从这些特征图中提取。关键点被用于全局匹配搜索候选的回环，并用于最后的几何验证来提出错误回环。</p>
@@ -1167,6 +1181,11 @@ single_frame matching:<br>
 <li><a href="#iros-2016-encoding-the-description-of-image-sequences-a-two-layered-pipeline-for-loop-closure-detection">[IROS 2016] <strong>Encoding the Description of Image Sequences: A Two-Layered Pipeline for Loop Closure Detection</strong></a></li>
 <li><a href="#arxiv-201-where-is-your-place-visual-place-recognition">[arxiv 201] <strong>Where is your place, Visual Place Recognition?</strong></a></li>
 <li><a href="#ral-2020-cohog-a-light-weight-compute-efficient-and-training-free-visual-place-recognition-technique-for-changing-environments">[RAL 2020] <strong>CoHOG: A Light-Weight, Compute-Efficient, and Training-Free Visual Place Recognition Technique for Changing Environments</strong></a></li>
+<li><a href="#iros-2017-improving-condition-and-enviroment-invariant-place-recognition-with-semantic-place-categorization">[IROS 2017] <strong>Improving Condition- and Enviroment- Invariant Place Recognition with Semantic Place Categorization</strong></a></li>
+<li><a href="#rss-2018-lost-appearance-invariant-place-recognition-for-opposite-viewpoints-using-visual-semantics">[RSS 2018] <strong>LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics</strong></a></li>
+<li><a href="#icra-2018-dont-look-back-robustifying-place-categorization-for-viewpoint-and-condition-invariant-place-recognition">[ICRA 2018] <strong>Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition</strong></a></li>
+<li><a href="#ral-2018-x-view-graph-based-semantic-multi-view-localization">[RAL 2018] <strong>X-View: Graph-Based Semantic Multi-View Localization</strong></a></li>
+<li><a href="#iros-2019-calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure">[IROS 2019] <strong>CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure</strong></a></li>
 </ul>
 </li>
 <li><a href="#span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2009span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</span>  pdf</a>
