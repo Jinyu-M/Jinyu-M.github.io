@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Re-Localization | 年少万兜鍪</title>
-<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1622096451796">
+<link rel="shortcut icon" href="https://jinyu-m.github.io/favicon.ico?v=1622169387797">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://jinyu-m.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Re-Localization | 年少万兜鍪 - Atom Feed" href="https://jinyu-m.github.io/atom.xml">
@@ -26,7 +26,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://jinyu-m.github.io">
-  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1622096451796" alt="">
+  <img class="avatar" src="https://jinyu-m.github.io/images/avatar.png?v=1622169387797" alt="">
   </a>
   <h1 class="site-title">
     年少万兜鍪
@@ -87,7 +87,7 @@
                 2021-03-27
               </span>
               <span>
-                17 min read
+                18 min read
               </span>
               
                 <a href="https://jinyu-m.github.io/tag/C5dppQYtP/" class="post-tag">
@@ -106,7 +106,8 @@
 <a href="#1">*Posenet: A Convolutional Network for Real-Time 6-DOF Camera Relocalization(ICCV 2015)</a><br>
 <a href="#2">*Image-based Localization using Hourglass Networks (ICCVW 2017)</a><br>
 <a href="#3">*Geometric loss functions for camera pose regression with deep learning (CVPR 2017)</a><br>
-<a href="#4">*AtLoc: Attention Guided Camera Localization (AAAI 2020)</a></p>
+<a href="#4">*AtLoc: Attention Guided Camera Localization (AAAI 2020)</a><br>
+<a href="#5">*Local Support Global: Deep Camera Relocalization with Sequence Enhancement (ICCV 2019)</a></p>
 <hr>
 <p><span id=0></span></p>
 <h1 id="论文总结">论文总结</h1>
@@ -143,6 +144,11 @@
 <td><a href="#4">AtLoc</a></td>
 <td>AAAI 2020</td>
 <td>利用ResNet得到特征向量后，加入一个non-local self-attention模块和残差连接，让特征更关注图像稳定、几何鲁棒的区域</td>
+</tr>
+<tr>
+<td><a href="#5">LSG</a></td>
+<td>ICCV 2019</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -293,6 +299,11 @@
 <img src="https://jinyu-m.github.io/post-images/1622096146431.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1622096167273.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1622096253565.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=5></span></p>
+<h1 id="local-supports-global-deep-camera-relocalization-with-sequence-enhancement-pdf">Local Supports Global: Deep Camera Relocalization with Sequence Enhancement <a href="https://arxiv.org/abs/1908.04391">pdf</a></h1>
+<h1 id="abstract-5">Abstract</h1>
+<p>作者在连续图像中探索时空一致性，与视觉里程计相结合来缓和视觉歧义。更确切的说，作者引入了两个有效的环节，即内容增强的位姿估计和基于运动的调整。内容增强环节通过VO建立的局部地图的共视关系来增强观察，进而缓解位姿估计的不确定性。基于运动的调整被定义为一个位姿图，其中相机位姿用VO提供的相对位姿来优化，作为一个额外的运动约束。因此，全局一致性得到了保证。</p>
 
               </div>
               <div class="toc-container">
@@ -363,6 +374,8 @@
 <li><a href="#experiments-4">Experiments</a></li>
 </ul>
 </li>
+<li><a href="#local-supports-global-deep-camera-relocalization-with-sequence-enhancement-pdf">Local Supports Global: Deep Camera Relocalization with Sequence Enhancement pdf</a></li>
+<li><a href="#abstract-5">Abstract</a></li>
 </ul>
 
               </div>
