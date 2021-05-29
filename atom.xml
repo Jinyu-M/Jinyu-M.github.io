@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-05-29T09:24:09.125Z</updated>
+    <updated>2021-05-29T09:51:56.095Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -1182,7 +1182,8 @@ D是两个位姿间的距离。<span class="katex"><span class="katex-mathml"><m
 <a href="#19">*LoST? Appearance-Invariant Place Recognition for Opposite Viewpoints using Visual Semantics (RSS 2018)</a><br>
 <a href="#20">*Don't Look Back: Robustifying Place Categorization for Viewpoint- and Condition-Invariant Place Recognition (ICRA 2018)</a><br>
 <a href="#21">*X-View: Graph-Based Semantic Multi-View Localization (RAL 2018)</a><br>
-<a href="#22">*CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual LC (IROS 2019)</a></p>
+<a href="#22">*CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual LC (IROS 2019)</a><br>
+<a href="#23">*STA-VPR: Spatio-Temporal Alignment for VPR (RAL 2021)</a></p>
 <hr>
 <h1 id="span-id0总结span"><span id="0">总结</span></h1>
 <h2 id="iros-2009-online-visual-vocabulary-for-robot-navigation-and-mapping">[IROS 2009] <strong>Online Visual Vocabulary for Robot Navigation and Mapping</strong></h2>
@@ -1234,6 +1235,7 @@ D是两个位姿间的距离。<span class="katex"><span class="katex-mathml"><m
 <p>提取图像语义块作为拓扑图节点，根据3D空间中的相邻关系定义边。利用random walk描述子描述拓扑图，匹配图像。</p>
 <h2 id="iros-2019-calc20combining-appearance-semantic-and-geometric-information-for-robust-and-efficient-visual-loop-closure">[IROS 2019] <strong>CALC2.0：Combining Appearance, Semantic and Geometric Information for Robust and Efficient Visual Loop Closure</strong></h2>
 <p>设计了一个单输入、多输出的VAE网络，让网络同时预测语义信息和重建RGB信息，结合了几何信息、外观信息和语义信息。利用triplet loss进行训练。中间层的隐含变量作为全局描述子。从conv5层的特征图中提取每个划窗中的最大响应区域作为特征关键点，去掉重复特征。参考BRIEF描述子，得到关键点的描述子。在回环检测时，先用全局描述子检索可能的回环，再用关键点匹配验证。</p>
+<h2 id="ral-2021-sta-vpr-spatio-temporal-alignment-for-visual-place-recognition">[RAL 2021] <strong>STA-VPR: Spatio-Temporal Alignment for Visual Place Recognition</strong></h2>
 <hr>
 <h1 id="span-id1online-visual-vocabulary-for-robot-navigation-and-mapping-iros-2009span-pdf"><span id="1">Online Visual Vocabulary for Robot Navigation and Mapping (IROS 2009)</span>  <a href="http://eia.udg.edu/~rafa/papers/iros-2009.pdf">pdf</a></h1>
 <h2 id="abstract">Abstract</h2>
@@ -2213,6 +2215,20 @@ single_frame matching:<br>
 <img src="https://jinyu-m.github.io/post-images/1610876846137.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1610876850180.png" alt="" loading="lazy"><br>
 比NetVLAD表现好，很强了</p>
+<hr>
+<p><span id=23></span></p>
+<h1 id="sta-vpr-spatio-temporal-alignment-for-visual-place-recognition-pdf-code">STA-VPR: Spatio-Temporal Alignment for Visual Place Recognition <a href="https://ieeexplore.ieee.org/document/9382071">pdf</a> <a href="https://github.com/Lu-Feng/STA-VPR">code</a></h1>
+<h2 id="abstract-21">Abstract</h2>
+<p>CNN中间层的特征对于剧烈外观变化更加鲁棒，但是缺乏对于视角变化的鲁棒性。作者将整体中间层特征划分成局部特征，提出一种自适应动态时间warping方法（DTW）来对齐空间上的特征，并计算两幅图像间的距离。实现了外观不变性和视角不变性的VPR。同时，一种局部匹配DTW（LM-DTW）算法被用于匹配图像序列，进一步提升效果，并保证线性时间复杂度。该篇工作无需重新训练网络。</p>
+<h2 id="introduction-16">Introduction</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1622281297843.png" alt="" loading="lazy"><br>
+如图1所示，不对齐特征就匹配图像的话，CNN特征会造成错误，算法的视角不变性较差。因此，作者将中层CNN特征划分到多个局部特征，然后用自适应dynamic time warping（DTW）来对齐它们，同时度量图像相似度。每个局部特征与具有相同语义信息的局部特征相匹配，算法可以获得正确的图像相似度，提升算法对视角变化的鲁棒性。<br>
+出自之外，作者还对齐了时间维度上的图像序列。Local matching DTW（LM-DTW）算法被用于匹配图像序列。这种空间对齐算法可以用于提升现存的序列匹配算法（如SeqSLAM）应对视角变化的鲁棒性。<br>
+算法被命名为STA-VPR（sptial-temporal alignment for visual place recognition），主要贡献为：</p>
+<ol>
+<li>分析了中层CNN特征为什么缺乏对大视角变化的鲁棒性，然后提出对齐基于CNN的局部特征，来解决这一问题；</li>
+<li>提出自适应DTW算法，通过划分中层特征来对齐局部特征，计算图像距离，与之前的工作[Visual sequence place recognition with improved dynamic time warping]相结合，构成STA-VPR算法。</li>
+</ol>
 ]]></content>
     </entry>
     <entry>
