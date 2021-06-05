@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-06-03T11:58:41.702Z</updated>
+    <updated>2021-06-05T03:48:42.143Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -910,7 +910,8 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 <a href="#5">*Local Support Global: Deep Camera Relocalization with Sequence Enhancement (ICCV 2019)</a><br>
 <a href="#6">*Learning Multi-Scene Absolute Pose Regression with Transformers (arxiv 2021)</a><br>
 <a href="#7">*Extending Absolute Pose Regression to Multiple Scenes (CVPRW 2020)</a><br>
-<a href="#8">*Geometry-Aware Learning of Maps for Camera Localization (CVPR 2018)</a></p>
+<a href="#8">*Geometry-Aware Learning of Maps for Camera Localization (CVPR 2018)</a><br>
+<a href="#9">*Neural Reprojection Error: Merging Feature Learning and Camera Pose Estimation (CVPR 2021)</a></p>
 <hr>
 <p><span id=0></span></p>
 <h1 id="论文总结">论文总结</h1>
@@ -967,6 +968,11 @@ tranformer encoder包含交替出现的multi-head self-attention层(MSA)和MLP�
 <td><a href="#8">MapNet</a></td>
 <td>CVPR 2018</td>
 <td>提出用单位四元数的对数来表示旋转；用VO提供的相对位姿来进一步优化模型，无需额外的数据标注，推理时加入位姿图优化，优化预测的绝对位姿</td>
+</tr>
+<tr>
+<td><a href="#9">NRE</a></td>
+<td>CVPR 2021</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1266,6 +1272,20 @@ PoseNet采用四元数来表示旋转，但是用四元数是对三维旋转的�
 <h2 id="experiment">Experiment</h2>
 <p><img src="https://jinyu-m.github.io/post-images/1622606481859.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1622606519826.png" alt="" loading="lazy"></p>
+<hr>
+<p><span id=9></span></p>
+<h1 id="neural-reprojection-error-merging-feature-learning-and-camera-pose-estimation-pdfneural-reprojection-error-merging-feature-learning-and-camera-pose-estimation-code">Neural Reprojection Error: Merging Feature Learning and Camera Pose Estimation [pdf](Neural Reprojection Error: Merging Feature Learning and Camera Pose Estimation) <a href="https://github.com/germain-hug/NRE">code</a></h1>
+<h2 id="abstract-9">Abstract</h2>
+<p>绝对位姿估计一般包括两步：首先通过特征匹配，来获得2D-3D间的correspondences；然后用PnP算法最小化关于相机位姿的重投影误差（RE）。作者认为生成2D-3Dcorrespondence（1）会带来重要的信息损失，需要在RE中通过选择损失和调参来补偿；（2）会导致RE想位姿估计模型传送错误的数据。这篇论文中，作者提出Neural Reprojection Error（NRE）作为RE的代替。NRE将特征匹配与位姿估计融合在一起，可以提供相比2D-3Dcorrespondence更丰富的信息，无需选择损失和调整参数。因此，NRE可以作为训练用于位姿估计的图像描述子的损失函数。作者还提出一种由粗到精的优化方法，来有效地最小化关于相机位姿的NRE项。</p>
+<h2 id="introduction-8">Introduction</h2>
+<p><img src="https://jinyu-m.github.io/post-images/1622864121470.png" alt="" loading="lazy"><br>
+<img src="https://jinyu-m.github.io/post-images/1622864205174.png" alt="" loading="lazy"><br>
+本文的贡献在于：</p>
+<ol>
+<li>提出NRE作为RE的替代品。NRE不需要2D-3Dcorrespondence作为输入，而是依赖于一个稠密的loss map，这包含了更多的信息，可以向位姿估计模块提供更高质量的信息。因此，无需选择鲁棒的损失函数和超参数。计算稠密的loss map本质上涉及到计算神经网络输出的描述子的相互关联；</li>
+<li>NRE不仅对相机位姿可微，而且对描述子可微。因此，当提供了真值的相机位姿，最小化关于描述子的NRE，是一个适当的用于位姿估计的特征训练任务。NRE将特征学习任务和相机位姿估计任务融合在了一起；</li>
+<li>为了更好的估计相机位姿，作者提出用由粗到精的方法来最小化NRE。因此，作者无需计算或存储任何高分辨率的稠密loss map。作者描述了如何用M-estimator 采样一致方法和一个graduated non-convexity过程来优化。</li>
+</ol>
 ]]></content>
     </entry>
     <entry>
