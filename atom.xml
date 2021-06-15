@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://jinyu-m.github.io</id>
     <title>年少万兜鍪</title>
-    <updated>2021-06-08T03:39:09.000Z</updated>
+    <updated>2021-06-15T03:50:02.408Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://jinyu-m.github.io"/>
     <link rel="self" href="https://jinyu-m.github.io/atom.xml"/>
@@ -2868,7 +2868,8 @@ class FastAPLoss(torch.nn.Module):
 <img src="https://jinyu-m.github.io/post-images/1610853296288.png" alt="" loading="lazy"><br>
 <img src="https://jinyu-m.github.io/post-images/1610853301967.png" alt="" loading="lazy"></p>
 <hr>
-<p>#VPR-Bench: An Open-Source Visual Place Recognition Evaluation Framework with Quatifiable Viewpoint and Appearance Change <a href="https://github.com/Jinyu-M/VPR-Bench">code</a></p>
+<p><span id=2></span></p>
+<h1 id="vpr-bench-an-open-source-visual-place-recognition-evaluation-framework-with-quatifiable-viewpoint-and-appearance-change-code">VPR-Bench: An Open-Source Visual Place Recognition Evaluation Framework with Quatifiable Viewpoint and Appearance Change <a href="https://github.com/Jinyu-M/VPR-Bench">code</a></h1>
 <h2 id="introduction-2">Introduction</h2>
 <p><img src="https://jinyu-m.github.io/post-images/1621503637284.png" alt="" loading="lazy"><br>
 本文提出一种评估VPR算法的开源框架，框架示意图如图1所示。<br>
